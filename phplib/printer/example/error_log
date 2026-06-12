@@ -1,0 +1,25 @@
+[04-Sep-2019 11:47:03 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Cannot initialise NetworkPrintConnector: Connection timed out' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php:38
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/example/receipt-with-logo.php(8): Mike42\Escpos\PrintConnectors\NetworkPrintConnector->__construct('192.168.0.105')
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php on line 38
+[04-Sep-2019 11:48:37 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Cannot initialise NetworkPrintConnector: Connection timed out' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php:38
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/example/receipt-with-logo.php(8): Mike42\Escpos\PrintConnectors\NetworkPrintConnector->__construct('192.168.0.105')
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php on line 38
+[04-Sep-2019 12:10:06 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Cannot initialise NetworkPrintConnector: Connection timed out' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php:38
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/example/receipt-with-logo.php(8): Mike42\Escpos\PrintConnectors\NetworkPrintConnector->__construct('192.168.0.105')
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php on line 38
+[05-Sep-2019 06:58:05 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Cannot initialise NetworkPrintConnector: ' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php:38
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/example/receipt-with-logo.php(10): Mike42\Escpos\PrintConnectors\NetworkPrintConnector->__construct('103.103.59.51', '')
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php on line 38
+[05-Sep-2019 06:59:18 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'Cannot initialise NetworkPrintConnector: ' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php:38
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/example/receipt-with-logo.php(10): Mike42\Escpos\PrintConnectors\NetworkPrintConnector->__construct('103.103.59.51', '')
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/PrintConnectors/NetworkPrintConnector.php on line 38

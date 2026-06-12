@@ -1,0 +1,15 @@
+[04-Sep-2019 11:45:42 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'File 'resources/escpos-php.png' does not exist, or is not readable.' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/EscposImage.php:430
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/index.php(22): Mike42\Escpos\EscposImage::load('resources/escpo...', false)
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/EscposImage.php on line 430
+[05-Sep-2019 05:59:07 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'File 'resources/escpos-php.png' does not exist, or is not readable.' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/EscposImage.php:430
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/index.php(22): Mike42\Escpos\EscposImage::load('resources/escpo...', false)
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/EscposImage.php on line 430
+[05-Sep-2019 06:57:39 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'File 'resources/escpos-php.png' does not exist, or is not readable.' in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/EscposImage.php:430
+Stack trace:
+#0 /home/inroomhub/public_html/app/phplib/printerLib/index.php(22): Mike42\Escpos\EscposImage::load('resources/escpo...', false)
+#1 {main}
+  thrown in /home/inroomhub/public_html/app/phplib/printerLib/src/Mike42/Escpos/EscposImage.php on line 430

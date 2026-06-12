@@ -1,0 +1,738 @@
+/* latest 9/6/2025 */
+
+/* invoice_style.css */
+
+/* General Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0; /* Remove body padding; let @page handle margins */
+    background-color: #f4f4f4;
+    color: #000;
+    font-size: 0.85em; /* Base font size adjusted for readability on A4 */
+}
+
+.invoice-container {
+    width: 210mm; /* A4 width */
+    /* Height will be managed by content flow and page breaks */
+    min-height: 297mm; /* Set min-height to A4 height to better visualize print layout */
+    margin-left: 20px;
+    background-color: #fff;
+    /* border: 1px solid #000; */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    /* padding: 20px; Keep consistent padding for screen view */
+    box-sizing: border-box;
+    /* border : 1px solid #000; */
+}
+
+/* New: Styles for the main table wrapping the entire invoice content */
+.invoice-main-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* Important for print: ensure cells respect content flow */
+    table-layout: fixed; /* Helps in more predictable column widths */
+}
+
+.invoice-main-table thead ,
+.invoice-main-table tbody {
+    border: 1px solid #000!important;
+}
+
+.item-table tbody{
+/* border : 0!important; */
+}
+
+.invoice-main-table thead td,
+.invoice-main-table tbody td,
+.invoice-main-table tfoot td {
+    padding: 0mm 0mm; /* Remove default table cell padding */
+    border: none; /* Remove border from the header/body/footer cells */
+    vertical-align: top; /* Align content to the top for all cells */
+   
+}
+
+/* Header Styles */
+.invoice-header {
+    margin-bottom: 0px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.header-content {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    padding : 5px 8px 0px 8px!important;
+}
+
+.company-logo {
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+.company-logo img {
+    max-width: 80px;
+    height: auto;
+}
+
+.company-details {
+    text-align: right;
+    flex-grow: 1;
+}
+
+.invoice-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 3px;
+    color: #555;
+}
+
+.company-details h1 {
+    font-size: 1.7em;
+    margin: 0 0 3px 0;
+    color: #000;
+}
+
+.company-details p {
+    margin: 0;
+    font-size: 0.75em;
+    line-height: 1.2;
+}
+
+/* Booking Details */
+.booking-details {
+    margin-bottom: 1mm;
+    /* Added display: block to ensure page-break-inside works reliably */
+    display: block;
+    page-break-inside: avoid; /* Ensure booking details stay together */
+}
+
+.booking-details tbody tr td{
+    padding: 4px 8px;
+    border : 1px solid #000;
+}
+
+.booking-details table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0px;
+}
+
+.booking-details th,
+.booking-details td {
+    border: 1px solid #000;
+    padding: 4px 8px;
+    text-align: left;
+    font-size: 0.85em;
+}
+
+.booking-details th {
+    background-color: #f7f7f7;
+    font-weight: normal;
+}
+
+.booking-by {
+    /* font-weight: bold;
+    margin-top: 0 !important;
+    font-size: 0.85em;
+    padding: 4px 8px;
+    border: 1px solid #000;
+    border-top: 0!important; */
+}
+
+/* Description Section (Item Table) */
+.section-title {
+    font-size: 1em;
+    /* font-weight: bold; */
+    /* margin-bottom: 8px; */
+    /* border-bottom: 1px solid #eee; */
+    /* padding: 3px 0px; */
+    text-align: center;
+    margin : 0!important;
+  
+ 
+}
+
+.dynamic-content-area .section-title:first-child{
+    display: none;
+}
+
+.description-section {
+    /* Changed to auto for better content flow, rows will handle breaks */
+    page-break-inside: auto;
+}
+
+.item-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    page-break-inside: auto; /* Allow breaking inside the item table if necessary */
+}
+
+
+.item-table td {
+    border: 1px solid #000;
+    padding: 3px 8px;
+    text-align: left;
+    font-size: 0.82em;
+}
+
+.item-table tr td.align-right{
+    text-align: right!important;
+}
+
+.item-table tr th.align-right{
+    text-align: right!important;
+}
+
+
+.item-table th{
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #000;
+    padding: 3px 8px;
+    text-align: left;
+    font-size: 0.82em;
+}
+
+.item-table thead th {
+    background-color: #f7f7f7;
+    font-weight: normal;
+}
+
+.item-table tr td{
+    padding :  0px 6px!important;
+}
+
+.item-table .date-group-header td {
+    background-color: #eef1f4;
+    font-weight: bold;
+    text-align: left;
+    padding: 2px 8px;
+    border-bottom: 0;
+    border-top: 1px solid #000;
+    font-size: 0.82em;
+    page-break-after: avoid; /* Ensure header stays with first rows */
+    page-break-inside: avoid; /* Keep the header from breaking */
+}
+
+.item-table tbody tr {
+    page-break-inside: avoid; /* Keep individual rows from breaking */
+    
+}
+
+.item-table .date-subtotal-row td {
+    background-color: #fcfcfc;
+    /* font-weight: bold; */
+    border-top: 0;
+    padding: 2px 8px;
+    font-size: 0.82em;
+    page-break-before: avoid; /* Crucial: Keep subtotal with its date group */
+    page-break-inside: avoid; /* Keep the subtotal row from breaking */
+}
+
+.date-subtotal-row td:first-child{
+    font-weight: 400!important;
+}
+
+.item-table tfoot {
+    /* Increased strength for avoiding breaks, ensuring the subtotal and its border appear */
+    page-break-inside: avoid;
+    page-break-before: auto; /* Allow a page break before the footer if necessary */
+    display: table-footer-group; /* Ensures this part is treated as a table footer */
+}
+
+.item-table tfoot td {
+    font-weight: bold;
+    background-color: #f7f7f7;
+    border-top: 1.5px solid #000;
+    padding: 5px 8px;
+    font-size: 0.95em;
+}
+
+.align-right {
+    text-align: right;
+}
+
+/* .total-label {
+    text-align: right;
+    padding-right: 10px;
+} */
+
+
+.subtotal-group {
+    display: inline-block; /* Or block, depending on if you want it on its own line */
+    /* Optional: If you want to control width or padding for the group */
+}
+
+.total-label {
+    padding-right: 10px; /* Space between label and amount */
+    white-space: nowrap;
+    font-size: 0.85em;
+}
+
+.total-amount {
+    
+    color: #000;
+    white-space: nowrap;
+    font-size: 0.85em;
+}
+
+/* .total-amount {
+    font-weight: bold;
+    color: #000;
+} */
+
+/* Summary Section */
+.summary-section {
+   
+    /* margin-top: 15px; */
+    /* margin-bottom: 20px; */
+    display: block; /* Ensure block-level for page-break properties */
+    page-break-inside: avoid; /* Keep the entire summary section together */
+    page-break-before: auto; /* Allows it to flow naturally, but moves to next page if it can't fit */
+}
+
+
+
+.rupees-in-words p{
+    margin : 0px 5px;
+    margin-bottom : 10px;
+}
+
+.rupees-in-words {
+    font-weight:bold;
+    margin-bottom: 0px;
+    font-size: 0.9em;
+}
+
+.grand-total-box {
+    border: 0;
+    padding: 5px 5px;
+    margin-bottom: 5px;
+    text-align: right;
+    width: fit-content;
+    margin-left: auto;
+    display: flex;
+    page-break-inside: avoid;
+}
+
+.grand-total-box p {
+    margin: 0;
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+.grand-total-box #grand-total-value,
+.grand-total-box #balance-value {
+    font-weight: bold;
+    font-size: 1.05em;
+    color: #000000;
+}
+
+.tax-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    display: block; /* Ensure block-level for page-break properties */
+    page-break-inside: avoid; /* Keep the tax table together */
+}
+
+.tax-table th,
+.tax-table td {
+    border: 1px solid #000;
+    padding: 5px 8px;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+.tax-table tbody td {
+    border: 1px solid #000;
+}
+
+.tax-table tfoot td {
+    padding: 3px;
+    border: 1px solid #000;
+}
+
+.tax-table tr td{
+    padding: 3px;
+}
+
+.tax-table th {
+    background-color: #f7f7f7;
+    font-weight: normal;
+    padding: 3px;
+}
+
+.tax-table tfoot td {
+    font-weight: bold;
+    background-color: #fcfcfc;
+}
+
+/* Footer Details (Aggressively Compact Layout) */
+.footer-details {
+    margin-top: 5px; /* Even less top margin */
+    padding: 5px; /* Reduced padding */
+    border-top: 1px solid #eee; /* Clean top border */
+    display: flex; /* Keep flex for layout */
+    flex-direction: column;
+    gap: 5px; /* Further reduced gap between main footer sections */
+    page-break-inside: avoid; /* Crucial: Keep the entire footer together */
+    page-break-before: auto; /* Allow it to flow naturally, but move to next page if it can't fit */
+}
+
+.bank-info {
+    margin-bottom: 0;
+    font-size: 0.75em; /* Slightly smaller font for bank info */
+    line-height: 1.1; /* Very tight line spacing */
+    display: block; /* Ensure block-level for page-break properties */
+    page-break-inside: avoid;
+}
+
+.signatures {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: flex-end; */
+    margin-top: 5px; /* Reduced margin above signatures */
+    margin-bottom: 0; /* Removed margin below signatures */
+    page-break-inside: avoid; /* Keep signatures together */
+}
+
+.signature-block {
+    width: 30%; /* Maximized width for blocks */
+    /* text-align: center; */
+    font-size: 0.75em; /* Smaller font for signatures */
+    position: relative;
+    padding-top: 10px; /* Space for the line above text */
+    line-height: 1.1; /* Tighter line spacing for signature text */
+    page-break-inside: avoid; /* Keep individual signature blocks from breaking */
+}
+
+.signature-block p {
+    margin: 0; /* Ensure no extra margin on paragraphs */
+}
+
+.signature-block:after {
+    content: '';
+    position: absolute;
+    top: 0; /* Line at the very top of padding-top */
+    left: 0%; /* Extend line more */
+    right: 10%; /* Extend line more */
+    border-bottom: 0.5px solid #000;
+}
+
+.guest-signature {
+    text-align: left;
+}
+
+.note {
+    font-size: 0.65em; /* Even smaller font for the note */
+    color: #666;
+    border-top: none;
+    padding: 0; /* No padding */
+    margin-top: 0; /* No top margin */
+    line-height: 1.1; /* Very tight line spacing */
+    text-align: center;
+    display: block; /* Ensure block-level for page-break properties */
+    page-break-inside: avoid;
+    padding-bottom: 5px; /* A tiny bit of padding at the very bottom of the footer */
+}
+
+/* Print Specific Styles - adjusted to match compactness */
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+    }
+
+    .invoice-container {
+        width: 97%;
+        min-height: auto;
+        border: 0;
+        box-shadow: none;
+        margin: 10px auto;
+    
+        /* padding: 1mm;  */
+        /* Container padding handled by @page margins */
+
+    }
+
+    .invoice-main-table{
+        margin: 1mm!important;
+        padding: 1mm!important;
+    }
+
+    /* Ensure the main table header repeats on each page */
+    .invoice-main-table thead {
+        display: table-header-group;
+        page-break-inside: avoid; /* Ensures the whole header group doesn't break */
+        border: 1px solid #000;
+    }
+
+    /* Important: Prevent the header cell from breaking within itself */
+    .invoice-main-table thead td {
+        page-break-inside: avoid;
+        vertical-align: top;
+        height: auto !important; /* Allow height to be determined by content */
+        /* To prevent header truncation, ensure its internal elements don't cause overflow */
+    }
+
+    /* This is critical for the main content area */
+    .invoice-main-table tbody {
+        display: table-row-group; /* Ensures tbody behaves correctly with page breaks */
+        border: 1px solid #000;
+    }
+
+    .invoice-main-table tbody td {
+        page-break-inside: auto; /* Allows breaking within the main content td if necessary */
+    }
+
+    /* Ensure the dynamic content area flows correctly and allows breaks */
+    .dynamic-content-area {
+        page-break-inside: auto;
+        display: block; /* Ensure block display for consistent page-break behavior */
+        min-height: 130mm; 
+    }
+
+    /* Keep date group headers and subtotals with their rows */
+    .item-table .date-group-header,
+    .item-table .date-subtotal-row {
+        page-break-after: avoid;
+        page-break-before: avoid;
+        page-break-inside: avoid; /* Keep content within these rows together */
+    }
+
+    /* This is the key for the "footer" part (tax summary, signatures, etc.) */
+    .bottom-sections {
+        page-break-before: auto; /* Allows it to flow naturally, but moves to next page if it can't fit */
+        page-break-inside: avoid; /* Crucial: ensures the entire block moves together */
+        margin-top: 15px; /* Provides separation if it does move to a new page */
+        display: block; /* Ensure block display for consistent page-break behavior */
+    }
+
+    /* Adjust print-specific margins for footer elements to maintain compactness */
+    .footer-details {
+        margin-top: 5mm; /* Very small margin in print */
+        padding-top: 3mm; /* Very small padding in print */
+        gap: 3mm; /* Small gap in print */
+        display: block; /* Ensure block display for consistent page-break behavior */
+    }
+
+    .bank-info, .note {
+        page-break-inside: avoid; /* Ensure these small blocks don't break */
+    }
+
+    .signatures {
+        margin-top: 5mm; /* Very small margin in print */
+        page-break-inside: avoid; /* Keep signatures together */
+    }
+
+    .signature-block {
+        padding-top: 7mm; /* Adjust line spacing for print */
+        page-break-inside: avoid; /* Keep individual signature blocks together */
+    }
+
+    /* Page numbering and margins for the print output */
+    @page {
+        margin: 15mm; /* Set uniform margins for the entire page */
+        size: A4; /* Explicitly set page size */
+
+        @top-center {
+            /* content: "DEOGARH RESORTS Invoice"; */
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        @bottom-right {
+            content: "Page " counter(page) " of " counter(pages);
+            font-size: 0.7em;
+            color: #777;
+          
+        }
+    }
+
+    /* Hide the original footer as page numbers are now handled by @page */
+    .invoice-footer {
+        display: none;
+    }
+}
+
+/* Summary Section */
+.summary-section {
+    /* margin-top: 15px; */
+    /* margin-bottom: 20px; */
+    display: block;
+    page-break-inside: avoid;
+    page-break-before: auto;
+}
+
+.rupees-in-words {
+   
+    margin-bottom: 0px;
+    font-size: 0.9em;
+}
+
+.grand-total-box {
+    /* border: 1px solid #e0e0e0; */
+    padding: 5px 5px;
+    /* background-color: #fcfcfc; */
+    margin-bottom: 0px;
+    text-align: right;
+    width: fit-content;
+    margin-left: auto;
+    display: block;
+    page-break-inside: avoid;
+}
+
+.grand-total-box p {
+    margin: 0;
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+.grand-total-box #grand-total-value,
+.grand-total-box #balance-value {
+    font-weight: bold;
+    font-size: 1.05em;
+    color: #000000;
+}
+
+.tax-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0px;
+    /* REVISION: Changed display from 'block' to 'table' to ensure proper table rendering behaviour. */
+    /* 'block' can sometimes interfere with table's native width and cell rendering. */
+    display: table;
+    page-break-inside: avoid; /* Keep the tax table together */
+}
+
+.tax-table th,
+.tax-table td {
+    /* REVISION: Increased border thickness and slightly darkened color for better visibility. */
+    border: 1.5px solid #000; /* Slightly thicker and darker border */
+    padding: 6px 10px; /* Slightly increased padding for better cell spacing */
+    text-align: center; /* Keep center alignment as requested implicitly by original */
+    font-size: 0.8em;
+}
+
+.tax-table th {
+    background-color: #f7f7f7;
+    font-weight: normal;
+}
+
+.tax-table tfoot td {
+    font-weight: bold;
+    background-color: #fcfcfc;
+}
+
+/* ... rest of your CSS remains the same ... */
+
+/* Print Specific Styles - adjusted to match compactness */
+@media print {
+    /* ... existing print styles ... */
+
+    .tax-table {
+        /* Ensure it behaves as a table in print as well */
+        display: table;
+        page-break-inside: avoid;
+        width: 100%; /* Ensure it spans full width */
+    }
+
+    .tax-table th,
+    .tax-table td {
+        border: 1.5px solid #000; /* Apply consistent border in print */
+        padding: 6px 10px;
+    }
+
+    /* ... rest of your print styles ... */
+}
+
+/* Optional: Style for the print button */
+.print-button-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.print-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #007bff; /* A nice blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.print-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Hide the print button when actually printing */
+@media print {
+    .print-button-container {
+        display: none;
+    }
+
+    .booking-details{
+            font-size : 0.8rem!important
+    }
+
+    .item-table{
+            font-size : 0.8rem!important
+    }
+
+
+    .tax-table{
+        font-size : 0.8rem!important
+    }
+
+
+}
+
+table tr th:first-child,
+table tr td:first-child,
+table tr th:last-child,
+table tr td:last-child {
+  /* border: 1px solid #fff; */
+}
+.booking-details tr th:first-child,
+.booking-details tr td:first-child {
+  border-left: 1px solid #fff;
+}
+
+.booking-details tr th:last-child,
+.booking-details tr td:last-child {
+  border-right: 1px solid #fff;
+}
+
+.item-table tr th:first-child,
+.item-table tr td:first-child {
+  border-left: 1px solid #fff;
+}
+
+.item-table tr th:last-child,
+.item-table tr td:last-child {
+  border-right: 1px solid #fff;
+}
+
+.tax-table tr th:first-child,
+.tax-table tr td:first-child {
+  border-left: 1px solid #fff;
+}
+
+.tax-table tr th:last-child,
+.tax-table tr td:last-child {
+  border-right: 1px solid #fff;
+}

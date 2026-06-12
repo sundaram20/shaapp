@@ -1,0 +1,22 @@
+Duplicate Entries : 
+1) beer  
+2) BEERA  
+3) Bento-Tori Karaage  
+4) Blanket  
+5) Blaser  
+6) Cabbage  
+7) Chicken  
+8) Chicken Breast  
+9) Juice  
+10) Margretta Pizza  
+11) Masoor Dal  
+12) Miso Soup  
+13) Onion  
+14) PANEER  
+15) Rice  
+16) Sugar  
+
+Errors  : 
+1) apple juice - Error : at : 1th data : Outlet  :  Not Found 
+
+

@@ -1,0 +1,195 @@
+<?php
+
+// Load JSON from file
+$jsonString = file_get_contents('reservation.json');
+$data = json_decode($jsonString, true);
+
+// --- Validation functions ---
+function validateHotelId($hotelId) {
+    return preg_match('/^[A-Z]{2,5}$/', $hotelId);
+}
+
+function validateTaxId($taxId) {
+    return preg_match('/^[A-Za-z0-9]{10,15}$/', $taxId);
+}
+
+function validateReservationId($reservationId) {
+    return preg_match('/^[0-9]+$/', $reservationId);
+}
+
+function validateRoomId($roomId) {
+    return preg_match('/^[A-Za-z0-9]{3,10}$/', $roomId);
+}
+
+function validateRateId($rateId) {
+    return preg_match('/^[A-Za-z0-9]{3,10}$/', $rateId);
+}
+
+function validateMealplanId($mealplanId) {
+    return preg_match('/^[A-Za-z0-9]{2,6}$/', $mealplanId);
+}
+
+function validateGuestId($guestId) {
+    return preg_match('/^[0-9]+$/', $guestId);
+}
+
+function validateBookingType($bookingType) {
+    $allowed = ['corporate', 'leisure', 'business'];
+    return in_array(strtolower($bookingType), $allowed);
+}
+
+// --- Process each reservation ---
+if (!empty($data['reservations'])) {
+    foreach ($data['reservations'] as $reservation) {
+
+        // Extract variables
+        $bookedAt = $reservation['booked_at'];
+        $commissionAmount = $reservation['commissionamount'];
+        $currencyCode = $reservation['currencycode'];
+        $paymentType = $reservation['paymenttype'];
+        $hotelId = $reservation['hotel_id'];
+        $hotelName = $reservation['hotel_name'];
+        $paymentDue = $reservation['paymentdue'];
+
+        // Guest info
+        $customer = $reservation['customer'];
+        $personal = $customer['personal_info'] ?? $customer;
+        $firstName = $personal['first_name'] ?? '';
+        $lastName = $personal['last_name'] ?? '';
+        $email = $personal['email'] ?? '';
+        $telephone = $personal['telephone'] ?? '';
+        $address = $personal['address'] ?? '';
+        $city = $personal['city'] ?? '';
+        $zip = $personal['zip'] ?? '';
+        $countryCode = $personal['countrycode'] ?? '';
+        $remarks = $personal['remarks'] ?? '';
+
+        // Corporate booking info
+        $corp = $customer['corporate_booking_detail'] ?? [];
+        $bookingSource = $corp['booking_source'] ?? '';
+        $taxId = $corp['tax_id'] ?? '';
+        $billingCompany = $corp['billing_company'] ?? '';
+        $billingAddress = $corp['billing_address'] ?? '';
+        $paymentInfo = $corp['payment_information'] ?? '';
+        $paymentDueDate = $corp['payment_due_date'] ?? '';
+        $bookerAddress = $corp['booker_address'] ?? '';
+        $bookerTaxId = $corp['booker_taxid'] ?? '';
+        $bookingType = $corp['booking_type'] ?? '';
+
+        // Validate hotelId, taxId, bookingType
+        if (!validateHotelId($hotelId)) {
+            echo "❌ Invalid Hotel ID: $hotelId\n";
+        }
+        if (!empty($taxId) && !validateTaxId($taxId)) {
+            echo "❌ Invalid Tax ID: $taxId\n";
+        }
+        if (!validateBookingType($bookingType)) {
+            echo "❌ Invalid Booking Type: $bookingType\n";
+        }
+
+        // Other reservation details
+        $chainId = $reservation['chain_id'];
+        $externalId = $reservation['external_id'];
+        $netAmount = $reservation['nettamount'];
+        $sellAmount = $reservation['sellamount'];
+        $channelBookingId = $reservation['channel_booking_id'];
+        $threadId = $reservation['thread_id'];
+        $guestId = $reservation['guest_id'];
+        $listingBasePrice = $reservation['listingbaseprice'];
+        $processedAt = $reservation['processed_at'];
+        $deposit = $reservation['deposit'];
+        $vendorBookingId = $reservation['vendor_booking_id'];
+        $reservationId = $reservation['id'];
+        $reservationNotifId = $reservation['reservation_notif_id'];
+        $modifiedAt = $reservation['modified_at'];
+        $status = $reservation['status'];
+        $totalPrice = $reservation['totalprice'];
+        $totalTax = $reservation['totaltax'];
+
+        // Validate reservationId and guestId
+        if (!validateReservationId($reservationId)) {
+            echo "❌ Invalid Reservation ID: $reservationId\n";
+        }
+        if (!validateGuestId($guestId)) {
+            echo "❌ Invalid Guest ID: $guestId\n";
+        }
+
+        // Rooms
+        if (!empty($reservation['rooms'])) {
+            foreach ($reservation['rooms'] as $roomIndex => $room) {
+                $roomId = $room['id'];
+                $roomReservationId = $room['roomreservation_id'];
+                $arrivalDate = $room['arrival_date'];
+                $departureDate = $room['departure_date'];
+                $guestName = $room['guest_name'];
+                $numGuests = $room['numberofguests'];
+                $numAdults = $room['numberofadults'];
+                $numChildren = $room['numberofchildren'];
+                $maxChildren = $room['max_children'];
+                $roomStayStatus = $room['roomstaystatus'];
+                $roomTotalBeforeTax = $room['totalbeforetax'];
+                $roomTotalTax = $room['totaltax'];
+                $roomTotalPrice = $room['totalprice'];
+                $roomInfo = $room['info'];
+                $roomFacilities = $room['facilities'];
+                $bedType = $room['bed_type'] ?? '';
+                $specialRequest = $room['specialrequest'];
+                $eta = $room['eta'];
+
+                // ✅ Validate Room ID
+                if (!validateRoomId($roomId)) {
+                    echo "❌ Invalid Room ID (Room #$roomIndex): $roomId\n";
+                }
+
+                // Price details per night
+                if (!empty($room['price'])) {
+                    foreach ($room['price'] as $priceDetail) {
+                        $priceDate = $priceDetail['date'];
+                        $rateId = $priceDetail['rate_id'];
+                        $mealplanId = $priceDetail['mealplan_id'];
+                        $mealplan = $priceDetail['mealplan'];
+                        $tax = $priceDetail['tax'];
+                        $priceBeforeTax = $priceDetail['pricebeforetax'];
+                        $priceAfterTax = $priceDetail['priceaftertax'];
+
+                        // ✅ Validate rateId and mealplanId
+                        if (!validateRateId($rateId)) {
+                            echo "❌ Invalid Rate ID: $rateId\n";
+                        }
+                        if (!validateMealplanId($mealplanId)) {
+                            echo "❌ Invalid Mealplan ID: $mealplanId\n";
+                        }
+                    }
+                }
+
+                // Addons
+                if (!empty($room['addons'])) {
+                    foreach ($room['addons'] as $addon) {
+                        $addonName = $addon['name'];
+                        $addonNights = $addon['nights'];
+                        $addonPricePerUnit = $addon['priceperunit'];
+                        $addonPrice = $addon['price'];
+                        $addonMode = $addon['pricemode'];
+                    }
+                }
+
+                // Extra Components
+                if (!empty($room['extracomponents'])) {
+                    foreach ($room['extracomponents'] as $extra) {
+                        $extraName = $extra['name'];
+                        $extraValue = $extra['value'];
+                    }
+                }
+            }
+        }
+
+        // 🖨️ Output Summary
+        echo "\nReservation for $firstName $lastName at $hotelName ($hotelId)\n";
+        echo "Booking Date: $bookedAt | Total: $totalPrice $currencyCode\n";
+        echo "Rooms: " . count($reservation['rooms']) . " | Guest Email: $email\n";
+        echo str_repeat("-", 60) . "\n";
+    }
+} else {
+    echo "No reservations found.\n";
+}
+?>

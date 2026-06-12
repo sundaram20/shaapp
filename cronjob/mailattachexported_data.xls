@@ -1,0 +1,215 @@
+<style>
+body { 
+	margin:0px; 
+	padding:0px;
+	font-size:13px !important;
+ 
+ }
+.table-bordered {
+    	 border: 1px solid #000;
+	 border-collapse: collapse;
+}
+.table {
+	font-size:11px !important; 
+    margin-bottom: 20px;	   
+    width:100%;
+} 
+table {
+	font-size:11px !important; 
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+	}
+.table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td,  .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {	
+    border-collapse: collapse; border: 1px solid #000;
+}
+.table td, .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    color: #000; border-collapse: collapse; border: 1px solid #000;
+    
+    
+}
+.fitwidth{
+	
+	}
+.page_break { page-break-before: always;float:left;
+ }
+ 
+ .page_autobreak{ page-break-before: always;
+ }
+ .generalTermClass table{
+ 	width:100% !important;
+ }
+</style><table class="table"  >
+                  <thead>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th colspan=6 style="background-color:#01B9F5; color: white;">Date:05 Nov, 2024 </th>
+                    </tr><tr>
+                      <td colspan=12><table class="table"  style="  width:100%;">
+                       <tr>
+                      <th  colspan=12 style="background-color:#e6e4e4;text-align: center; color: #000;">Pending</th>
+                    </tr>
+                          <tr style=" margin-bottom: 0px;border: 1px; width:100%; text-align: center; color: #000;   background-color:#c2d69a;">
+                            <th>Hotel Name</th>
+							  <th>Reservation Id</th>
+                            <th>Other Referance</th>
+                            <th>Room Type</th>
+ 							<th>Rate Plan</th>
+                            <th>Guest Name</th>
+                            <th>Source</th>
+                            
+                            <th>Booking Status</th>                           
+                            
+                            <th>Checkin-Checkout</th>
+                           
+                           
+                            <th>Adults</th>
+                            <th>Room No</th>
+                            <th>Front Office Status</th>
+                           
+                            
+                          </tr><tr>
+                            <td>DEOGARH RESORTS</td>
+							  <td>RES/603</td>
+                            <td>DGH/1695</td>
+                            <td>Deluxe Room</td>
+                         
+                            <td>MAPAI</td>
+                            <td style="width:200px">Chamaeleon   - Taj Mahal</td>
+                            <td style="width:200px">SITA WORLD TRAVELS (I) PVT. LTD.</td>
+                            
+                            <td>Confirmed</td>
+                           
+                            
+                            <td>05 Nov, 2024  - 06 Nov, 2024 </td>
+                            
+                            
+                            <td>2</td>
+                            <td>0</td>
+                            <td>Pending</td>
+                            
+                            
+                              </tr/><tr>
+                            <td>DEOGARH RESORTS</td>
+							  <td>RES/603</td>
+                            <td>DGH/1695</td>
+                            <td>Deluxe Room</td>
+                         
+                            <td>MAPAI</td>
+                            <td style="width:200px">Chamaeleon   - Taj Mahal</td>
+                            <td style="width:200px">SITA WORLD TRAVELS (I) PVT. LTD.</td>
+                            
+                            <td>Confirmed</td>
+                           
+                            
+                            <td>05 Nov, 2024  - 06 Nov, 2024 </td>
+                            
+                            
+                            <td>2</td>
+                            <td>0</td>
+                            <td>Pending</td>
+                            
+                            
+                              </tr/><tr>
+                            <td>DEOGARH RESORTS</td>
+							  <td>RES/603</td>
+                            <td>DGH/1695</td>
+                            <td>Deluxe Room</td>
+                         
+                            <td>MAPAI</td>
+                            <td style="width:200px">Chamaeleon   - Taj Mahal</td>
+                            <td style="width:200px">SITA WORLD TRAVELS (I) PVT. LTD.</td>
+                            
+                            <td>Confirmed</td>
+                           
+                            
+                            <td>05 Nov, 2024  - 06 Nov, 2024 </td>
+                            
+                            
+                            <td>2</td>
+                            <td>0</td>
+                            <td>Pending</td>
+                            
+                            
+                              </tr/><tr>
+                            <td>DEOGARH RESORTS</td>
+							  <td>RES/603</td>
+                            <td>DGH/1695</td>
+                            <td>Deluxe Room</td>
+                         
+                            <td>MAPAI</td>
+                            <td style="width:200px">Chamaeleon   - Taj Mahal</td>
+                            <td style="width:200px">SITA WORLD TRAVELS (I) PVT. LTD.</td>
+                            
+                            <td>Confirmed</td>
+                           
+                            
+                            <td>05 Nov, 2024  - 06 Nov, 2024 </td>
+                            
+                            
+                            <td>2</td>
+                            <td>0</td>
+                            <td>Pending</td>
+                            
+                            
+                              </tr/><tr>
+                                    <td colspan="6"></td>
+                                    <td style="color:#000;background-color:#c2d69a;"><b>Day Total</b></td>
+                                    <td style="color:#000;background-color:#c2d69a;"></td>
+                                    <td style="color:#000;background-color:#c2d69a;"><b></b></td>
+                                    <td style="color:#000;background-color:#c2d69a;"><b></b></td>
+                                    <td style="color:#000;background-color:#c2d69a;"><b></b></td>
+                                    
+                                    
+                                    <td style="color:#000;background-color:#c2d69a;"><b>Pending: <span style="float: right;">4</span></b><br/></td>
+                                </tr></table></td>
+                    </tr>
+                      <tr>
+                      <th  colspan=12 > </th>
+                    </tr><tr>
+                      <td colspan="5"><table class="table" >
+                       <tr>
+                      <th  colspan=4 style="background-color:#c2d69a;text-align: center; color: #000;"> Summary Details</th>
+                    </tr>
+                          <tr style=" margin-bottom: 0px;border: 1px; width:50%; text-align: center; color: #000;   background-color:#c2d69a;">
+                            <th>Name</th>
+							  <th>No Of Room</th>
+                            
+                           
+                           
+                            <th>Adults</th>
+                            <th>Child</th>
+                           
+                           
+                            
+                            
+                            
+                            
+                            
+                            
+                          </tr><tr>
+                            <td>Pending</td>
+							  <td>4</td>
+                            <td>8</td> <td>0</td>
+					</tr><tr>
+                            <td><b>Total</b></td>
+							  <td><b>4</b></td>
+                            <td><b>8</td> <td><b>0</b></td>
+					</tr><tr>
+                            <td>MAPAI</td>
+							  <td>4</td>
+                            <td>8</td> <td>0</td>
+					</tr><tr>
+                            <td><b>Total</b></td>
+							  <td><b>4</b></td>
+                            <td><b>8</td> <td><b>0</b></td>
+					</tr></table></td>
+                          
+                          
+                           <td colspan="8" style="width:300px" ></td>
+                                    
+                          </tr> 
+                  
+                   </tbody>
+                </table>

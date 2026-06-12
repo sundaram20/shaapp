@@ -1,0 +1,10 @@
+Duplicate Entries : 
+1) Aadiyar  
+2) Creative Net  
+3) hp  
+
+Errors  : 
+1) Lucid - Error : at : 4th Data : Area : Gurugrm Not Found 
+2) RCPL - Error : at : 5th data :Company Group :  Travl Agent Not Found 
+
+

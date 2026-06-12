@@ -1,0 +1,100 @@
+<Envelope>
+	<Header>
+		<Username>mmr</Username>
+		<Password>mmr#123</Password>
+	</Header>
+	<Body><OTA_HotelResNotifRQ EchoToken="30fec47599c2392100f6cbaa1fa0f039491e0e34c984b73b17861f991a17a3a1" TimeStamp="2023-11-23T14:35:05" Version="5.000" ResStatus="Modify"><POS>
+        <Source>
+          <RequestorID Type="22" />
+          <BookingChannel Type="5" Primary="true">
+            <CompanyName>Another World India</CompanyName>
+			<CompanyGroupName>Inbound </CompanyGroupName>
+          </BookingChannel>
+        </Source>
+      </POS>
+	  <HotelReservations>
+        <HotelReservation RoomStayReservation="true" CreateDateTime="2023-11-23T14:35:05" CreatorID="WelcomeHeritage" LastModifyDateTime="2023-11-23T14:35:05" LastModifierID="WelcomeHeritage" ResStatus="Modify"  BookingDateTime="2023-11-23 10:26:58">
+          <UniqueID Type="14" ID="122" ReferenceID="007/009"/>
+		  <BasicPropertyInfo ChainCode="MISTY MEADWOS RESORTS" HotelCode="MMRMISTY" /><MiscellaneousInfo><bookingThrough>Reference</bookingThrough><Segment>COMPLIMENTARY</Segment><amendmentIn>Guest Name</amendmentIn><bookingSource>Delhi Office</bookingSource><bookingStatus>Confirmed</bookingStatus><paymentStatus>Voucher / Awaited</paymentStatus><specialInstructions></specialInstructions><billingInstructions></billingInstructions></MiscellaneousInfo><RoomStays>
+<RoomStay>
+              <RatePlans>
+                <RatePlan RatePlanCode="MMRROOM001PLAN002">
+                  <RatePlanInclusions TaxInclusive="false" />
+                </RatePlan>
+              </RatePlans> 
+      		<RoomRates>
+                <RoomRate RoomTypeCode="MMRROOM002" NumberOfUnits="1" RatePlanCode="MMRROOM001PLAN002" RatePlanCategory="MMRROOM001PLAN002" MealPlan="MMRROOM001PLAN002" Adult="2">
+                  <Rates> <Rate EffectiveDate="2023-11-28" ExpireDate="2023-11-29" RateTimeUnit="Day" UnitMultiplier="1">
+                      <Base AmountBeforeTax="6000" AmountAfterTax="6720" AmountReceived="0"  CurrencyCode="INR">
+                        <Taxes Amount="720" CurrencyCode="INR" />
+                      </Base>
+                    </Rate></Rates>
+                </RoomRate>
+              </RoomRates><GuestCounts IsPerRoom="true">  <GuestCount AgeQualifyingCode="10" Count="2" />  <GuestCount AgeQualifyingCode="8" Count="0" /></GuestCounts><TimeSpan Start="2023-11-28" End="2023-11-29" /><Total AmountBeforeTax="6000" AmountAfterTax="6720" CurrencyCode="INR">
+						<Taxes Amount="720" CurrencyCode="INR" />
+					</Total><BasicPropertyInfo ChainCode="MISTY MEADWOS RESORTS" HotelCode="MMRMISTY" /><BusinessSourceInfo Name="Inbound" /><SegmentInfo Name="COMPLIMENTARY" /><SpecialRequestsInfo Name="" /><ResGuestRPHs>
+						<ResGuestRPH RPH="1" />
+					</ResGuestRPHs>
+					<Comments>
+						<Comment GuestViewable="true">
+							<Text>Remarks  , Discount 0 , Other Charges </Text>
+						</Comment>
+					</Comments>
+				</RoomStay>
+<RoomStay>
+              <RatePlans>
+                <RatePlan RatePlanCode="MMRROOM001PLAN002">
+                  <RatePlanInclusions TaxInclusive="false" />
+                </RatePlan>
+              </RatePlans> 
+      		<RoomRates>
+                <RoomRate RoomTypeCode="MMRROOM004" NumberOfUnits="1" RatePlanCode="MMRROOM001PLAN002" RatePlanCategory="MMRROOM001PLAN002" MealPlan="MMRROOM001PLAN002" Adult="2">
+                  <Rates> <Rate EffectiveDate="2023-11-28" ExpireDate="2023-11-29" RateTimeUnit="Day" UnitMultiplier="1">
+                      <Base AmountBeforeTax="7000" AmountAfterTax="7840" AmountReceived="0"  CurrencyCode="INR">
+                        <Taxes Amount="840" CurrencyCode="INR" />
+                      </Base>
+                    </Rate></Rates>
+                </RoomRate>
+              </RoomRates><GuestCounts IsPerRoom="true">  <GuestCount AgeQualifyingCode="10" Count="2" />  <GuestCount AgeQualifyingCode="8" Count="0" /></GuestCounts><TimeSpan Start="2023-11-28" End="2023-11-29" /><Total AmountBeforeTax="7000" AmountAfterTax="7840" CurrencyCode="INR">
+						<Taxes Amount="1560" CurrencyCode="INR" />
+					</Total><BasicPropertyInfo ChainCode="MISTY MEADWOS RESORTS" HotelCode="MMRMISTY" /><BusinessSourceInfo Name="Inbound" /><SegmentInfo Name="COMPLIMENTARY" /><SpecialRequestsInfo Name="" /><ResGuestRPHs>
+						<ResGuestRPH RPH="1" />
+					</ResGuestRPHs>
+					<Comments>
+						<Comment GuestViewable="true">
+							<Text>Remarks  , Discount 0 , Other Charges </Text>
+						</Comment>
+					</Comments>
+				</RoomStay>
+  </RoomStays><ResGuests><ResGuest ResGuestRPH="1">
+					<Profiles>
+						<ProfileInfo>
+							<UniqueID Type="1" ID="107" >
+								<CompanyName Code="14" CodeContext="crs" />
+							</UniqueID>
+							<Profile ProfileType="1">
+								<Customer>
+									<PersonName>
+										<NamePrefix>Mr.</NamePrefix>
+										<GivenName>ANOOP</GivenName>
+										<Surname> KUMAR</Surname>
+									</PersonName>
+									<Telephone PhoneNumber="9816402247" PhoneTechType="1" />
+									<Email>anoopsaan47@gmail.com</Email>
+									<Address Type="1" Remark="Home">
+										<AddressLine />
+										<CityName />
+										<PostalCode />
+										<StateProv />
+										<CountryName Code="India" />
+									</Address>									
+								</Customer>
+							</Profile>
+						</ProfileInfo>
+					</Profiles>
+				</ResGuest></ResGuests><ResGlobalInfo><HotelReservationIDs><HotelReservationID ResID_Type="10" ResID_Value="" ResID_Source="PMS" ForGuest="true"/><HotelReservationID ResID_Type="14" ResID_Value="9" ResID_Source="CRS" ForGuest="true"/></HotelReservationIDs>
+</ResGlobalInfo> </HotelReservation>
+      </HotelReservations>
+    </OTA_HotelResNotifRQ>
+	</Body>
+</Envelope>

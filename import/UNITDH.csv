@@ -1,0 +1,178 @@
+DIN1,Mattar paneer,PANEER SPECIALTIES,Course meal,por,por,195,10,,,,573
+DIN2,Palak panerr,PANEER SPECIALTIES,Course meal,por,por,195,10,,,,573
+DIN3,Paneer Do Pyaza,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN4,Kadahi Paneer,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN5,Shahi paneer,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN6,Cheese Tomato,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN7,Paneer Butter Masala,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN8,Malai Kofta,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN9,Kashmiri Dum Aloo,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN10,Punjabi Paneer Bhujia,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN11,Paneer Lababdar,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN12,Paneer Handi,PANEER SPECIALTIES,Course meal,por,por,220,10,,,,573
+DIN13,Sarson Ka Saag,SEASONAL VEGETABLES,Course meal,por,por,160,10,,,,573
+DIN14,Aloo Gobhi Mattar,SEASONAL VEGETABLES,Course meal,por,por,160,10,,,,573
+DIN15,Tawa Bhindi Masala,SEASONAL VEGETABLES,Course meal,por,por,160,10,,,,573
+DIN16,Gajar Mattar,SEASONAL VEGETABLES,Course meal,por,por,160,10,,,,573
+DIN17,Jeera Aloo,VEGETABLES PLATTER,Course meal,por,por,145,10,,,,573
+DIN18,Aloo Mattar,VEGETABLES PLATTER,Course meal,por,por,155,10,,,,573
+DIN19,Mixed Veg,VEGETABLES PLATTER,Course meal,por,por,185,10,,,,573
+DIN20,Palak Kofta,VEGETABLES PLATTER,Course meal,por,por,185,10,,,,573
+DIN21,Kadhi P{akoda,VEGETABLES PLATTER,Course meal,por,por,160,10,,,,573
+DIN22,Baingan Ka Bharta,VEGETABLES PLATTER,Course meal,por,por,160,10,,,,573
+DIN23,Mushroom Do Pyaza,VEGETABLES PLATTER,Course meal,por,por,199,10,,,,573
+DIN24,Kadahi Mushroom,VEGETABLES PLATTER,Course meal,por,por,199,10,,,,573
+DIN25,Methi Malai Mattar,VEGETABLES PLATTER,Course meal,por,por,210,10,,,,573
+DIN26,Kadahi Soya Chaap,VEGETABLES PLATTER,Course meal,por,por,205,10,,,,573
+DIN27,Tawa Soya Chaap,VEGETABLES PLATTER,Course meal,por,por,180,10,,,,573
+DIN28,Tawa Mushroom,VEGETABLES PLATTER,Course meal,por,por,195,10,,,,573
+DIN29,Mattar Mushroom Makhni,VEGETABLES PLATTER,Course meal,por,por,175,10,,,,573
+DIN30,Dal Fry,DAL SPECIAL,Course meal,bowl,bowl,160,10,,,,573
+DIN31,Arhar Dal Tadka,DAL SPECIAL,Course meal,bowl,bowl,150,10,,,,573
+DIN32,Moong dal Tadka,DAL SPECIAL,Course meal,bowl,bowl,160,10,,,,573
+DIN33,Dal Makhni,DAL SPECIAL,Course meal,bowl,bowl,175,10,,,,573
+DIN34,Panchratna Dal (Desi Ghee),DAL SPECIAL,Course meal,bowl,bowl,170,10,,,,573
+DIN35,Rajmah Rasmisa,DAL SPECIAL,Course meal,bowl,bowl,165,10,,,,573
+DIN36,Chana Masala dry,DAL SPECIAL,Course meal,bowl,bowl,165,10,,,,573
+DIN37,Amritsari Chholey,DAL SPECIAL,Course meal,bowl,bowl,165,10,,,,573
+DIN38,Plain Rice,RICE PLATTER,Course meal,plate,plate,105,10,,,,573
+DIN39,Jeera Tadka Rice,RICE PLATTER,Course meal,plate,plate,110,10,,,,573
+DIN40,Veg Pulao,RICE PLATTER,Course meal,plate,plate,115,10,,,,573
+DIN41,Mattar Pulao,RICE PLATTER,Course meal,plate,plate,115,10,,,,573
+DIN42,Green Salad + Chatni,SALAD RAITA,Course meal,por,por,60,10,,,,573
+DIN43,Plain curd,SALAD RAITA,Course meal,bowl,bowl,55,10,,,,573
+DIN44,Mix Raita,SALAD RAITA,Course meal,bowl,bowl,78,10,,,,573
+DIN45,Boondi Raita,SALAD RAITA,Course meal,bowl,bowl,78,10,,,,573
+DIN46,Pineapple Raita,SALAD RAITA,Course meal,bowl,bowl,95,10,,,,573
+DIN47,Papad,SALAD RAITA,Course meal,nos,nos,20,10,,,,573
+DIN48,Pudina Chatni,SALAD RAITA,Course meal,bowl,bowl,15,10,,,,573
+DIN49,Gol Gappe (6-Pcs),STREET FOOD,Course meal,pcs,pcs,50,10,,,,573
+DIN50,Stuffed Gol Gappe,STREET FOOD,Course meal,pcs,pcs,85,10,,,,573
+DIN51,Bhalla Papri Chaat,STREET FOOD,Course meal,bowl,bowl,85,10,,,,573
+DIN52,Papri Chaat,STREET FOOD,Course meal,bowl,bowl,85,10,,,,573
+DIN53,Dahi Bhalla,STREET FOOD,Course meal,bowl,bowl,85,10,,,,573
+DIN54,Raj Kachori,STREET FOOD,Course meal,nos,nos,90,10,,,,573
+DIN55,Bhel Puri,STREET FOOD,Course meal,bowl,bowl,60,10,,,,573
+DIN56,Aloo Tikki (Desi Ghee) 2-pcs,STREET FOOD,Course meal,pcs,pcs,80,10,,,,573
+DIN57,Juicy Sweet Corn,STREET FOOD,Course meal,bowl,bowl,72,10,,,,573
+DIN58,Butter Popcorn,STREET FOOD,Course meal,bowl,bowl,72,10,,,,573
+DIN59,Sponge Rasgulla 1-pc.,SWEET DISHES,Course meal,pcs,pcs,15,10,,,,573
+DIN60,Rajbhog 1-pc.,SWEET DISHES,Course meal,pcs,pcs,15,10,,,,573
+DIN61,Kesar Rasmalai (2-pcs),SWEET DISHES,Course meal,pcs,pcs,80,10,,,,573
+DIN62,Anguri Rasmalai (per Plate),SWEET DISHES,Course meal,plate,plate,75,10,,,,573
+DIN63,Fruit Rabri,SWEET DISHES,Course meal,plate,plate,75,10,,,,573
+DIN64,Spl. Thandi Kheer,SWEET DISHES,Course meal,bowl,bowl,78,10,,,,573
+DIN65,Mewa Ghujla 1-pc.,SWEET DISHES,Course meal,pcs,pcs,35,10,,,,573
+DIN66,Gulab Jamun 1-pc.,SWEET DISHES,Course meal,pcs,pcs,26,10,,,,573
+DIN67,Spl. Desi Ghee Jalebi (per plate),SWEET DISHES,Course meal,plate,plate,72,10,,,,573
+DIN68,Imariti (Desi ghee) 1pc.,SWEET DISHES,Course meal,pcs,pcs,35,10,,,,573
+DIN69,Paneer Jalebi 1pc.,SWEET DISHES,Course meal,pcs,pcs,40,10,,,,573
+DIN70,Gajar Halwa (seasonal),SWEET DISHES,Course meal,bowl,bowl,80,10,,,,573
+DIN71,Moong Dal Halwa (per plate),SWEET DISHES,Course meal,plate,plate,80,10,,,,573
+DIN72,Malpua (2-Pcs),SWEET DISHES,Course meal,pcs,pcs,65,10,,,,573
+DIN73,Rasmalai 2-pcs (Sugar free),SWEET DISHES,Course meal,pcs,pcs,90,10,,,,573
+DIN74,Bangali sweets,SWEET DISHES,Course meal,pcs,pcs,35,10,,,,573
+DIN75,Chadarkala Gujla,SWEET DISHES,Course meal,pcs,pcs,38,10,,,,573
+DIN76,Aloo Prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,68,10,,,,573
+DIN77,Onian Prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,68,10,,,,573
+DIN78,Aloo Pyaz Prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,68,10,,,,573
+DIN79,Gobhi Prantha (seasonal),PRANTHA,TANDOORI PRANTHA,nos,nos,74,10,,,,573
+DIN80,Paneer Prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,80,10,,,,573
+DIN81,Mooli Prantha (seasonal),PRANTHA,TANDOORI PRANTHA,nos,nos,70,10,,,,573
+DIN82,Mix Prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,74,10,,,,573
+DIN83,Paneer Misiya prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,88,10,,,,573
+DIN84,Aloo Misiya Prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,78,10,,,,573
+DIN85,Soya Keema Prantha,PRANTHA,TANDOORI PRANTHA,nos,nos,78,10,,,,573
+DIN86,Aloo prantha,PRANTHA,TAWA PRANTHA FRY DRY,nos,nos,85,10,,,,573
+DIN87,Onion Prantha,PRANTHA,TAWA PRANTHA FRY DRY,nos,nos,85,10,,,,573
+DIN88,Aloo Pyaz Prantha,PRANTHA,TAWA PRANTHA FRY DRY,nos,nos,85,10,,,,573
+DIN89,Gobhi Prantha (seasonal),PRANTHA,TAWA PRANTHA FRY DRY,nos,nos,88,10,,,,573
+DIN90,Paneer Prantha,PRANTHA,TAWA PRANTHA FRY DRY,nos,nos,92,10,,,,573
+DIN91,Mooli Prantha (seasonal),PRANTHA,TAWA PRANTHA FRY DRY,nos,nos,85,10,,,,573
+DIN92,Mix pratha,PRANTHA,TAWA PRANTHA FRY DRY,nos,nos,88,10,,,,573
+DIN93,Veg cole Slaw Sandwitch,SANDWITCHES,Course meal,nos,nos,65,10,,,,573
+DIN94,Vegetable Sandwitch,SANDWITCHES,Course meal,nos,nos,65,10,,,,573
+DIN95,Cheese Corn Sandwitch,SANDWITCHES,Course meal,nos,nos,75,10,,,,573
+DIN96,Veg Grilled Sandwitch,GRILLED SANDWITCHES,Course meal,nos,nos,120,10,,,,573
+DIN97,Cheese Grilled Sandwitch,GRILLED SANDWITCHES,Course meal,nos,nos,130,10,,,,573
+DIN98,Aloo Tikki Burger,BURGER FRIES,Course meal,nos,nos,65,10,,,,573
+DIN99,Veg Burger,BURGER FRIES,Course meal,nos,nos,75,10,,,,573
+DIN100,Veg & Cheese Burger,BURGER FRIES,Course meal,nos,nos,85,10,,,,573
+DIN101,French Fries (per plate),BURGER FRIES,Course meal,nos,nos,80,10,,,,573
+DIN102,Plain Roti,TANDOOR BREADS,Course meal,nos,nos,28,10,,,,573
+DIN103,Butter Roti,TANDOOR BREADS,Course meal,nos,nos,35,10,,,,573
+DIN104,Lachhedar Parantha,TANDOOR BREADS,Course meal,nos,nos,48,10,,,,573
+DIN105,Red Chilly Prantha,TANDOOR BREADS,Course meal,nos,nos,48,10,,,,573
+DIN106,Pudina Lachha Parantha,TANDOOR BREADS,Course meal,nos,nos,55,10,,,,573
+DIN107,Green Chilly Lachha Prantha,TANDOOR BREADS,Course meal,nos,nos,65,10,,,,573
+DIN108,Garlic Lachha parantha,TANDOOR BREADS,Course meal,nos,nos,65,10,,,,573
+DIN109,Chilly Garlic Lachha Prantha,TANDOOR BREADS,Course meal,nos,nos,65,10,,,,573
+DIN110,Missi Roti,TANDOOR BREADS,Course meal,nos,nos,48,10,,,,573
+DIN111,Makki Ki Roti (seasonal),TANDOOR BREADS,Course meal,nos,nos,40,10,,,,573
+DIN112,Plaain Naan,TANDOOR BREADS,Course meal,nos,nos,52,10,,,,573
+DIN113,Butter Naan,TANDOOR BREADS,Course meal,nos,nos,62,10,,,,573
+DIN114,Garlic Naan,TANDOOR BREADS,Course meal,nos,nos,68,10,,,,573
+DIN115,Stuffed Naan,TANDOOR BREADS,Course meal,nos,nos,78,10,,,,573
+DIN116,Paneer Naan,TANDOOR BREADS,Course meal,nos,nos,88,10,,,,573
+DIN117,Hedrabadi Naan,TANDOOR BREADS,Course meal,nos,nos,85,10,,,,573
+DIN118,Chilly garlic onian Naan,TANDOOR BREADS,Course meal,nos,nos,80,10,,,,573
+DIN119,Roomali Roti,TANDOOR BREADS,Course meal,nos,nos,38,10,,,,573
+DIN120,White Butter (K.G),TANDOOR BREADS,Course meal,nos,nos,450,10,,,,573
+DIN121,Amritsari Kulcha,TANDOOR BREADS,Course meal,nos,nos,68,10,,,,573
+DIN122,Rajma Rice,MINI MEAL COMBO,Course meal,plate,plate,70,10,,,,573
+DIN123,Kadhi Rice,MINI MEAL COMBO,Course meal,plate,plate,70,10,,,,573
+DIN124,Kachori Rice,MINI MEAL COMBO,Course meal,plate,plate,70,10,,,,573
+DIN125,Chholey Rice,MINI MEAL COMBO,Course meal,plate,plate,70,10,,,,573
+DIN126,Veg Momos (steamed/fried,SNACKS,Course meal,pcs,pcs,85,10,,,,573
+DIN127,Veg Spring Roll,SNACKS,Course meal,pcs,pcs,100,10,,,,573
+DIN128,Honey Chilly potatoes,SNACKS,Course meal,plate,plate,140,10,,,,573
+DIN129,Chilly Baby Corn,SNACKS,Course meal,plate,plate,150,10,,,,573
+DIN130,Honey Chilly Cauliflower,SNACKS,Course meal,plate,plate,120,10,,,,573
+DIN131,Mushroom Salt And Papper,SNACKS,Course meal,por,por,180,10,,,,573
+DIN132,Cauliflower Manchurian,SNACKS,Course meal,por,por,130,10,,,,573
+DIN133,Aloo Puri,INDIAN SNACKS,Course meal,pcs,pcs,120,10,,,,573
+DIN134,Aloo puri (palak),INDIAN SNACKS,Course meal,pcs,pcs,130,10,,,,573
+DIN135,Chholey Bhature,INDIAN SNACKS,Course meal,plate,plate,125,10,,,,573
+DIN136,Pav Bhaji,INDIAN SNACKS,Course meal,plate,plate,115,10,,,,573
+DIN137,Dahi kabab (6-pcs.),INDIAN SNACKS,Course meal,pcs,pcs,160,10,,,,573
+DIN138,Aloo Samosa (1-Pc.),INDIAN SNACKS,Course meal,pcs,pcs,20,10,,,,573
+DIN139,Gobhi Samosa(1-Pc.),INDIAN SNACKS,Course meal,pcs,pcs,28,10,,,,573
+DIN140,Paneer Samosa(1-pc.),INDIAN SNACKS,Course meal,pcs,pcs,28,10,,,,573
+DIN141,Patty Samosa (1-pc.),INDIAN SNACKS,Course meal,pcs,pcs,30,10,,,,573
+DIN142,Kachori (1-pc.),INDIAN SNACKS,Course meal,pcs,pcs,28,10,,,,573
+DIN143,Bread Pakora (1-Pc.),INDIAN SNACKS,Course meal,pcs,pcs,25,10,,,,573
+DIN144,Paneer Bread Pakoda (1-Pc.),INDIAN SNACKS,Course meal,pcs,pcs,35,10,,,,573
+DIN145,Mix pakoda (per Plate),INDIAN SNACKS,Course meal,plate,plate,90,10,,,,573
+DIN146,Paneer Pakoda (5-pcs),INDIAN SNACKS,Course meal,pcs,pcs,110,10,,,,573
+DIN147,Mirchi vada,INDIAN SNACKS,Course meal,pcs,pcs,22,10,,,,573
+DIN148,Plain Dhokla (1-pc.),INDIAN SNACKS,Course meal,pcs,pcs,22,10,,,,573
+DIN149,Masala Dhokla (1-Pc.),INDIAN SNACKS,Course meal,pcs,pcs,30,10,,,,573
+DIN150,Idli Dhokla (1-Pc.),INDIAN SNACKS,Course meal,pcs,pcs,25,10,,,,573
+DIN151,Veg Kurkuri,INDIAN SNACKS,Course meal,pcs,pcs,100,10,,,,573
+DIN152,Flery soya chaps (2-Pcs),TANDOORI SNACKS,Course meal,pcs,pcs,130,10,,,,573
+DIN153,Paneer Tikka,TANDOORI SNACKS,Course meal,pcs,pcs,190,10,,,,573
+DIN154,Paneer malai Tikka,TANDOORI SNACKS,Course meal,pcs,pcs,195,10,,,,573
+DIN155,Mushroom Tikka,TANDOORI SNACKS,Course meal,pcs,pcs,190,10,,,,573
+DIN156,Soya Tikka,TANDOORI SNACKS,Course meal,pcs,pcs,190,10,,,,573
+DIN157,Soya malai Tikka,TANDOORI SNACKS,Course meal,pcs,pcs,199,10,,,,573
+DIN158,Mix Tandoori platter,TANDOORI SNACKS,Course meal,plate,plate,220,10,,,,573
+DIN159,Idli Sambar (2-Pcs.),SOUTH INDIAN,Course meal,pcs,pcs,100,10,,,,573
+DIN160,Vada Sambar (2-pcs.),SOUTH INDIAN,Course meal,pcs,pcs,100,10,,,,573
+DIN161,Mix Veg uttapam,SOUTH INDIAN,Course meal,pcs,pcs,120,10,,,,573
+DIN162,Onian Uttapam,SOUTH INDIAN,Course meal,pcs,pcs,120,10,,,,573
+DIN163,Tomato Uttapam,SOUTH INDIAN,Course meal,pcs,pcs,120,10,,,,573
+DIN164,Mango Achar Uttapam,SOUTH INDIAN,Course meal,pcs,pcs,120,10,,,,573
+DIN165,Plain Dosa,SOUTH INDIAN,Course meal,pcs,pcs,110,10,,,,573
+DIN166,Plain Butter Dosa,SOUTH INDIAN,Course meal,pcs,pcs,120,10,,,,573
+DIN167,Masala Dosa,SOUTH INDIAN,Course meal,pcs,pcs,130,10,,,,573
+DIN168,Onion Dosa,SOUTH INDIAN,Course meal,pcs,pcs,130,10,,,,573
+DIN169,SpecialPaneer Dosa,SOUTH INDIAN,Course meal,pcs,pcs,150,10,,,,573
+DIN170,Paper Dosa,SOUTH INDIAN,Course meal,pcs,pcs,110,10,,,,573
+DIN171,Paper masala Dosa,SOUTH INDIAN,Course meal,pcs,pcs,125,10,,,,573
+DIN172,Rava Plain Dosa,SOUTH INDIAN,Course meal,pcs,pcs,130,10,,,,573
+DIN173,Rava Masala Dosa,SOUTH INDIAN,Course meal,pcs,pcs,130,10,,,,573
+DIN174,Rava Onion Dosa,SOUTH INDIAN,Course meal,pcs,pcs,140,10,,,,573
+DIN175,Dahi vada,SOUTH INDIAN,Course meal,bowl,bowl,85,10,,,,573
+DIN176,Idli Chaat,SOUTH INDIAN,Course meal,bowl,bowl,85,10,,,,573
+DIN177,Mysore Plain Dosa,SOUTH INDIAN,Course meal,pcs,pcs,125,10,,,,573
+DIN178,Mysore Masala Dosa,SOUTH INDIAN,Course meal,pcs,pcs,145,10,,,,573

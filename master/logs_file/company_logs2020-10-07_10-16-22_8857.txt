@@ -1,0 +1,10 @@
+Duplicate Entries : 
+1) Aadiyar-Kanpur  
+2) Creative Net  
+3) hp  
+4) RCPL  
+
+Errors  : 
+1) Aadiyar - Error : at : 1th Data : Area :  Not Found 
+
+

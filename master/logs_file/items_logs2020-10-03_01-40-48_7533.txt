@@ -1,0 +1,21 @@
+Duplicate Entries : 
+1) apple juice  
+2) beer  
+3) BEERA  
+4) Bento-Tori Karaage  
+5) Blanket  
+6) Blaser  
+7) Cabbage  
+8) Chicken  
+9) Chicken Breast  
+10) Juice  
+11) Margretta Pizza  
+12) Masoor Dal  
+13) Miso Soup  
+14) Onion  
+15) PANEER  
+16) Rice  
+17) Sugar  
+
+
+

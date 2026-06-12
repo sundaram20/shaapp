@@ -1,0 +1,22 @@
+Duplicate Entries : 
+1) apple juice  
+2) beer  
+3) BEERA  
+4) Bento-Tori Karaage  
+5) Cabbage  
+6) Chicken  
+7) Chicken Breast  
+8) Juice  
+9) Margretta Pizza  
+10) Masoor Dal  
+11) Miso Soup  
+12) Onion  
+13) PANEER  
+14) Rice  
+15) Sugar  
+
+
+Company Imported Successfully : 
+1) Blanket
+2) Blaser
+

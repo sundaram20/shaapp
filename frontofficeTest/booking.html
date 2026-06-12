@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" >
+
+</head>
+<body>
+
+
+<div class="container">
+	<div class="row">
+			DELEX ROOM <span id="delex">&nbsp;  0 &nbsp;</span>
+		<button class="btn btn-success btn-sm delex" data-id='1'>1</button>
+		<button class="btn btn-success btn-sm delex" data-id='2'>2</button>
+		<button class="btn btn-success btn-sm delex" data-id='3'>3</button>
+		<button class="btn btn-success btn-sm delex" data-id='4'>4</button>
+		<input type="text" value="" id="valu">
+	
+	</div><br>
+
+		<div class="row">
+		SUPER DELEX ROOM <span id="cdelex">&nbsp;  0 &nbsp;</span>
+		<button class="btn btn-success btn-sm sdelex" data-sid='1'>1</button>
+		<button class="btn btn-success btn-sm sdelex" data-sid='2'>2</button>
+		<button class="btn btn-success btn-sm sdelex" data-sid='3'>3</button>
+		<button class="btn btn-success btn-sm sdelex" data-sid='4'>4</button>
+		<input type="text" value="" id="svalu">
+	
+	</div>
+
+	<button class="btn btn-primary " id="checkin">CHECK IN</button>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+<script type="text/javascript">
+	var i=[];
+	$(document).ready(function (){
+     $('.delex').each(function() {
+                $(this).click(function(e) {  
+                var id=$(this).val(); 
+                var sid = $(this).data('id');
+                 // store data code
+                     i.push(sid);
+                  // for count data
+                  var le =i.length;
+                    $('#delex').text(le); 
+                    $('#valu').val(i);
+                }); 
+         });
+
+var si=[];
+     // super delex room code
+     $('.sdelex').each(function() {
+                $(this).click(function(e) {  
+                var id=$(this).val(); 
+                var sid = $(this).data('sid');
+                 // store data code
+                     si.push(sid);
+                  // for count data
+                  var le =si.length;
+                    $('#cdelex').text(le); 
+                    $('#svalu').val(si);
+                }); 
+         });
+
+
+     $(document).on('click','#checkin',function (){
+      var svalu =$('#svalu').val();
+       var valu =$('#valu').val();
+       var data =" SDELEX => "+svalu+"  DELEX =>"+valu;
+       alert(data);
+     });
+
+	});
+</script>
+</body>
+</html>

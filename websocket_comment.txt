@@ -1,0 +1,1 @@
+php -q c:xampp\htdocs\app\websocket\php-socket.php

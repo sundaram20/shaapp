@@ -1,0 +1,125 @@
+IC001,Cream of Tomato ,Soups,Soups,NOS,NOS,200,10,1,10,5%,10
+IC002,Manchow ,Soups,Soups,NOS,NOS,200,10,1,10,5%,10
+IC003,Hot & Sour ,Soups,Soups,NOS,NOS,200,10,1,10,5%,10
+IC004,Chefs Special Clear Soup,Soups,Soups,NOS,NOS,200,10,1,10,5%,10
+IC005,Classic Ceaser Salad ,Salad,Salad,NOS,NOS,300,10,1,15,5%,15
+IC006,Lettuce & Sprouts Salad,Salad,Salad,NOS,NOS,275,10,1,13.75,5%,13.75
+IC007,Green Salad,Salad,Salad,NOS,NOS,250,10,1,12.5,5%,12.5
+IC008,Fruit Salad,Salad,Salad,NOS,NOS,250,10,1,12.5,5%,12.5
+IC009,Chicken Ceaser Salad,Salad,Salad,NOS,NOS,350,10,1,17.5,5%,17.5
+IC010,Ajwaini Paneer Tikka,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC011,Peri Peri Paneer Tikka,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC012,Malai Paneer Tikka,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC013,Tandoori Malai Broccoli,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC014,Tandoori Soya Chaap,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC015,Malai Soya Chaap,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC016,Dahi Ke Kebab,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC017,Tandoori Kumbh ,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,400,10,1,20,5%,20
+IC018,Gilafi Seekh Kebab,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,350,10,1,17.5,5%,17.5
+IC019,Hara Bhara Kebab ,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,350,10,1,17.5,5%,17.5
+IC020,Aloo Nazakat ,Indian Starters (Veg),Indian Starters (Veg),PCS,PCS,350,10,1,17.5,5%,17.5
+IC021,Murg Ke Sulley,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC022,Tandoori Chicken ,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC023,Peri Peri Murg Tikka ,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC024,Malai Murg Tikka,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC025,Lehsuni Murg ,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC026,Bhunna Ghost,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC027,Bhunna Chicken ,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC028,Ajwaini Fish Tikka ,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC029,Amritsari Fish ,Indian Starters (Non Veg),Indian Starters (Non Veg),PCS,PCS,450,10,1,22.5,5%,22.5
+IC030,Chilly Paneer,Oriental ,Oriental ,NOS,NOS,400,10,1,20,5%,20
+IC031,Thai Basil Cottage Chesse ,Oriental ,Oriental ,NOS,NOS,400,10,1,20,5%,20
+IC032,Classic Crispy Corn ,Oriental ,Oriental ,NOS,NOS,400,10,1,20,5%,20
+IC033,Mexican Cheese Balls,Oriental ,Oriental ,PCS,PCS,400,10,1,20,5%,20
+IC034,Honey Chilly Potato,Oriental ,Oriental ,NOS,NOS,350,10,1,17.5,5%,17.5
+IC035,Classic Spring Rolls,Oriental ,Oriental ,NOS,NOS,350,10,1,17.5,5%,17.5
+IC036,Vegetable Manchurian ,Oriental ,Oriental ,NOS,NOS,350,10,1,17.5,5%,17.5
+IC037,Hot Garlic Chicken ,Oriental ,Oriental ,NOS,NOS,450,10,1,22.5,5%,22.5
+IC038,Crispy Fried Chicken ,Oriental ,Oriental ,NOS,NOS,450,10,1,22.5,5%,22.5
+IC039,Fish & Chips ,Oriental ,Oriental ,NOS,NOS,475,10,1,23.75,5%,23.75
+IC040,French Fries (Salted/Peri Peri),All Time Favorite,All Time Favorite,NOS,NOS,300,10,1,15,5%,15
+IC041,Classic Nachos ,All Time Favorite,All Time Favorite,NOS,NOS,300,10,1,15,5%,15
+IC042,Cheesy French Fries,All Time Favorite,All Time Favorite,NOS,NOS,350,10,1,17.5,5%,17.5
+IC043,Fully Loaded Nachos ,All Time Favorite,All Time Favorite,NOS,NOS,350,10,1,17.5,5%,17.5
+IC044,Cheese Garlic Bread,All Time Favorite,All Time Favorite,NOS,NOS,350,10,1,17.5,5%,17.5
+IC045,Masala Garlic Bread,All Time Favorite,All Time Favorite,NOS,NOS,350,10,1,17.5,5%,17.5
+IC046,Salsa Alfredo,Pasta ,Pasta ,NOS,NOS,350,10,1,17.5,5%,17.5
+IC047,Arrabbiata ,Pasta ,Pasta ,NOS,NOS,350,10,1,17.5,5%,17.5
+IC048,Pink Sauce,Pasta ,Pasta ,NOS,NOS,350,10,1,17.5,5%,17.5
+IC049,Classic Margherita,Thin Crust Pizza,Thin Crust Pizza,NOS,NOS,350,10,1,17.5,5%,17.5
+IC050,Exotic Delight ,Thin Crust Pizza,Thin Crust Pizza,NOS,NOS,350,10,1,17.5,5%,17.5
+IC051,Peri Peri Paneer ,Thin Crust Pizza,Thin Crust Pizza,NOS,NOS,400,10,1,20,5%,20
+IC052,Chicken Tikka ,Thin Crust Pizza,Thin Crust Pizza,PCS,PCS,400,10,1,20,5%,20
+IC053,Veg Grilled Sandwich ,Sandwiches ,Sandwiches ,PCS,PCS,275,10,1,13.75,5%,13.75
+IC054,Triple Cheese ,Sandwiches ,Sandwiches ,PCS,PCS,300,10,1,15,5%,15
+IC055,Peshawari Paneer,Sandwiches ,Sandwiches ,PCS,PCS,300,10,1,15,5%,15
+IC056,Chicken & Egg Mayo ,Sandwiches ,Sandwiches ,PCS,PCS,325,10,1,16.25,5%,16.25
+IC057,Veg Hakka Noodles ,Oriental Main Course ,Oriental Main Course ,NOS,NOS,300,10,1,15,5%,15
+IC058,Chilly Garlic Noodles ,Oriental Main Course ,Oriental Main Course ,NOS,NOS,300,10,1,15,5%,15
+IC059,Schezwan Noodles ,Oriental Main Course ,Oriental Main Course ,NOS,NOS,300,10,1,15,5%,15
+IC060,Wok Tossed Fried Rice ,Oriental Main Course ,Oriental Main Course ,NOS,NOS,300,10,1,15,5%,15
+IC061,Schezwan Fried Rice ,Oriental Main Course ,Oriental Main Course ,NOS,NOS,300,10,1,15,5%,15
+IC062,Paneer Rajwadi ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC063,Paneer Butter Masala ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC064,Shahi Paneer,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC065,Kadhai Paneer ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC066,Soya Chaap Masala ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC067,Malai Kofta ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC068,Mutter Mushroom Masala,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC069,Palak Corn ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,375,10,1,18.75,5%,18.75
+IC070,Subz Diwani Handi ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,350,10,1,17.5,5%,17.5
+IC071,Jodhpuri Gutta Curry ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,350,10,1,17.5,5%,17.5
+IC072,Aloo Pyaaz ki Sabzi ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,350,10,1,17.5,5%,17.5
+IC073,Bhindi Do Pyaza ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,350,10,1,17.5,5%,17.5
+IC074,Pindi Channa ,Indian Main Course (Veg),Indian Main Course (Veg),NOS,NOS,350,10,1,17.5,5%,17.5
+IC075,Desi Ghee ka Murg ,Indian Main Course (Non Veg),Indian Main Course (Non Veg),NOS,NOS,450,10,1,22.5,5%,22.5
+IC076,Chicken Tikka Masala ,Indian Main Course (Non Veg),Indian Main Course (Non Veg),NOS,NOS,450,10,1,22.5,5%,22.5
+IC077,Butter Chicken ,Indian Main Course (Non Veg),Indian Main Course (Non Veg),NOS,NOS,450,10,1,22.5,5%,22.5
+IC078,Chicken Curry ,Indian Main Course (Non Veg),Indian Main Course (Non Veg),NOS,NOS,450,10,1,22.5,5%,22.5
+IC079,Laal Maans ,Indian Main Course (Non Veg),Indian Main Course (Non Veg),NOS,NOS,500,10,1,25,5%,25
+IC080,Mutton Rogan Josh ,Indian Main Course (Non Veg),Indian Main Course (Non Veg),NOS,NOS,500,10,1,25,5%,25
+IC081,Egg Curry ,Indian Main Course (Non Veg),Indian Main Course (Non Veg),NOS,NOS,400,10,1,20,5%,20
+IC082,Dal Tadka,Dal,Dal,NOS,NOS,350,10,1,17.5,5%,17.5
+IC083,Rajasthani Mix Dal ,Dal,Dal,NOS,NOS,350,10,1,17.5,5%,17.5
+IC084,Dal Makhani,Dal,Dal,NOS,NOS,400,10,1,20,5%,20
+IC085,Veg Dum Biryani ,Rice & Biryani,Rice & Biryani,NOS,NOS,400,10,1,20,5%,20
+IC086,Paneer Tikka Biryani ,Rice & Biryani,Rice & Biryani,NOS,NOS,450,10,1,22.5,5%,22.5
+IC087,Chicken Tikka Biryani ,Rice & Biryani,Rice & Biryani,NOS,NOS,450,10,1,22.5,5%,22.5
+IC088,Mutton Biryani ,Rice & Biryani,Rice & Biryani,NOS,NOS,500,10,1,25,5%,25
+IC089,Choice of Rice (Steam/Jeera),Rice & Biryani,Rice & Biryani,NOS,NOS,275,10,1,13.75,5%,13.75
+IC090,Mint Onion Pulao ,Rice & Biryani,Rice & Biryani,NOS,NOS,300,10,1,15,5%,15
+IC091,Curd Rice ,Rice & Biryani,Rice & Biryani,NOS,NOS,300,10,1,15,5%,15
+IC092,Tandoori Roti (Plain/Butter),Breads,Breads,PCS,PCS,40,10,1,2,5%,2
+IC093,Tawa Phulka  (Plain/Butter),Breads,Breads,PCS,PCS,40,10,1,2,5%,2
+IC094,Lachha Paratha ,Breads,Breads,PCS,PCS,70,10,1,3.5,5%,3.5
+IC095,Jodhpuri Paratha ,Breads,Breads,PCS,PCS,80,10,1,4,5%,4
+IC096,Choice of Naan (Plain /Butter),Breads,Breads,PCS,PCS,80,10,1,4,5%,4
+IC097,Garlic Naan ,Breads,Breads,PCS,PCS,100,10,1,5,5%,5
+IC098,Cheese Naan ,Breads,Breads,PCS,PCS,125,10,1,6.25,5%,6.25
+IC099,Choice of 2 Stuffed Paratha(with curd),Breads,Breads,PCS,PCS,300,10,1,15,5%,15
+IC100,Gulab Jamun,Desserts,Desserts,PCS,PCS,225,10,1,11.25,5%,11.25
+IC101,Brownie with Ice Cream ,Desserts,Desserts,NOS,NOS,250,10,1,12.5,5%,12.5
+IC102,Choice of Ice Cream (Vanilla/Butter Scotch/Strawberry),Desserts,Desserts,NOS,NOS,200,10,1,10,5%,10
+IC103,Virgin Mojito (Mint/Kiwi/Watermelon),Mocktails,Mocktails,NOS,NOS,300,10,1,15,5%,15
+IC104,Spicy Guava ,Mocktails,Mocktails,NOS,NOS,300,10,1,15,5%,15
+IC105,Mango Mule ,Mocktails,Mocktails,NOS,NOS,300,10,1,15,5%,15
+IC106,Passion Fruit ,Mocktails,Mocktails,NOS,NOS,300,10,1,15,5%,15
+IC107,Iced Tea (Lemon/Peach/Watermelon),Mocktails,Mocktails,NOS,NOS,250,10,1,12.5,5%,12.5
+IC108,Cold Coffee ,Shakes,Shakes,NOS,NOS,180,10,1,9,5%,9
+IC109,Chocolate Shake ,Shakes,Shakes,NOS,NOS,180,10,1,9,5%,9
+IC110,Vanilla Shake ,Shakes,Shakes,NOS,NOS,180,10,1,9,5%,9
+IC111,Oreo Shake ,Shakes,Shakes,NOS,NOS,200,10,1,10,5%,10
+IC112,Kitkat Shake ,Shakes,Shakes,NOS,NOS,200,10,1,10,5%,10
+IC113,Indian Masala Tea,Hot Beverages ,Hot Beverages ,NOS,NOS,50,10,1,2.5,5%,2.5
+IC114,Green Tea,Hot Beverages ,Hot Beverages ,NOS,NOS,50,10,1,2.5,5%,2.5
+IC115,Honey Ginger Lemon Tea,Hot Beverages ,Hot Beverages ,NOS,NOS,70,10,1,3.5,5%,3.5
+IC116,Black Coffee,Hot Beverages ,Hot Beverages ,NOS,NOS,70,10,1,3.5,5%,3.5
+IC117,Hand Beaten Coffee,Hot Beverages ,Hot Beverages ,NOS,NOS,100,10,1,5,5%,5
+IC118,Hot Chocolate,Hot Beverages ,Hot Beverages ,NOS,NOS,150,10,1,7.5,5%,7.5
+IC119,Aerated Drinks (Can),Regulars ,Regulars ,NOS,NOS,100,10,1,5,5%,5
+IC120,Packaged Drinking Water,Regulars ,Regulars ,NOS,NOS,50,10,1,2.5,5%,2.5
+IC121,Masala Chaach ,Regulars ,Regulars ,NOS,NOS,125,10,1,6.25,5%,6.25
+IC122,Fresh Juice,Regulars ,Regulars ,NOS,NOS,150,10,1,7.5,5%,7.5
+IC123,Sweet Lassi ,Regulars ,Regulars ,NOS,NOS,150,10,1,7.5,5%,7.5
+IC124,Masala Lemonade,Regulars ,Regulars ,NOS,NOS,150,10,1,7.5,5%,7.5
+IC125,Red Bull,Regulars ,Regulars ,NOS,NOS,250,10,1,12.5,5%,12.5
