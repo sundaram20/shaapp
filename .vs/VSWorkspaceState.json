@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\config"
+    "\\frontoffice",
+    "\\frontoffice\\ajax"
   ],
-  "SelectedNode": "\\config\\auto_loader.php",
+  "SelectedNode": "\\frontoffice\\ajax\\ReservationSingleForm.php",
   "PreviewInSolutionExplorer": false
 }
