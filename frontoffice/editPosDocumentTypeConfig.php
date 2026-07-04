@@ -240,9 +240,11 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 				              	 			echo "FO Bill";
 				              	 		}elseif($row->doc_type == '804'){
 				              	 			echo "FOLIO";
-				              	 		}else{
-
-				              	 		}
+				              	 		}elseif($row->doc_type == '901'){
+											echo "Cash Memo";
+				              	 		}elseif($row->doc_type == '902'){
+											echo "Cash Transfer";
+				              	 		}else{}
 							
 		                  	 		?>
 		                  	 			
@@ -253,6 +255,8 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
                                 <option value="802">Meal Booking</option> 
                                 <option value="803">FO Bill</option>
 								  <option value="804">FOLIO</option>
+								  <option value="901">Cash Memo</option>
+								  <option value="902">Cash Transfer</option>
 		                  	 </select></div>
 	                  </div>
 
