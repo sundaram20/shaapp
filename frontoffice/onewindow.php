@@ -2911,6 +2911,7 @@ height : 0px!important;
             tableData += `</td>
                                 </tr>`;
           });
+          //testing purpose
 
           $("#room_statistics")
             .DataTable()
