@@ -33,6 +33,7 @@ $query =	mysqli_query($appConnect ,"select * from app_shops_api Where user_name=
 $appNumberOfRows=	mysqli_num_rows($query);
 if($appNumberOfRows=='1'){	
 	$row=	mysqli_fetch_object($query);
+	$id_app_shops	= $row->id_app_shops;
 	include_once("../config/api_auto_loader.php");
 	include_once("guestDocConfig.php");
 	
@@ -136,8 +137,9 @@ else{
 			  mysqli_query($connNew, $updateDetailsSql);
 			 $checkinInv	= date('Y-m-d',strtotime($res['checkin']));
 		     $checkoutInv	= date('Y-m-d',strtotime($res['checkout']));
-			 updateOTA('1', $checkinInv,$checkoutInv,$connNew);
-			  
+			if($id_app_shops!='57'){
+				updateOTA('1', $checkinInv,$checkoutInv,$connNew);
+			}
 			  $data = [
 			'EchoToken' => $ReferenceID,
 			'CrsResID_Value' => $otherRefrenceId,
@@ -1254,7 +1256,9 @@ $updateInventory = executeSql("UPDATE  `".FO_RESERVATIONS."`  SET
 //Other Charges Start=================================================================
 	
 	}
+				if($id_app_shops!='57'){
 				updateOTA('1', $checkin,$checkout,$connNew);
+				}
 				
 $Booking_no	= addslashes($docConfig['prefix']).addslashes($docConfig['po_no']).addslashes($docConfig['suffix']);
 	$data = [
