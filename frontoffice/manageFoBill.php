@@ -628,7 +628,7 @@ $id_folio=$row->id;
 		  <div id="cancelpop" class="well p-4" style="margin:0 15px;display: none;"> 
 		  <form id="Formkotremarks" autocomplete="off">
           
-		  <input type="hidden" id="pos_purch_id" name="pos_purch_id" value="<?php echo encryptor('decrypt', $_REQUEST['editKotid']); ?>">
+		  <input type="hidden" id="pos_purch_id" name="pos_purch_id" value="<?php echo encryptor(decrypt, $_REQUEST['editKotid']); ?>">
             <div id="kot_mdoc_no"> </div>
 		 	<div class="form-group">
 		      <label for="title">Remarks</label>
@@ -649,8 +649,7 @@ $id_folio=$row->id;
       	</div>
  
       </div>
-<?php
-echo '======='.MST_COMPANY." where status='1' and id_shop='".addslashes($_SESSION['shop'])."' and name !=' ' ";
+<?php 
 $CompanyList = '<select class="form-control first-input select2" style="width:100% !important;" name="id_bill_to_company" id="id_bill_to_company">';
 $resCat = selectSql(MST_COMPANY," where status='1' and id_shop='".addslashes($_SESSION['shop'])."' and name !=' ' ",' ORDER BY `name`');
 if ($db->num_rows2($resCat)) {
@@ -661,10 +660,447 @@ if ($db->num_rows2($resCat)) {
 }
 $CompanyList .= '</select>';
 ?>
+<script>
+  var companyDropdownHTML = `<?= $CompanyList ?>`;
+</script>
+
+<script>
+function confirmPreviewOption(idfobill, id_folio, id_room, submenu, session) {
+  bootbox.dialog({
+    title: "Choose Bill Format",
+    message: `
+      
+      <div class="form-group">
+  <select id="previewType" class="form-control">
+    <option value="">-- Select Option --</option>
+
+    <?php if (!empty($frontbillprint)) { ?>
+      <option value="customformats" <?= $default_bill_format_name === 'customformats' ? 'selected' : '' ?>>Custom Format</option>
+      <option value="daywise_standard" <?= $default_bill_format_name === 'daywise_standard' ? 'selected' : '' ?>>Date Wise</option>
+      <option value="roomwise" <?= $default_bill_format_name === 'roomwise' ? 'selected' : '' ?>>Room Wise</option>
+    <?php } else { ?>
+      <option value="daywise_standard" <?= $default_bill_format_name === 'daywise_standard' ? 'selected' : '' ?>>Date Wise</option>
+      <option value="roomwise" <?= $default_bill_format_name === 'roomwise' ? 'selected' : '' ?>>Room Wise</option>
+    <?php } ?>
+  </select>
+</div>
+
+<div id="hideRoomTypeContainer" class="form-group" style="display:none;">
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="hideRoomType">
+    <label class="form-check-label" for="hideRoomType">Hide Room Type</label>
+  </div>
+</div>
+    `,
+    buttons: {
+      confirm: {
+        label: "Print",
+        className: "btn-primary",
+        callback: function () {
+          const selectedValue = document.getElementById("previewType").value;
+          const hideRoomType = document.getElementById("hideRoomType")?.checked ? 1 : 0;
+
+          if (!selectedValue) {
+            bootbox.alert("Please select a preview type.");
+            return false;
+          }
+
+          if (selectedValue.startsWith("daywise")) {
+            openPreviewDayWise(selectedValue, idfobill, id_folio, id_room, submenu, session);
+          } else if (selectedValue === "roomwise") {
+            openPreviewRoomWise("roomwise", idfobill, id_folio, id_room, submenu, session, hideRoomType);
+          } else if (selectedValue === "customformats") {
+            openPreviewcustomformats("roomwise", idfobill, id_folio, id_room, submenu, session);
+          }
+        }
+      },
+      cancel: {
+        label: "Cancel",
+        className: "btn-secondary"
+      }
+    },
+    onShown: function () {
+      document.getElementById("previewType").addEventListener("change", function () {
+        const selected = this.value;
+        const container = document.getElementById("hideRoomTypeContainer");
+        if (selected === "roomwise") {
+          container.style.display = "block";
+        } else {
+          container.style.display = "none";
+        }
+      });
+    }
+  });
+}
+
+function openPreviewDayWise(type, idfobill, id_folio, id_room, submenu, session) { //const url = "fobillformat_DayWise.php"
+  const url = "<?php echo $datewiseformat;?>" 
+    + "?idfobill=" + idfobill
+    + "&id_folio=" + id_folio
+    + "&id_mst_room_no_allocation=" + id_room
+    + "&submenu=" + submenu
+    + "&session=" + session
+    + "&preview_type=" + type;
+
+  window.open(url, "_blank");
+}
+
+function openPreviewRoomWise(type, idfobill, id_folio, id_room, submenu, session, hideRoomType) { // const url = "fobillformat_RoomWise.php"
+  const url = "<?php echo $roomwiseformat;?>"
+    + "?idfobill=" + idfobill
+    + "&id_folio=" + id_folio
+    + "&id_mst_room_no_allocation=" + id_room
+    + "&submenu=" + submenu
+    + "&session=" + session
+    + "&preview_type=" + type
+    + "&hide_room_type=" + hideRoomType;
+
+  window.open(url, "_blank");
+}
+
+function openPreviewcustomformats(type, idfobill, id_folio, id_room, submenu, session) {
+  const url = "<?php echo $frontbillprint;?>"
+    + "?idfobill=" + idfobill
+    + "&id_folio=" + id_folio
+    + "&id_mst_room_no_allocation=" + id_room
+    + "&submenu=" + submenu
+    + "&session=" + session
+    + "&preview_type=" + type;
+
+  window.open(url, "_blank");
+}
+</script>
 
 
+<?php /*?><script>
+function confirmPreviewOption(idfobill, id_folio, id_room, submenu, session) {
+  bootbox.dialog({
+    title: "Choose Preview Type",
+    message: "<p>Please select how you want to preview the bill:</p>",
+    buttons: {
+      daywise: {
+        label: "Day Wise",
+        className: "btn-primary",
+        callback: function () {
+          openPreviewDayWise("daywise", idfobill, id_folio, id_room, submenu, session);
+        }
+      },
+      roomwise: {
+        label: "Room Wise",
+        className: "btn-success",
+        callback: function () {
+          openPreviewRoomWise("roomwise", idfobill, id_folio, id_room, submenu, session);
+        }
+      },
+	  customformats: {
+        label: "custom formats",
+        className: "btn-success",
+        callback: function () {
+          openPreviewcustomformats("roomwise", idfobill, id_folio, id_room, submenu, session);
+        }
+      },
+      cancel: {
+        label: "Cancel",
+        className: "btn-secondary"
+      }
+    }
+  });
+}
+
+function openPreviewDayWise(type, idfobill, id_folio, id_room, submenu, session) {
+  const url = "fobillformat_DayWise.php"
+    + "?idfobill=" + idfobill
+    + "&id_folio=" + id_folio
+    + "&id_mst_room_no_allocation=" + id_room
+    + "&submenu=" + submenu
+    + "&session=" + session
+    + "&preview_type=" + type;
+
+  window.open(url, "_blank");
+}
+function openPreviewRoomWise(type, idfobill, id_folio, id_room, submenu, session) {
+  const url = "fobillformat_RoomWise.php"
+    + "?idfobill=" + idfobill
+    + "&id_folio=" + id_folio
+    + "&id_mst_room_no_allocation=" + id_room
+    + "&submenu=" + submenu
+    + "&session=" + session
+    + "&preview_type=" + type;
+
+  window.open(url, "_blank");
+}
+function openPreviewcustomformats(type, idfobill, id_folio, id_room, submenu, session) {
+  const url = "<?php echo $frontbillprint;?>"
+    + "?idfobill=" + idfobill
+    + "&id_folio=" + id_folio
+    + "&id_mst_room_no_allocation=" + id_room
+    + "&submenu=" + submenu
+    + "&session=" + session
+    + "&preview_type=" + type;
+
+  window.open(url, "_blank");
+}
+</script><?php */?>
+
+  <?php include_once("../includes/footer.php")?>
+  <script>
+  function ajaxCancelKot(id){
+
+var form=$("#Formkotremarks");	
+	var id_pos_pos_purch_idpurch=$("#pos_purch_id").val();
+	//var id_pos_purch=$("#id_pos_purch").val();
+	
+	var submenu1=$("#submenu1").val();
+	
+	if(pos_purch_id!='' && pos_purch_id==undefined){
+		var purch = form.serialize()+'&pos_purch_id='+pos_purch_id;
+		var saveType='edit';
+		
+	}else{
+		var purch = form.serialize();
+		var saveType='add';
+		
+	}
+	$('.loading').show();
+    if(form.parsley().validate()){
+
+		$.ajax({
+			type: "GET",
+			url: 'ajax/ajaxCancelKot.php',
+			data: purch, 
+			success: function (result) {
+			        console.log(result);
+			        data = JSON.parse(result);
+					//$( "#GetItemListView" ).html('');
+					//getPreviousOrder(data.purch_id);	
+					alert(data.msg);
+					
+					if(submenu1=='179'){
+						window.location.href="manageKotNc.php?submenu="+submenu1;
+					}else{
+						window.location.href="manageKot.php?submenu=178&session=22";
+					}
+					
+      	}
+
+		});
+
+	}
 
 
+}
 
-  <?php include_once("../includes/footer.php"); ?>
+	 function BillToCompany(idfobill, id_fo_folio_to) {
+    $.ajax({
+        type: "POST",
+        url: "ajax/ajaxGetCompanyList.php",
+        data: { idfobill: idfobill },
+        success: function (companyDropdownHTML) {
+            const dialog = bootbox.dialog({
+                title: "Bill To Company",
+                message: `
+                    <div class="form-group">
+                        <label for="id_bill_to_company">Select Company:</label>
+                        <div class="input-group">
+                            ${companyDropdownHTML}
+							<div class="input-group-addon" onclick="editSelectedCompany();" style="cursor:pointer;">
+                <i class="fa fa-edit" title="Edit Selected Company"></i>
+            </div>
+                            <div class="input-group-addon" onclick="AddnewCompany();" style="cursor:pointer;">
+                                <i class="fa fa-plus" title="Add New Company"></i>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                buttons: {
+                    cancel: {
+                        label: "Cancel",
+                        className: 'btn-secondary'
+                    },
+                    confirm: {
+                        label: "Submit",
+                        className: 'btn-primary',
+                        callback: function () {
+                            let selectedCompany = $('#id_bill_to_company').val();
+
+                            if (selectedCompany) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "ajax/ajaxSaveCompanySelection.php",
+                                    data: {
+                                        idfobill: idfobill,
+                                        selected_company_id: selectedCompany,
+                                        id_fo_folio_to: id_fo_folio_to
+                                    },
+                                    success: function (response) {
+                                        bootbox.alert("Company assigned successfully!");
+                                        // Optionally reload or update UI here
+                                    },
+                                    error: function () {
+                                        bootbox.alert("Error while saving company selection.");
+                                    }
+                                });
+                            } else {
+                                bootbox.alert("Please select a company.");
+                                return false;
+                            }
+                        }
+                    }
+                }
+            });
+
+            dialog.on("shown.bs.modal", function () {
+                $('#id_bill_to_company').select2({
+                    dropdownParent: $('.bootbox')
+                });
+            });
+        },
+        error: function () {
+            bootbox.alert("Failed to load company list.");
+        }
+    });
+}
   
+	  
+	  
+	  
+	  /*function BillToCompany(idfobill) {
+    $.ajax({
+        type: "POST",
+        url: "ajax/ajaxGetCompanyList.php", // Your PHP file that echoes the `<select>` HTML
+        data: { idfobill: idfobill },
+        success: function (companyDropdownHTML) {
+            const dialog = bootbox.dialog({
+                title: "Bill To Company",
+                message: `
+                    <div class="form-group">
+                        <label for="id_bill_to_company">Select Company:</label>
+                        ${companyDropdownHTML}
+                    </div>
+                `,
+                buttons: {
+                    cancel: {
+                        label: "Cancel",
+                        className: 'btn-secondary'
+                    },
+                    confirm: {
+                        label: "Submit",
+                        className: 'btn-primary',
+                        callback: function () {
+                            let selectedCompany = $('#id_bill_to_company').val();
+                            if (selectedCompany) {
+                                bootbox.alert("Selected Company ID: " + selectedCompany);
+                            } else {
+                                bootbox.alert("Please select a company.");
+                                return false;
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Initialize Select2 after dialog is shown
+            dialog.on("shown.bs.modal", function () {
+                $('#id_bill_to_company').select2({
+                    dropdownParent: $('.bootbox')
+                });
+            });
+        },
+        error: function () {
+            bootbox.alert("Failed to load company list.");
+        }
+    });
+}*/
+
+	  
+/*function BillToCompany(idfobill) {
+    bootbox.dialog({
+        title: "Bill To Company",
+        message: `
+            <div class="form-group">
+                <label for="id_bill_to_company">Select Company:</label>
+                ${companyDropdownHTML}
+            </div>
+        `,
+        buttons: {
+            cancel: {
+                label: "Cancel",
+                className: 'btn-secondary'
+            },
+            confirm: {
+                label: "Submit",
+                className: 'btn-primary',
+                callback: function () {
+                    let selectedCompany = $('#id_bill_to_company').val();
+                    if (selectedCompany) {
+                        bootbox.alert("Selected Company ID: " + selectedCompany);
+                    } else {
+                        bootbox.alert("Please select a company.");
+                        return false;
+                    }
+                }
+            }
+        },
+        callback: function () {
+            // Not used here
+        }
+    });
+
+    // Delay to ensure DOM is rendered, then initialize Select2
+    setTimeout(() => {
+        $('#id_bill_to_company').select2({
+            dropdownParent: $('.bootbox') // Ensures it works within modal
+        });
+    }, 300);
+}*/
+	  
+function ajaxKOTcancel(posid,mdoc_no){
+	
+	//$("#cancelled").addClass("bookedby_open");
+	$('#cancelpop').popup({
+        			transition: 'all 0.3s',
+           			 autoopen: true,            
+        			});
+	$("#pos_purch_id").val(posid);
+	$("#kot_mdoc_no").html(' KOT No: '+mdoc_no);				
+	}
+	  
+function AddnewCompany() {
+    $.ajax({
+        url: 'ajax/companyFormPopup.php',
+        type: 'GET',
+        success: function (formHtml) {
+            bootbox.dialog({
+                title: "Add New Company",
+                message: formHtml, // the form includes the button now
+                closeButton: true
+            });
+        },
+        error: function () {
+            bootbox.alert("Failed to load the company form.");
+        }
+    });
+}
+	  
+	  
+	  
+function editSelectedCompany() {
+	 const selectedCompanyId = $('#id_bill_to_company').val();
+	
+    $.ajax({
+		data: { eId: selectedCompanyId },
+        url: 'ajax/companyFormPopup.php',
+        type: 'GET',
+        success: function (formHtml) {
+            bootbox.dialog({
+                title: "Edit Company",
+                message: formHtml, // the form includes the button now
+                closeButton: true
+            });
+        },
+        error: function () {
+            bootbox.alert("Failed to load the company form.");
+        }
+    });
+}	  
+  </script>

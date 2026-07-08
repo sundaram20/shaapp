@@ -1,5 +1,5 @@
 <?php include_once("../config/auto_loader.php");
-define(TBL_ROOM_MAPPING,'fs_room_mapping');
+define('TBL_ROOM_MAPPING','fs_room_mapping');
 
 
  $sql = " SELECT * FROM `".TBL_ROOM_MAPPING."` WHERE `hotel_mapping_id` = '".encryptor('decrypt',$_REQUEST['eId'])."' ";

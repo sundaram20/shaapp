@@ -745,7 +745,7 @@ function currentNavigation_id($sessionid){
 function currenDateTime(){
 	return date("Y-m-d H:i:s");
 }
-function executeSql($sql){ 
+function executeSql($sql){
 	global $connNew;
 	$resSql = @mysqli_query($connNew, $sql) or die(" SQL synatx error :<br> SQL : <font color=red>".$sql."</font><br>Error : ".mysql_error());
 	return $resSql;
@@ -793,7 +793,6 @@ function getInitials($str) {
 //----------------------------------------------------------------------------------
 function selectSql($tableName = '', $where = '', $limit = ''){
 	global $connNew;
-
 	$sqlTable = "SELECT * FROM ".$tableName."";
 	if($where != ''){
 		$sqlTable .= " ".$where;

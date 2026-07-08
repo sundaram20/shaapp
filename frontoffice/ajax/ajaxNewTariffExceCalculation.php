@@ -13,29 +13,16 @@ $masterArray	=array();
 
 	//print_r($roomLineWiseDate);
 $_REQUEST['res_rate_plan'];
-
-		
-	 $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$_REQUEST['res_rate_plan']."'");
-
-	 /*
-	$SelectTaxDateSQL = executeSql("SELECT * FROM `".TBL_TAX_DATE_RULE."`
-    WHERE id_shop='".addslashes($_SESSION['shop'])."'
-    AND start_date <= CURDATE()
-    AND status='1'
-    ORDER BY start_date DESC");
-
-$SelectTaxDateRow = $db->fetch_object2($SelectTaxDateSQL);
-print_r($SelectTaxDateRow);
-echo '===='.$SlectedDateNewTax_id = $SelectTaxDateRow->id;
-*/
-
+	//echo "SELECT * FROM `".TBL_TAX_DATE_RULE."` where id_shop='".addslashes($_SESSION['shop'])."'  order by start_date desc";
+	$SelectTaxDateSQL		= executeSql("SELECT * FROM `".TBL_TAX_DATE_RULE."` where id_shop='".addslashes($_SESSION['shop'])."' AND start_date <= CURDATE() and status='1'  order by start_date desc");
+		$SelectTaxDateRow 		= $db->fetch_object2($SelectTaxDateSQL);
+		$SlectedDateNewTax_id	= $SelectTaxDateRow->id;	
 	 $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$_REQUEST['res_rate_plan']."'");
 	
 	 //Tariff Per Room Exclusive Taxes
-			$SelectTaxDateSQL		=  mysqli_query($connNew,"SELECT * FROM `".TBL_TAX_DATE_RULE."` where id_shop='".addslashes($_SESSION['shop'])."'  AND start_date <= CURDATE() and status='1' order by start_date desc");
-				$SelectTaxDateRow 		= mysqli_fetch_object($SelectTaxDateSQL);
-				$SlectedDateNewTax_id	= $SelectTaxDateRow->id;
+			
 				 	$price2 					= $_REQUEST['res_tariff_per_room_per_night'];			
+					
 					$resNewTax2= mysqli_query($connNew,"SELECT * FROM `".TBL_TAX_RULE."` where id_shop='".addslashes($_SESSION['shop'])."' AND ((tax_slabs_from <=  '".$price2."' and tax_slabs_to  >= '".$price2."') OR ( tax_slabs_from between '".$price2."' and '".$price2."') OR ( tax_slabs_to between '".$price2."' and '".$price2."')) and tax_uniqueid='".$SlectedDateNewTax_id."'  order by start_date desc");
 					
 					if(mysqli_num_rows($resNewTax2) >0 ){

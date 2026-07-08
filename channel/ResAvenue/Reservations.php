@@ -154,7 +154,7 @@ if ($xmlarray['@attributes']['CancelType'] == 'Cancel') {
             $autoInventoryUpdate = $resultMapping->auto_sync_inv ?? 0;
 
            // if ($autoInventoryUpdate == 1) {
-                updateOTA($apiHotelID, $check_in, $check_out,$connNew);
+               updateOTA($apiHotelID, $check_in, $check_out,$connNew);
             //}
         }
         sendResponse('cancel success', $ReferenceID, $otherRefrenceId, $id);
