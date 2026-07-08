@@ -2906,12 +2906,12 @@ height : 0px!important;
                 `<button class="btn btn-info" onClick="ChangeRoomNumber('${value.id_fo_reservations}','${value.id_mst_room_no_allocation}');" >Change Room</button>`;
             } //data-toggle="modal" data-target="#EditReservationModal"
 			
-		/*	tableData +=
-                `<button class="btn btn-info" onClick="UpdateCheckoutRoomWise('${value.id_fo_reservations}','${value.id_mst_room_no_allocation}','${value.id_fo_view_folio}','${value.id_fo_bill}','${value.is_pre_checkout}');" >Checkout</button>`;*/
+			tableData +=
+                `<button class="btn btn-info" onClick="UpdateCheckoutRoomWise('${value.id_fo_reservations}','${value.id_mst_room_no_allocation}','${value.id_fo_view_folio}','${value.id_fo_bill}','${value.is_pre_checkout}');" >Checkout</button>`;
             tableData += `</td>
                                 </tr>`;
           });
-          
+          //Test Afsal
 
           $("#room_statistics")
             .DataTable()
