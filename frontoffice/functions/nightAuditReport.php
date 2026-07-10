@@ -513,24 +513,18 @@ WHERE pp.id!=0 and p.cancelled!='1'
 //echo $SQL;die;
 $query = mysqli_query($connNew,$SQL);
 $TotalNumberOfRows = mysqli_num_rows($query);
-
+$TotalRecordPurch = mysqli_num_rows($query);
 $InCount=1;
 
 $count2=1;
 $TotalBillCount=0;
 //$nightAudit=array();
+$iTR=0;
 while($Records	   =	mysqli_fetch_object($query)){
 	
 	
 	
-	
-	
-  
-	
-	$Tax_Today	=	selectColumn('pos_purch','sum(sgst_total_items+cgst_total_items+igst_total_items+cess_total_items+vat_total_items+surcharge_total_items)'," WHERE `id` = '".$Records->id_purch."' and (DATE(`doc_date`) = '".$current_date."')");
-	$Tax_MTD	  =	selectColumn('pos_purch','sum(sgst_total_items+cgst_total_items+igst_total_items+cess_total_items+vat_total_items+surcharge_total_items)'," WHERE `id` = '".$Records->id_purch."' and ( DATE(`doc_date`) between '".$from_month_to_date."' and '".$to_month_to_date."') ");
-	$Tax_YTD	  =	selectColumn('pos_purch','sum(sgst_total_items+cgst_total_items+igst_total_items+cess_total_items+vat_total_items+surcharge_total_items)'," WHERE `id` = '".$Records->id_purch."' 	and (DATE(`doc_date`) between '".$from_year_to_date."' and '".$to_year_to_date."')");
-	
+
 				$outlet_Name	=	selectColumn('mst_outlets','name'," WHERE `id` = '".$Records->id_mst_outlet."'");
 	//$outlet_Name =$Records->outlet_Name;
 				$id_mst_outlet=$Records->id_mst_outlet;
@@ -541,7 +535,7 @@ while($Records	   =	mysqli_fetch_object($query)){
 				$YTD = ($Records->CASH_YTD_SUM+$Records->BIllONHOLD_YTD_SUM+$Records->CARD_YTD_SUM+$Records->CHEQUE_YTD_SUM+$Records->UPI_YTD_SUM+$Records->ONLINETRANSFER_YTD_SUM+$Records->COMPANY_YTD_SUM+$Records->ROOMTO_YTD_SUM);      
 				
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['outlet_Name']=$outlet_Name;;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Today'] += ($Today-$Tax_Today);
+						/*$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Today'] += ($Today);
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_MTD'] += $MTD-$Tax_MTD;
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_YTD'] += $YTD-$Tax_YTD;
 						
@@ -550,6 +544,42 @@ while($Records	   =	mysqli_fetch_object($query)){
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_MTD'] += $Tax_MTD;
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_YTD'] += $Tax_YTD;
 						
+						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_Today'] += ($Today);
+						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_MTD'] += $MTD;
+						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_YTD'] += $YTD;*/
+
+						if (!isset($processedPurch[$Records->id_purch])) {
+
+        $processedPurch[$Records->id_purch] = true;
+
+        $Tax_Today = selectColumn(
+            'pos_purch',
+            'SUM(sgst_total_items+cgst_total_items+igst_total_items+cess_total_items+vat_total_items+surcharge_total_items)',
+            " WHERE id='".$Records->id_purch."' AND DATE(doc_date)='".$current_date."'"
+        );
+
+        $Tax_MTD = selectColumn(
+            'pos_purch',
+            'SUM(sgst_total_items+cgst_total_items+igst_total_items+cess_total_items+vat_total_items+surcharge_total_items)',
+            " WHERE id='".$Records->id_purch."' AND DATE(doc_date) BETWEEN '".$from_month_to_date."' AND '".$to_month_to_date."'"
+        );
+
+        $Tax_YTD = selectColumn(
+            'pos_purch',
+            'SUM(sgst_total_items+cgst_total_items+igst_total_items+cess_total_items+vat_total_items+surcharge_total_items)',
+            " WHERE id='".$Records->id_purch."' AND DATE(doc_date) BETWEEN '".$from_year_to_date."' AND '".$to_year_to_date."'"
+        );
+
+        $nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_Today'] += $Tax_Today;
+        $nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_MTD'] += $Tax_MTD;
+        $nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_YTD'] += $Tax_YTD;
+    }
+
+    // This runs for every row
+    $nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Today'] += $Today;
+    $nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_MTD'] += $MTD;
+    $nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_YTD'] += $YTD;
+
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_Today'] += ($Today);
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_MTD'] += $MTD;
 						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_YTD'] += $YTD;
@@ -648,6 +678,19 @@ while($Records	   =	mysqli_fetch_object($query)){
 //============================================
 	}
 	
+	foreach ($nightAudit['NightAudit'] as $outletName => &$outlets) {
+    foreach ($outlets as &$data) {
+
+        $data['tariff_Today'] -= $data['tax_Today'];
+        $data['tariff_MTD']   -= $data['tax_MTD'];
+        $data['tariff_YTD']   -= $data['tax_YTD'];
+
+    }
+}
+	//debugData($SalesRegisterArrayPOS);
+	//debugData($SalesRegisterArray);
+
+	//debugData($nightAudit);die;
 	//debugData($SalesRegisterArray);die;
 	
 	$ConnChargesSQL='';
