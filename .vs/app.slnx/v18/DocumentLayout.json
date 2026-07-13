@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\xampp74\\htdocs\\app\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\xampp74\\htdocs\\app\\frontoffice\\ajax\\ReservationSingleForm.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontoffice\\ajax\\ReservationSingleForm.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\xampp74\\htdocs\\app\\process.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:process.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\xampp74\\htdocs\\app\\config\\auto_loader.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:config\\auto_loader.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\xampp74\\htdocs\\app\\frontoffice\\ajax\\ReservationSingleForm.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontoffice\\ajax\\ReservationSingleForm.php||{3B902123-F8A7-4915-9F01-361F908088D0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\xampp74\\htdocs\\app\\frontoffice\\manageReservation.php||{3B902123-F8A7-4915-9F01-361F908088D0}",
@@ -58,21 +58,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 6,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "functions.library.php",
-              "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\phplib\\functions.library.php",
-              "RelativeDocumentMoniker": "phplib\\functions.library.php",
-              "ToolTip": "D:\\xampp74\\htdocs\\app\\phplib\\functions.library.php",
-              "RelativeToolTip": "phplib\\functions.library.php",
-              "ViewState": "AgIAAAoDAACAzczMzMwcwBYDAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T12:45:07.35Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 8,
@@ -83,8 +70,7 @@
               "RelativeToolTip": "frontoffice\\manageFoBill.php",
               "ViewState": "AgIAAHkCAAAAkpmZmRkWwI8CAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T12:37:46.919Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T12:37:46.919Z"
             },
             {
               "$type": "Document",
@@ -96,12 +82,11 @@
               "RelativeToolTip": "frontoffice\\manageReservation.php",
               "ViewState": "AgIAAGYEAAAAkJmZmVkqwIAEAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T09:01:58.723Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T09:01:58.723Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "class.database.php",
               "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\phplib\\class.database.php",
               "RelativeDocumentMoniker": "phplib\\class.database.php",
@@ -109,12 +94,11 @@
               "RelativeToolTip": "phplib\\class.database.php",
               "ViewState": "AgIAAGcAAAAAAAAAAAAIwI4AAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T08:37:18.23Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T08:37:18.23Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "data.config.php",
               "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\config\\data.config.php",
               "RelativeDocumentMoniker": "config\\data.config.php",
@@ -122,25 +106,24 @@
               "RelativeToolTip": "config\\data.config.php",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T06:51:10.552Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T06:51:10.552Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "process.php",
               "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\process.php",
               "RelativeDocumentMoniker": "process.php",
               "ToolTip": "D:\\xampp74\\htdocs\\app\\process.php",
               "RelativeToolTip": "process.php",
-              "ViewState": "AgIAAA8AAAAA//////8gwC0AAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-06-11T07:04:28.671Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "auto_loader.php",
               "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\config\\auto_loader.php",
               "RelativeDocumentMoniker": "config\\auto_loader.php",
@@ -148,8 +131,32 @@
               "RelativeToolTip": "config\\auto_loader.php",
               "ViewState": "AgIAAAQAAAAAAAAAAAAmwCMAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T07:03:13.508Z",
+              "WhenOpened": "2026-06-11T07:03:13.508Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ReservationSingleForm.php",
+              "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\frontoffice\\ajax\\ReservationSingleForm.php",
+              "RelativeDocumentMoniker": "frontoffice\\ajax\\ReservationSingleForm.php",
+              "ToolTip": "D:\\xampp74\\htdocs\\app\\frontoffice\\ajax\\ReservationSingleForm.php",
+              "RelativeToolTip": "frontoffice\\ajax\\ReservationSingleForm.php",
+              "ViewState": "AgIAAEoBAAAAAAAAAAAAAEoBAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-06-11T17:04:58.697Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "functions.library.php",
+              "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\phplib\\functions.library.php",
+              "RelativeDocumentMoniker": "phplib\\functions.library.php",
+              "ToolTip": "D:\\xampp74\\htdocs\\app\\phplib\\functions.library.php",
+              "RelativeToolTip": "phplib\\functions.library.php",
+              "ViewState": "AgIAAAoDAACAzczMzMwcwBYDAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-06-11T12:45:07.35Z"
             },
             {
               "$type": "Document",
@@ -161,8 +168,7 @@
               "RelativeToolTip": "frontoffice\\ajax\\ajaxNewTariffExceCalculation.php",
               "ViewState": "AgIAAAsAAACAz8zMzMwXwCYAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T13:33:24.451Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T13:33:24.451Z"
             },
             {
               "$type": "Document",
@@ -174,21 +180,7 @@
               "RelativeToolTip": "frontoffice\\ajax\\ajaxNewTariffExceInclusiveCalculation.php",
               "ViewState": "AgIAAA4AAADAMzMzM/MmwA8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T16:52:59.676Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ReservationSingleForm.php",
-              "DocumentMoniker": "D:\\xampp74\\htdocs\\app\\frontoffice\\ajax\\ReservationSingleForm.php",
-              "RelativeDocumentMoniker": "frontoffice\\ajax\\ReservationSingleForm.php",
-              "ToolTip": "D:\\xampp74\\htdocs\\app\\frontoffice\\ajax\\ReservationSingleForm.php",
-              "RelativeToolTip": "frontoffice\\ajax\\ReservationSingleForm.php",
-              "ViewState": "AgIAAB4BAAAAcGZmZmYEwCoBAAASAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T17:04:58.697Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T16:52:59.676Z"
             },
             {
               "$type": "Document",
@@ -200,8 +192,7 @@
               "RelativeToolTip": "includes\\footer.php",
               "ViewState": "AgIAAP4CAAAAaGZmZmYUwBADAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T08:55:52.029Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T08:55:52.029Z"
             },
             {
               "$type": "Document",
@@ -213,8 +204,7 @@
               "RelativeToolTip": "favourites.php",
               "ViewState": "AgIAAP0AAABoZmZmZmYUwPEAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-06-11T08:50:27.351Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-11T08:50:27.351Z"
             }
           ]
         }

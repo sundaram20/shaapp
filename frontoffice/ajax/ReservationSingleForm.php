@@ -498,7 +498,7 @@ $(function() {
                     <p class="error res_bookingStatus_new-error"></p>
                 </div>
 				  <div class="form-group col-md-2" id="tentative_wrapper">
-    <label style="float:left;">Date</label>
+    <label style="float:left;">Tentative Date</label>
 
   <input type="text"
        id="tentative_date"
@@ -2319,11 +2319,20 @@ function setTentativeRange() {
         $('#tentative_date').datepicker('option', 'minDate', minDate);
         $('#tentative_date').datepicker('option', 'maxDate', maxDate);
 
-        // only set if empty
-        var currentVal = $('#tentative_date').val();
-        if (!currentVal) {
-            $('#tentative_date').datepicker('setDate', minDate);
+        // Calculate 30 days before check-in
+        var checkinDateObj = getDate(checkinDate);
+        var defaultTentativeDate = new Date(checkinDateObj);
+        defaultTentativeDate.setDate(defaultTentativeDate.getDate() - 30);
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (defaultTentativeDate < today) {
+            defaultTentativeDate = today;
         }
+
+        $('#tentative_date').datepicker('setDate', defaultTentativeDate);
+
     }
 }
 

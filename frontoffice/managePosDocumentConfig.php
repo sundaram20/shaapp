@@ -150,8 +150,12 @@ if($_REQUEST['action'] == 'change'){
 							echo "Meal Booking";
 						}elseif($row->doc_type == '803'){
 				             echo "FO Bill";
-				        }else{
-
+				        }elseif($row->doc_type == '804'){
+				            echo "FOLIO";
+						}elseif($row->doc_type == '901'){
+							echo "Cash Memo";
+						}elseif($row->doc_type == '902'){
+							echo "Cash Transfer";
 						}
 		            ?>
                   </td>   
