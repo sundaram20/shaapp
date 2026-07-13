@@ -38,7 +38,15 @@ WHERE   fo_bill.status='1'  and resdetails.`checkout_status`='0' and  resdetails
 					$bill_checkout_status	= selectColumn(FO_BILL,'status'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
 					$GuestName	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
 					$lastName	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
-					
+
+					$id_owner_room  = selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+					if($id_owner_room==$rowRoomNumbers->id){
+						$OwnerRoom='1';
+
+					}else{
+						$OwnerRoom='0';
+					}
+
 					$id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");				
 	$Title=selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'"); 				
 	
@@ -55,6 +63,7 @@ WHERE   fo_bill.status='1'  and resdetails.`checkout_status`='0' and  resdetails
 					$folioArray[$RoomName][$rowRoomNumbers->id]['room_no']=$roomNo;
 					$folioArray[$RoomName][$rowRoomNumbers->id]['RoomName']=$RoomName;
 					$folioArray[$RoomName][$rowRoomNumbers->id]['status']=$rowRoomNumbers->room_status;
+					$folioArray[$RoomName][$rowRoomNumbers->id]['owner_room']=$OwnerRoom;
 					
 					$folioArray[$RoomName][$rowRoomNumbers->id]['total_child']=$rowRoomNumbers->child_below_5_year+$rowRoomNumbers->child_above_5_year;
 					$folioArray[$RoomName][$rowRoomNumbers->id]['child_below_5_year']=$rowRoomNumbers->child_below_5_year;
@@ -106,7 +115,7 @@ WHERE   fo_bill.status='1'  and resdetails.`checkout_status`='0' and  resdetails
 				$is_pre_checkout = (strtotime($Array2['Checkout']) > strtotime($DayCloseDate)) ? '1' : '0';
 				$demoData[]= 
         array("id"=>encryptor(encrypt,'12'),'type'=>$Array2['RoomName'],'room_no' => $Array2['room_no'],'status' => $Array2['status'],'res_id'=>$Array2['mdoc_no'],'guest' =>$Array2['GuestName'],'folio' => $Array2['folio_mdoc_no'],'checkin'=>$Array2['Checkin'],
-        'checkout'=>$Array2['Checkout'],'action'=>'1','id_fo_bill'=>$Array2['id_fo_bill'],'id_fo_reservations'=>encryptor(encrypt,$Array2['id_fo_reservations']),'id_mst_guest'=>encryptor(encrypt,$Array2['id_mst_guest']),'id_fo_view_folio'=>$Array2['id_fo_view_folio'],'id_mst_room_no_allocation'=>$Array2['id_mst_room_no_allocation'],'order_by_room'=>$Array2['order_by_room'],'child_below_5_year'=>$Array2['child_below_5_year'],'child_above_5_year'=>$Array2['child_above_5_year'],'adults_per_room'=>$Array2['adults_per_room'],'total_child'=>$Array2['total_child'], 'is_pre_checkout' => $is_pre_checkout, 'check_checkout_date' => $check_checkout_date);
+        'checkout'=>$Array2['Checkout'],'action'=>'1','id_fo_bill'=>$Array2['id_fo_bill'],'id_fo_reservations'=>encryptor(encrypt,$Array2['id_fo_reservations']),'id_mst_guest'=>encryptor(encrypt,$Array2['id_mst_guest']),'id_fo_view_folio'=>$Array2['id_fo_view_folio'],'id_mst_room_no_allocation'=>$Array2['id_mst_room_no_allocation'],'order_by_room'=>$Array2['order_by_room'],'child_below_5_year'=>$Array2['child_below_5_year'],'child_above_5_year'=>$Array2['child_above_5_year'],'adults_per_room'=>$Array2['adults_per_room'],'total_child'=>$Array2['total_child'], 'is_pre_checkout' => $is_pre_checkout, 'check_checkout_date' => $check_checkout_date,'owner_room' =>$Array2['owner_room']);
 				}
 			
 			}
