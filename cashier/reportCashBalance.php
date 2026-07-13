@@ -2,7 +2,7 @@
 include_once("../config/auto_loader.php");
 checkUserLevelPermission($_SESSION['userLevel'], TBL_DOC_TYPE_CONFIG, 'view');
 
-define('FO_START_DATE', '2026-07-04');
+define('FO_START_DATE', '2026-07-14');
 
 // ── DATE RANGE ────────────────────────────────────────────────────────────────
 $dateFilter = isset($_GET['datefilter']) ? $_GET['datefilter'] : '';
@@ -22,16 +22,15 @@ if($dateFrom == '' || $dateTo == ''){
     $dateFilter = date('01-m-Y').' to '.date('d-m-Y');
 }
 
-// ── OPENING BALANCE (before dateFrom) ────────────────────────────────────────
+// ── OPENING BALANCE (all transactions before dateFrom, from FO_START_DATE) ───
+// = previous day's closing balance
 
-// FO Cash before period
 $db->query("SELECT COALESCE(SUM(amount),0) AS total FROM `fo_receipt`
             WHERE `payment_mode`='CASH'
             AND `doc_date` >= '".FO_START_DATE."'
             AND `doc_date` < '".$dateFrom."'");
 $foReceiptOpen = floatval($db->fetch_object()->total);
 
-// Cash Memos before period
 $db->query("SELECT COALESCE(SUM(ctd.amount),0) AS total
             FROM `cash_transaction` ct
             LEFT JOIN `cash_transaction_details` ctd ON ctd.id_cash_transaction = ct.id
@@ -39,7 +38,6 @@ $db->query("SELECT COALESCE(SUM(ctd.amount),0) AS total
             AND ct.`doc_date` < '".$dateFrom."'");
 $cashMemoOpen = floatval($db->fetch_object()->total);
 
-// Transfers before period (all transfers regardless of direction)
 $db->query("SELECT COALESCE(SUM(ctd.amount),0) AS total
             FROM `cash_transaction` ct
             LEFT JOIN `cash_transaction_details` ctd ON ctd.id_cash_transaction = ct.id
@@ -51,14 +49,12 @@ $openingBalance = $foReceiptOpen - $cashMemoOpen - $transferOpen;
 
 // ── PERIOD TRANSACTIONS ───────────────────────────────────────────────────────
 
-// FO Cash within period
 $db->query("SELECT COALESCE(SUM(amount),0) AS total FROM `fo_receipt`
             WHERE `payment_mode`='CASH'
             AND `doc_date` >= '".$dateFrom."'
             AND `doc_date` <= '".$dateTo."'");
 $receiptAmount = floatval($db->fetch_object()->total);
 
-// Cash Memos within period
 $db->query("SELECT COALESCE(SUM(ctd.amount),0) AS total
             FROM `cash_transaction` ct
             LEFT JOIN `cash_transaction_details` ctd ON ctd.id_cash_transaction = ct.id
@@ -67,7 +63,6 @@ $db->query("SELECT COALESCE(SUM(ctd.amount),0) AS total
             AND ct.`doc_date` <= '".$dateTo."'");
 $cashMemoPeriod = floatval($db->fetch_object()->total);
 
-// Transfers within period
 $db->query("SELECT COALESCE(SUM(ctd.amount),0) AS total
             FROM `cash_transaction` ct
             LEFT JOIN `cash_transaction_details` ctd ON ctd.id_cash_transaction = ct.id
@@ -186,57 +181,67 @@ while($dr = $db->fetch_object()){
         <!-- Summary Cards -->
         <div class="row">
 
-    <!-- Receipt Amount -->
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box" style="border-left:4px solid #00a65a;">
-            <span class="info-box-icon" style="background:#00a65a;"><i class="fa fa-plus-circle"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Receipt Amount</span>
-                <span class="info-box-number">&#8377; <?php echo number_format($receiptAmount, 2); ?></span>
-                <span class="progress-description" style="font-size:10px;">
-                    FO Cash receipts in period
-                </span>
+            <!-- Opening Balance -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box" style="border-left:4px solid #1296f3;">
+                    <span class="info-box-icon" style="background:#1296f3;"><i class="fa fa-history"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Opening Balance</span>
+                        <span class="info-box-number">&#8377; <?php echo number_format($openingBalance, 2); ?></span>
+                        <span class="progress-description" style="font-size:10px;">
+                            Balance as of <?php echo date('d-m-Y', strtotime($dateFrom.' -1 day')); ?>
+                        </span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Expense -->
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box" style="border-left:4px solid #dd4b39;">
-            <span class="info-box-icon" style="background:#dd4b39;"><i class="fa fa-minus-circle"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Expense (Cash Memo)</span>
-                <span class="info-box-number">&#8377; <?php echo number_format($cashMemoPeriod, 2); ?></span>
+            <!-- Receipt Amount -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box" style="border-left:4px solid #00a65a;">
+                    <span class="info-box-icon" style="background:#00a65a;"><i class="fa fa-plus-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Receipt Amount</span>
+                        <span class="info-box-number">&#8377; <?php echo number_format($receiptAmount, 2); ?></span>
+                        <span class="progress-description" style="font-size:10px;">
+                            FO Cash receipts in period
+                        </span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Transfer -->
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box" style="border-left:4px solid #f39c12;"">
-            <span class="info-box-icon" style="background:#f39c12;"><i class="fa fa-arrow-circle-right"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Transfer</span>
-                <span class="info-box-number">&#8377; <?php echo number_format($transferPeriod, 2); ?></span>
+            <!-- Expense & Transfer combined -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box" style="border-left:4px solid #dd4b39;">
+                    <span class="info-box-icon" style="background:#dd4b39;"><i class="fa fa-minus-circle"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Expense &amp; Transfer</span>
+                        <span class="info-box-number">&#8377; <?php echo number_format($expenseTransfer, 2); ?></span>
+                        <span class="progress-description" style="font-size:10px;">
+                            <span>Expense: &#8377;<?php echo number_format($cashMemoPeriod, 2); ?></span>
+                            &nbsp;|&nbsp;
+                            <span>Transfer: &#8377;<?php echo number_format($transferPeriod, 2); ?></span>
+                        </span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-     <!-- New Opening Balance = Total Receipt - (Expense + Transfer) -->
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="info-box" style="border-left:4px solid #1296f3;">
-            <span class="info-box-icon" style="background:#1296f3;"><i class="fa fa-history"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Opening Balance</span>
-                <span class="info-box-number">&#8377; <?php echo number_format($balanceAmount, 2); ?></span>
-                <span class="progress-description" style="font-size:10px;">
-                    Total Receipt - (Expense + Transfer)
-                </span>
+            <!-- Balance -->
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box" style="border-left:4px solid <?php echo $balanceAmount >= 0 ? '#00a65a' : '#dd4b39'; ?>;">
+                    <span class="info-box-icon" style="background:<?php echo $balanceAmount >= 0 ? '#00a65a' : '#dd4b39'; ?>;"><i class="fa fa-balance-scale"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Balance</span>
+                        <span class="info-box-number" style="<?php echo $balanceAmount >= 0 ? 'color:#00a65a;' : 'color:#dd4b39;'; ?>">
+                            &#8377; <?php echo number_format($balanceAmount, 2); ?>
+                        </span>
+                        <span class="progress-description" style="font-size:10px;">
+                            Opening + Receipts - Expense &amp; Transfer
+                        </span>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-</div>
+        </div>
 
         <!-- Daily Breakdown Table -->
         <div class="row">
@@ -262,25 +267,27 @@ while($dr = $db->fetch_object()){
                                 $grandMemo     = 0;
                                 $grandTransfer = 0;
                                 $grandNet      = 0;
+                                $runningBal    = $openingBalance;
 
                                 if(!empty($dailyRows)){
                                     foreach($dailyRows as $dr){
                                         $netDay        = floatval($dr->fo_cash)
                                                        - floatval($dr->memo_total)
                                                        - floatval($dr->transfer_total);
+                                        $runningBal   += $netDay;
                                         $grandFo       += floatval($dr->fo_cash);
                                         $grandMemo     += floatval($dr->memo_total);
                                         $grandTransfer += floatval($dr->transfer_total);
-                                        $grandNet      += $netDay;
-                                        $netColor       = $netDay >= 0 ? 'color:green;' : 'color:red;';
+                                        $grandNet       = $runningBal;
+                                        $balColor       = $runningBal >= 0 ? 'color:green;' : 'color:red;';
                                     ?>
                                     <tr>
                                         <td><?php echo date('d-m-Y', strtotime($dr->report_date)); ?></td>
                                         <td class="text-right" style="color:#00a65a;"><?php echo number_format($dr->fo_cash, 2); ?></td>
                                         <td class="text-right" style="color:#dd4b39;"><?php echo number_format($dr->memo_total, 2); ?></td>
-                                        <td class="text-right" style="color:#dd4b39;"><?php echo number_format($dr->transfer_total, 2); ?></td>
-                                        <td class="text-right font-bold" style="<?php echo $netColor; ?>">
-                                            <?php echo number_format($netDay, 2); ?>
+                                        <td class="text-right" style="color:#f39c12;"><?php echo number_format($dr->transfer_total, 2); ?></td>
+                                        <td class="text-right font-bold" style="<?php echo $balColor; ?>">
+                                            <?php echo number_format($runningBal, 2); ?>
                                         </td>
                                     </tr>
                                     <?php } ?>
@@ -291,13 +298,11 @@ while($dr = $db->fetch_object()){
                             <?php if(!empty($dailyRows)){ ?>
                             <tfoot>
                                 <tr style="font-weight:bold; background:#f5f5f5;">
-                                    <td><strong>Total</strong></td>
+                                    <td><strong>Period Total</strong></td>
                                     <td class="text-right" style="color:#00a65a;"><?php echo number_format($grandFo, 2); ?></td>
                                     <td class="text-right" style="color:#dd4b39;"><?php echo number_format($grandMemo, 2); ?></td>
-                                    <td class="text-right" style="color:#dd4b39;"><?php echo number_format($grandTransfer, 2); ?></td>
-                                    <td class="text-right" style="<?php echo $grandNet >= 0 ? 'color:green;' : 'color:red;'; ?>">
-                                        <?php echo number_format($grandNet, 2); ?>
-                                    </td>
+                                    <td class="text-right" style="color:#f39c12;"><?php echo number_format($grandTransfer, 2); ?></td>
+                                    <td class="text-right"></td>
                                 </tr>
                                 <tr style="font-weight:bold; background:#eaf4ff;">
                                     <td colspan="4" class="text-right">Opening Balance</td>
@@ -372,44 +377,48 @@ while($dr = $db->fetch_object()){
             ['Period: <?php echo addslashes($dateFilter); ?>'],
             [''],
             ['', 'Amount (INR)'],
-            ['Opening Balance',                    <?php echo $balanceAmount; ?>],
-            ['Receipt Amount',                     <?php echo $receiptAmount; ?>],
-            ['Expense (Cash Memo)',                <?php echo $cashMemoPeriod; ?>],
-            ['Transfer',                           <?php echo $transferPeriod; ?>],
+            ['Opening Balance (as of <?php echo date('d-m-Y', strtotime($dateFrom.' -1 day')); ?>)', <?php echo $openingBalance; ?>],
+            ['Receipt Amount (period)',    <?php echo $receiptAmount; ?>],
+            ['Expense & Transfer (period)',<?php echo $expenseTransfer; ?>],
+            ['  Cash Memos',              <?php echo $cashMemoPeriod; ?>],
+            ['  Transfers',               <?php echo $transferPeriod; ?>],
             [''],
-            ['Note: Opening Balance = Total Receipt - (Expense + Transfer)']
+            ['Balance',                   <?php echo $balanceAmount; ?>],
         ];
         var wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
-        wsSummary['!cols'] = [{wch:40},{wch:18}];
+        wsSummary['!cols'] = [{wch:45},{wch:18}];
         XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
 
         // Daily Breakdown sheet
         var dailyData = [
             ['Cash Balance Report - Daily Breakdown'],
             ['Period: <?php echo addslashes($dateFilter); ?>'],
+            ['Opening Balance: <?php echo $openingBalance; ?>'],
             [''],
-            ['Date', 'FO Cash Receipt', 'Expense (Cash Memo)', 'Transfer', 'Net for Day']
+            ['Date', 'FO Cash Receipt', 'Expense (Cash Memo)', 'Transfer', 'Running Balance']
         ];
 
         <?php
-        $grandFoJs       = 0; $grandMemoJs = 0;
-        $grandTransferJs = 0; $grandNetJs  = 0;
+        $runBal          = $openingBalance;
+        $grandFoJs       = 0;
+        $grandMemoJs     = 0;
+        $grandTransferJs = 0;
         foreach($dailyRows as $dr){
             $netDay          = floatval($dr->fo_cash) - floatval($dr->memo_total) - floatval($dr->transfer_total);
-            $grandFoJs       += floatval($dr->fo_cash);
-            $grandMemoJs     += floatval($dr->memo_total);
-            $grandTransferJs += floatval($dr->transfer_total);
-            $grandNetJs      += $netDay;
+            $runBal         += $netDay;
+            $grandFoJs      += floatval($dr->fo_cash);
+            $grandMemoJs    += floatval($dr->memo_total);
+            $grandTransferJs+= floatval($dr->transfer_total);
             echo "dailyData.push(['"
                 .date('d-m-Y', strtotime($dr->report_date))."',"
                 .floatval($dr->fo_cash).","
                 .floatval($dr->memo_total).","
                 .floatval($dr->transfer_total).","
-                .$netDay."]);";
+                .$runBal."]);";
         }
         ?>
 
-        dailyData.push(['Total', <?php echo $grandFoJs; ?>, <?php echo $grandMemoJs; ?>, <?php echo $grandTransferJs; ?>, <?php echo $grandNetJs; ?>]);
+        dailyData.push(['Period Total', <?php echo $grandFoJs; ?>, <?php echo $grandMemoJs; ?>, <?php echo $grandTransferJs; ?>, '']);
         dailyData.push(['']);
         dailyData.push(['Opening Balance',        '', '', '', <?php echo $openingBalance; ?>]);
         dailyData.push(['+ Period Receipts',      '', '', '', <?php echo $receiptAmount; ?>]);
@@ -417,7 +426,7 @@ while($dr = $db->fetch_object()){
         dailyData.push(['Balance',                '', '', '', <?php echo $balanceAmount; ?>]);
 
         var wsDaily = XLSX.utils.aoa_to_sheet(dailyData);
-        wsDaily['!cols'] = [{wch:14},{wch:18},{wch:22},{wch:14},{wch:14}];
+        wsDaily['!cols'] = [{wch:14},{wch:18},{wch:22},{wch:14},{wch:18}];
         XLSX.utils.book_append_sheet(wb, wsDaily, 'Daily Breakdown');
 
         var fileName = 'Cash_Balance_Report_<?php echo str_replace([' ', '-', '/'], '_', $dateFilter); ?>.xlsx';
@@ -426,4 +435,3 @@ while($dr = $db->fetch_object()){
 </script>
 
 <?php include_once("../includes/footer.php"); ?>
-
