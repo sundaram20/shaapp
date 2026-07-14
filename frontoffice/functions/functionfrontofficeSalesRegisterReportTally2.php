@@ -574,16 +574,72 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 	
     $reservation_percentage[] = $percentage;
 	
-	
+		$SelectTaxDateSQL = executeSql(
+    "SELECT * FROM `" . TBL_TAX_DATE_RULE . "` 
+     WHERE id_shop='" . addslashes($_SESSION['shop']) . "' 
+       AND start_date <= CURDATE() AND status='1' 
+     ORDER BY start_date DESC"
+);
+$SelectTaxDateRow = $db->fetch_object2($SelectTaxDateSQL);
+$SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
+
+
+$tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reservation->id_fo_rate_plan."'");
+		
+	if($tax_detail=='1'){//1 for inclusive
+		
+		
+	$price =$reservation->tax_per_day_per_room;
+
+       $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($_SESSION['shop']) . "' 
+           AND ((tax_inc_slabs_from <= '$price' AND tax_inc_slabs_to >= '$price') 
+             OR (tax_inc_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_inc_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );	
+		 
+		 
+	}else{//2 for exclusive	
+		
+		
+	$price =$reservation->tax_per_day_per_room;
+	 $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($_SESSION['shop']) . "' 
+           AND ((tax_slabs_from <= '$price' AND tax_slabs_to >= '$price') 
+             OR (tax_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );
+	}
+
+$tax_percent = 0;
+   
+    if (mysqli_num_rows($resNewTaxInclution) > 0) {
+        $rowNewTaxInclution = mysqli_fetch_object($resNewTaxInclution);
+        $tax_percent = $rowNewTaxInclution->tax_percent;
+        
+    } else {
+        $tax_percent = '5';
+        
+    }
+
+
    
 	//$doc_type = selectColumn(TBL_PURCH, 'doc_type', "WHERE id='{$record->id}' AND id_shop='{$id_shop}'");
-	$tax_percent=$reservation->tax_percent;
+	//$tax_percent=$reservation->tax_percent;
 	
 				$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$taxMethod_sgst='Tariff Sales';	
 				$reservation_id_mst_charges_sales_local=$id_reservations;						
-				$Account_Name = 'ROOM TARIFF INCOME '.$tax_percent.'%';
+				$Account_Name = 'ROOM TARIFF INCOME '.round($tax_percent).'%';
 				$tax_per_day_per_room_sgst	=$reservation->total_tariff ?? 0;
 				
 					$tariff_Round_Off +=$reservation->total_tariff ?? 0;
