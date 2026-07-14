@@ -575,15 +575,15 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
     $reservation_percentage[] = $percentage;
 	
 	
-   
-	
-	
+   //test
+	//$doc_type = selectColumn(TBL_PURCH, 'doc_type', "WHERE id='{$record->id}' AND id_shop='{$id_shop}'");
+	$tax_percent=$reservation->tax_percent;
 	
 				$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$taxMethod_sgst='Tariff Sales';	
 				$reservation_id_mst_charges_sales_local=$id_reservations;						
-				$Account_Name = 'ROOM TARIFF INCOME 5%';
+				$Account_Name = 'ROOM TARIFF INCOME '.tax_percent.'%';
 				$tax_per_day_per_room_sgst	=$reservation->total_tariff ?? 0;
 				
 					$tariff_Round_Off +=$reservation->total_tariff ?? 0;
