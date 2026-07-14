@@ -634,7 +634,7 @@ $tax_percent = 0;
     }
    
 	//$doc_type = selectColumn(TBL_PURCH, 'doc_type', "WHERE id='{$record->id}' AND id_shop='{$id_shop}'");
-	$tax_percent=$reservation->tax_percent;
+	//$tax_percent=$reservation->tax_percent;
 	
 				$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
