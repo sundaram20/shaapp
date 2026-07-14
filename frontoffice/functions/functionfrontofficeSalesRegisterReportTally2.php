@@ -43,6 +43,7 @@ function frontofficeSalesRegisterReportTally2($Date,$id_outlet,$id_shift,$objPHP
 	global $connNew;
 	global $objPHPExcel;
 	
+	
 	$chagesFieldName = ($id_charges_name == 1) ? 'name' : 'display_alias_name';
 	if($Date != ''){
 		$DateExplode = explode(' to ',$Date);
@@ -563,7 +564,7 @@ foreach ($ArrayOfFoBill as $billData){
     $id_fo_folio_to  = $billData['id_fo_folio_to'];
 	$date_created    = $billData['date_created'];
      $matchedMdocNo   = $billData['mdoc_no'];
-	 $total_dramount= $billData['total_dramount'];
+	 $total_dramount	= $billData['total_dramount'];
     $room_mst_guest= '';
 	
 	$reservation_query = mysqli_query($connNew, "select SUM(tax_per_day_per_room) AS total_tax,
@@ -574,13 +575,15 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 	
     $reservation_percentage[] = $percentage;
 	
-		$SelectTaxDateSQL = executeSql(
+
+
+		$SelectTaxDateSQL = mysqli_query($connNew,
     "SELECT * FROM `" . TBL_TAX_DATE_RULE . "` 
      WHERE id_shop='" . addslashes($_SESSION['shop']) . "' 
        AND start_date <= CURDATE() AND status='1' 
      ORDER BY start_date DESC"
 );
-$SelectTaxDateRow = $db->fetch_object2($SelectTaxDateSQL);
+$SelectTaxDateRow = mysqli_fetch_object($SelectTaxDateSQL);
 $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 
 
@@ -629,11 +632,9 @@ $tax_percent = 0;
         $tax_percent = '5';
         
     }
-
-
    
 	//$doc_type = selectColumn(TBL_PURCH, 'doc_type', "WHERE id='{$record->id}' AND id_shop='{$id_shop}'");
-	//$tax_percent=$reservation->tax_percent;
+	$tax_percent=$reservation->tax_percent;
 	
 				$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
