@@ -575,7 +575,7 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
     $reservation_percentage[] = $percentage;
 	
 	
-   //test t check
+   
 	//$doc_type = selectColumn(TBL_PURCH, 'doc_type', "WHERE id='{$record->id}' AND id_shop='{$id_shop}'");
 	$tax_percent=$reservation->tax_percent;
 	
