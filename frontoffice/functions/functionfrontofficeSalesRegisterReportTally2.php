@@ -664,7 +664,11 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
         $tax_percent = '5';
         
     }
-   
+   if($reservation->tax_percent>0){
+
+$tax_percent=$reservation->tax_percent;
+
+   }
 	//$doc_type = selectColumn(TBL_PURCH, 'doc_type', "WHERE id='{$record->id}' AND id_shop='{$id_shop}'");
 	//$tax_percent=$reservation->tax_percent;
 	
