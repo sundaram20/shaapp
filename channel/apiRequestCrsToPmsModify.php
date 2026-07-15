@@ -452,7 +452,7 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 	if($tax_detail=='1'){//1 for inclusive
 		
 		
-	 $price =$NewpriceValue;		
+	 $price =$subtotal1;		
 	
        $resNewTaxInclution = mysqli_query(
         $connNew,
@@ -469,7 +469,7 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 	}else{//2 for exclusive	
 		
 		
-	$price =$NewpriceValue;		
+	$price =$subtotal1;		
 	 $resNewTaxInclution = mysqli_query(
         $connNew,
         "SELECT * FROM `" . TBL_TAX_RULE . "` 
