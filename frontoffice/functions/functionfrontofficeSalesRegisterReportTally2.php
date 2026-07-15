@@ -575,7 +575,28 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 	
     $reservation_percentage[] = $percentage;
 	
-
+	$Sql_Count_status= 	"SELECT
+			t.dated,
+			t.room_count,
+			d.no_of_days
+		FROM
+		(
+			SELECT
+				dated,
+				COUNT(DISTINCT order_by_room) AS room_count
+			FROM fo_reservations_details
+			WHERE id_fo_bill = '".$bill_id."' and id_fo_reservations='".$id_reservations."' and checkin_status='1' 
+			GROUP BY dated
+		) AS t
+		CROSS JOIN
+		(
+			SELECT COUNT(DISTINCT dated) AS no_of_days
+			FROM fo_reservations_details
+			WHERE  id_fo_bill = '".$bill_id."' and id_fo_reservations='".$id_reservations."' and checkin_status='1' 
+		) AS d
+		ORDER BY t.dated DESC";
+$reservation_Count_status = mysqli_query($connNew,$Sql_Count_status);
+$rowCount_status= mysqli_fetch_object($reservation_Count_status);
 
 		$SelectTaxDateSQL = mysqli_query($connNew,
     "SELECT * FROM `" . TBL_TAX_DATE_RULE . "` 
@@ -592,7 +613,7 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 	if($tax_detail=='1'){//1 for inclusive
 		
 		
-	$price =$reservation->total_tariff;
+	$price =($reservation->total_tariff/$rowCount_status->room_count)/$rowCount_status->no_of_days;
 	
        /*$resNewTaxInclution = mysqli_query(
         $connNew,
@@ -620,7 +641,7 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 	}else{ //2 for exclusive	
 		
 		
-	$price =$reservation->total_tariff;
+	$price =($reservation->total_tariff/$rowCount_status->room_count)/$rowCount_status->no_of_days;//$reservation->total_tariff;
 	 $resNewTaxInclution = mysqli_query(
         $connNew,
         "SELECT * FROM `" . TBL_TAX_RULE . "` 
@@ -760,7 +781,7 @@ $Account_Name = 'Output CGST @ ' . $value . '%';
 	
 	
 	
-	
+	//die;
 	
 	
 	
