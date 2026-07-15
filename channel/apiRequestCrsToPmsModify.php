@@ -452,7 +452,7 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 	if($tax_detail=='1'){//1 for inclusive
 		
 		
-	 $price =$subtotal1;		
+	 /*$price =$subtotal1;		
 	
        $resNewTaxInclution = mysqli_query(
         $connNew,
@@ -463,7 +463,18 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
              OR (tax_inc_slabs_to BETWEEN '$price' AND '$price')) 
            AND tax_uniqueid='$SlectedDateNewTax_id' 
          ORDER BY start_date DESC LIMIT 1"
-    );	
+    );	*/
+		$price =$subtotal1;		
+	 $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($id_shop) . "' 
+           AND ((tax_slabs_from <= '$price' AND tax_slabs_to >= '$price') 
+             OR (tax_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );
 		 
 		 
 	}else{//2 for exclusive	
