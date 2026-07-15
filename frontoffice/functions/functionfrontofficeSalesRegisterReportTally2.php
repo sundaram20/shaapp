@@ -588,13 +588,13 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 
 
 $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reservation->id_fo_rate_plan."'");
-		
+	//echo '------------------====>'.$reservation->id_fo_rate_plan.'--'.$tax_detail	;
 	if($tax_detail=='1'){//1 for inclusive
 		
 		
 	$price =$reservation->tax_per_day_per_room;
-
-       $resNewTaxInclution = mysqli_query(
+	
+       /*$resNewTaxInclution = mysqli_query(
         $connNew,
         "SELECT * FROM `" . TBL_TAX_RULE . "` 
          WHERE id_shop='" . addslashes($_SESSION['shop']) . "' 
@@ -603,10 +603,20 @@ $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reserva
              OR (tax_inc_slabs_to BETWEEN '$price' AND '$price')) 
            AND tax_uniqueid='$SlectedDateNewTax_id' 
          ORDER BY start_date DESC LIMIT 1"
-    );	
+    );	*/
+	$resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($_SESSION['shop']) . "' 
+           AND ((tax_slabs_from <= '$price' AND tax_slabs_to >= '$price') 
+             OR (tax_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );
 		 
 		 
-	}else{//2 for exclusive	
+	}else{ //2 for exclusive	
 		
 		
 	$price =$reservation->tax_per_day_per_room;
@@ -622,7 +632,7 @@ $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reserva
     );
 	}
 
-$tax_percent = 0;
+	$tax_percent = 0;
    
     if (mysqli_num_rows($resNewTaxInclution) > 0) {
         $rowNewTaxInclution = mysqli_fetch_object($resNewTaxInclution);
