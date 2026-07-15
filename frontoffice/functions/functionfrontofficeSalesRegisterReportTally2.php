@@ -587,12 +587,12 @@ $SelectTaxDateRow = mysqli_fetch_object($SelectTaxDateSQL);
 $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 
 
-$tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reservation->id_fo_rate_plan."'");
+	$tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reservation->id_fo_rate_plan."'");
 	//echo '------------------====>'.$reservation->id_fo_rate_plan.'--'.$tax_detail	;
 	if($tax_detail=='1'){//1 for inclusive
 		
 		
-	$price =$reservation->tax_per_day_per_room;
+	$price =$reservation->total_tariff;
 	
        /*$resNewTaxInclution = mysqli_query(
         $connNew,
@@ -604,6 +604,7 @@ $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reserva
            AND tax_uniqueid='$SlectedDateNewTax_id' 
          ORDER BY start_date DESC LIMIT 1"
     );	*/
+	
 	$resNewTaxInclution = mysqli_query(
         $connNew,
         "SELECT * FROM `" . TBL_TAX_RULE . "` 
@@ -619,7 +620,7 @@ $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reserva
 	}else{ //2 for exclusive	
 		
 		
-	$price =$reservation->tax_per_day_per_room;
+	$price =$reservation->total_tariff;
 	 $resNewTaxInclution = mysqli_query(
         $connNew,
         "SELECT * FROM `" . TBL_TAX_RULE . "` 
@@ -650,7 +651,7 @@ $tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$reserva
 				$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$taxMethod_sgst='Tariff Sales';	
 				$reservation_id_mst_charges_sales_local=$id_reservations;						
-				$Account_Name = 'ROOM TARIFF INCOME '.round($tax_percent).'%';
+				echo '<br>===================>'.$Account_Name = 'ROOM TARIFF INCOME '.round($tax_percent).'%';
 				$tax_per_day_per_room_sgst	=$reservation->total_tariff ?? 0;
 				
 					$tariff_Round_Off +=$reservation->total_tariff ?? 0;
