@@ -432,7 +432,87 @@ $resRoomId = mysqli_fetch_object($queryRoomId);
 
 	
 	
+	//Tax iD======INSERT=================================================================		
+			
+			$SelectTaxDateSQL = executeSql(
+    "SELECT * FROM `" . TBL_TAX_DATE_RULE . "` 
+     WHERE id_shop='" . addslashes($id_shop) . "' 
+       AND start_date <= CURDATE() AND status='1' 
+     ORDER BY start_date DESC"
+);
+$SelectTaxDateRow = $db->fetch_object2($SelectTaxDateSQL);
+$SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
+
+//1 for inclusive | 2 for exclusive	
+
+    
+			
+	$tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$Room_rate_plan_id."'");
+		
+	if($tax_detail=='1'){//1 for inclusive
+		
+		
+	 $price =$NewpriceValue;		
 	
+       $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($id_shop) . "' 
+           AND ((tax_inc_slabs_from <= '$price' AND tax_inc_slabs_to >= '$price') 
+             OR (tax_inc_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_inc_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );	
+		 
+		 
+	}else{//2 for exclusive	
+		
+		
+	$price =$NewpriceValue;		
+	 $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($id_shop) . "' 
+           AND ((tax_slabs_from <= '$price' AND tax_slabs_to >= '$price') 
+             OR (tax_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );
+	}
+			
+					
+			
+	
+
+    $tax_percent = 0;
+    $tax_rule_id = 0;
+    if (mysqli_num_rows($resNewTaxInclution) > 0) {
+        $rowNewTaxInclution = mysqli_fetch_object($resNewTaxInclution);
+        $tax_percent = $rowNewTaxInclution->tax_percent;
+        $tax_rule_id = $rowNewTaxInclution->id;
+
+        $tax_multiplier = 1 + ($tax_percent / 100);
+        $tariff_excl_tax = round($price / $tax_multiplier, 2, PHP_ROUND_HALF_UP);
+        $tax_amount = round($price - $tariff_excl_tax, 2);
+    } else {
+        $tariff_excl_tax = $price;
+        $tax_amount = 0;
+    }
+
+     $RoomListArray[$roomInc] = [
+        'tariff_per_room_excl_tax' => $tariff_excl_tax,
+        'tariff_per_room_incl_tax' => $price,
+        'tax_amount' => $tax_amount,
+        'tax_percent' => $tax_percent,
+        'tax_rule_id' => $tax_rule_id
+    ];
+
+    
+
+
+//Tax iD=======================================================================
 	
 		$SqlCheckOrderDetails = mysqli_query($connNew,"SELECT * FROM fo_reservations_details WHERE id_fo_reservations='".$id_fo_reservations."' AND `id_mst_hotels`='".$id_mst_hotels."' AND `id_mst_guest`='".$id_mst_guest."' AND `id_mst_room_types`='".$id_mst_room_types."' AND  `dated`='".addslashes(date("Y-m-d",strtotime($dated)))."' AND `room_quantity`='".$RoomType_NumberOfUnits."' AND `adults_per_room`='".$adults_per_room."' and `tariff_price_per_day_per_room`='".$subtotal1."' ");
 		$NumRow	=	mysqli_num_rows($SqlCheckOrderDetails); 
@@ -463,8 +543,8 @@ $resRoomId = mysqli_fetch_object($queryRoomId);
 			//$order_by_room='0';
 			for($r=1;$r<=$RoomType_NumberOfUnits;$r++){
 				
-		 $Insert_into_Order_Details= "INSERT INTO fo_reservations_details (id_fo_reservations,id_mst_hotels,id_mst_guest,id_mst_room_types,plan,id_rate,id_fo_rate_plan,dated,room_quantity,adults_per_room,tariff_price_per_day_per_room,tax_per_day_per_room,unique_code,checkin_status,id_shop,order_by_room,tax_percent) 
-	Values('$id_fo_reservations','$id_mst_hotels','$id_mst_guest',$id_mst_room_types,'$Room_rate_plan_id','$id_rate','$Room_rate_plan_id','$dated','$RoomType_NumberOfUnits','$adults_per_room','$subtotal1','$tax_per_day_per_room','$unique_code','$checkin_status','".addslashes($id_shop)."','$order_by_room','$tax_new_percent')";
+		 $Insert_into_Order_Details= "INSERT INTO fo_reservations_details (id_fo_reservations,id_mst_hotels,id_mst_guest,id_mst_room_types,plan,id_rate,id_fo_rate_plan,dated,room_quantity,adults_per_room,tariff_price_per_day_per_room,tax_per_day_per_room,unique_code,checkin_status,id_shop,order_by_room,tax_percent,id_tax_configuration) 
+	Values('$id_fo_reservations','$id_mst_hotels','$id_mst_guest',$id_mst_room_types,'$Room_rate_plan_id','$id_rate','$Room_rate_plan_id','$dated','$RoomType_NumberOfUnits','$adults_per_room','$subtotal1','$tax_per_day_per_room','$unique_code','$checkin_status','".addslashes($id_shop)."','$order_by_room','$tax_percent','$tax_rule_id')";
 	//exit;
 	 	$order_by_room++;
 	$Insert_into_Order_Details_Run = executeSql($Insert_into_Order_Details);
