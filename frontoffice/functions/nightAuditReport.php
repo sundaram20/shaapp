@@ -214,7 +214,7 @@ then ROUND(`".FO_RESERVATIONS_DETAILS."`.tariff_price_per_day_per_room,0) else 0
 
    $sqlOrderDetail = "Select  $ConnSQL from `".FO_RESERVATIONS_DETAILS."` where checkin_status='1' and id_fo_folio_to>0  ";
 		
-
+echo $sqlOrderDetail;
 //die;
 
 $queryReceipt = mysqli_query($connNew,$sqlOrderDetail);
@@ -226,25 +226,25 @@ $TotalBillCount=0;
 $nightAudit=array();
 ////while($RecordsReceipt	   =	mysqli_fetch_object($queryReceipt)){
 	
-	$RecordsReceipt	   =	mysqli_fetch_object($queryReceipt);
+		$RecordsReceipt	   =	mysqli_fetch_object($queryReceipt);
 				$outlet_Name ='Room Tariff';
 				$id_mst_outlet='000121';
-				
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['outlet_Name']= $outlet_Name;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Today'] += $RecordsReceipt->tariff_Today;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_MTD'] += $RecordsReceipt->tariff_MTD;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_YTD'] += $RecordsReceipt->tariff_YTD;
-						
-						
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_Today'] += $RecordsReceipt->tariff_Today+$RecordsReceipt->tax_Today;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_MTD'] += $RecordsReceipt->tariff_MTD+$RecordsReceipt->tax_MTD;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_YTD'] += $RecordsReceipt->tariff_YTD+$RecordsReceipt->tax_YTD;
-						
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_Today'] += $RecordsReceipt->tax_Today;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_MTD'] += $RecordsReceipt->tax_MTD;
-						$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_YTD'] += $RecordsReceipt->tax_YTD;
-						
-				
+
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['outlet_Name']= $outlet_Name;
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Today'] += $RecordsReceipt->tariff_Today;
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_MTD'] += $RecordsReceipt->tariff_MTD;
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_YTD'] += $RecordsReceipt->tariff_YTD;
+		
+		
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_Today'] += $RecordsReceipt->tariff_Today+$RecordsReceipt->tax_Today;
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_MTD'] += $RecordsReceipt->tariff_MTD+$RecordsReceipt->tax_MTD;
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tariff_Tax_YTD'] += $RecordsReceipt->tariff_YTD+$RecordsReceipt->tax_YTD;
+		
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_Today'] += $RecordsReceipt->tax_Today;
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_MTD'] += $RecordsReceipt->tax_MTD;
+		$nightAudit['NightAudit'][$outlet_Name][$id_mst_outlet]['tax_YTD'] += $RecordsReceipt->tax_YTD;
+		
+
 				
 	//}
 	//END TARIFF====================================================
@@ -412,7 +412,7 @@ while($RecordsSalesReportPayment	   =	mysqli_fetch_object($querySalesReportPayme
  
 	
 
-	
+	debugData($nightAudit);
 
 //debugdata($SalesRegisterArray);die;
 //PAYMENT END Tariff==================================================================>
@@ -677,8 +677,19 @@ while($Records	   =	mysqli_fetch_object($query)){
 			
 //============================================
 	}
-	
 	foreach ($nightAudit['NightAudit'] as $outletName => &$outlets) {
+
+    if ($outletName == 'Room Tariff') {
+        continue;
+    }
+
+    foreach ($outlets as &$data) {
+        $data['tariff_Today'] -= $data['tax_Today'];
+        $data['tariff_MTD']   -= $data['tax_MTD'];
+        $data['tariff_YTD']   -= $data['tax_YTD'];
+    }
+}
+	/*foreach ($nightAudit['NightAudit'] as $outletName => &$outlets) {
     foreach ($outlets as &$data) {
 
         $data['tariff_Today'] -= $data['tax_Today'];
@@ -686,7 +697,7 @@ while($Records	   =	mysqli_fetch_object($query)){
         $data['tariff_YTD']   -= $data['tax_YTD'];
 
     }
-}
+}*///Room Tariff
 	//debugData($SalesRegisterArrayPOS);
 	//debugData($SalesRegisterArray);
 
