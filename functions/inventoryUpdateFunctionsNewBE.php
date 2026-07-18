@@ -48,8 +48,8 @@
             } else { // CRS
                 $online_avail = selectColumn('fo_inventory', 'online_allocation', "WHERE allocation_date='" . date('Y-m-d', $startDate) . "' AND id_mst_room_types='" . $ids_room[$index] . "' AND id_mst_hotels='$id_hotel'");
             }
-            $blocked_hotel=selectColumn('fo_inventory','blocked_hotel','WHERE allocation_date="'.date('Y-m-d',$startDate).'" AND id_mst_room_types="'.$ids_room[$index].'" AND id_mst_hotels="'.$id_hotel.'"');
-						$online_avail=$online_avail-$blocked_hotel;
+            //$blocked_hotel=selectColumn('fo_inventory','blocked_hotel','WHERE allocation_date="'.date('Y-m-d',$startDate).'" AND id_mst_room_types="'.$ids_room[$index].'" AND id_mst_hotels="'.$id_hotel.'"');
+						//$online_avail=$online_avail-$blocked_hotel;
             $invStatus = selectColumn('fo_inventory', 'status', "WHERE allocation_date='" . date('Y-m-d', $startDate) . "' AND id_mst_room_types='" . $ids_room[$index] . "' AND id_mst_hotels='$id_hotel'");
 
             $online_avail = max(0, (int)$online_avail);
