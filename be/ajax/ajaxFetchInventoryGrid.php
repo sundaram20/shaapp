@@ -51,7 +51,7 @@ if($_REQUEST['id_room']!='' && $_REQUEST['id_hotel']!='' ){
 
     		$dateGrid.='<th>'.date("l",strtotime($from))."<br>".date("d-M-Y",strtotime($from)).'</th>';
 
-        $singleGrid.='<td "><i onclick="fillLeft(\''.date('Y-m-d',strtotime($dateArr[0])).'\',\''.$from.'\',\'room_'.$rowGrid->id_mst_room_types.'\');" class="arrows fa fa-angle-double-left"></i><input class="inputGrid" name="room_'.$rowGrid->id_mst_room_types."_".date('Y-m-d',strtotime($from)).'" value="'.$rowGrid->crs_available.'"  type="text" /><i onclick="fillRight(\''.$from.'\',\''.date('Y-m-d',strtotime($dateArr[1])).'\',\'room_'.$rowGrid->id_mst_room_types.'\');" class="arrows fa fa-angle-double-right"></i></td>';
+        $singleGrid.='<td "><i onclick="fillLeft(\''.date('Y-m-d',strtotime($dateArr[0])).'\',\''.$from.'\',\'room_'.$rowGrid->id_mst_room_types.'\');" class="arrows fa fa-angle-double-left"></i><input class="inputGrid" name="room_'.$rowGrid->id_mst_room_types."_".date('Y-m-d',strtotime($from)).'" value="'.($rowGrid->crs_available-$rowGrid->blocked_hotel).'"  type="text" /><i onclick="fillRight(\''.$from.'\',\''.date('Y-m-d',strtotime($dateArr[1])).'\',\'room_'.$rowGrid->id_mst_room_types.'\');" class="arrows fa fa-angle-double-right"></i></td>';
 
         $stopSellGrid.='<td "><i onclick="fillLeft(\''.date('Y-m-d',strtotime($dateArr[0])).'\',\''.$from.'\',\'status_'.$rowGrid->id_mst_room_types.'\');" class="arrows fa fa-angle-double-left"></i><input class="inputGrid" name="status_'.$rowGrid->id_mst_room_types."_".date('Y-m-d',strtotime($from)).'" value="'.$rowGrid->status.'"  type="text" /><i onclick="fillRight(\''.$from.'\',\''.date('Y-m-d',strtotime($dateArr[1])).'\',\'status_'.$rowGrid->id_mst_room_types.'\');" class="arrows fa fa-angle-double-right"></i></td>'; 
 
