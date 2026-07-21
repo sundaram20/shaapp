@@ -523,7 +523,7 @@ if($report_show!=1){
 							}
 					}else{
 						
-					$status = "Occupied";	
+					$status = "Checkout";	
 						}
 					echo $status;
 
