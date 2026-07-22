@@ -126,7 +126,7 @@ if(mysqli_query($connNew, $updateSql)){
 
 
 
-$autoFix = "ALTER TABLE `fo_reservations_details` ADD `tax_percent` FLOAT(55,2) NOT NULL AFTER `id_tax_configuration`;
+/*$autoFix = "ALTER TABLE `fo_reservations_details` ADD `tax_percent` FLOAT(55,2) NOT NULL AFTER `id_tax_configuration`;
 
 ";
 
@@ -135,9 +135,24 @@ if(mysqli_query($connNew, $autoFix)){
 } else {
     echo "⚠ [$DB_NAME] date_created Issue: ".mysqli_error($connNew)."<br>";
 }
+*/
+$autoFix = "SELECT * FROM `fs_channel_manager` ";
 
-echo "<hr>";
-			
+
+$RowCh    =   mysqli_query($connNew, $autoFix);
+while($RecodCh = mysqli_fetch_object($RowCh)){
+
+ 
+ echo "🔧 [$RecodCh->id] ".$RecodCh->name." OK<br>";
+
+
+
+
+
+
+
+        }
+		echo "<hr>";	
 mysqli_close($connNew);
 $db->close();
 		}
