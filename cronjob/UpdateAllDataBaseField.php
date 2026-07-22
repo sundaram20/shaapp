@@ -61,7 +61,7 @@ $DB_PERSISTENT_CONN             = false;
 $id_shop=2;
 
 $season =array();
-$SqlShop = "SELECT name,city FROM `mst_shops` where id='2' and status='1' ";
+$SqlShop = "SELECT name,city,shop_code FROM `mst_shops` where id='2' and status='1' ";
 $resShop = mysqli_query($connNew,$SqlShop);
 $rowShop = mysqli_fetch_object($resShop);
 
@@ -152,10 +152,10 @@ while($RecodCh = mysqli_fetch_object($RowCh)){
 
 
         }
-		echo "<hr>";	
+			
 mysqli_close($connNew);
 $db->close();
-		}
+		}echo "<hr>";
 }	
 
 
