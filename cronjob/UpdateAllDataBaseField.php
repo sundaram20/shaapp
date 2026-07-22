@@ -65,7 +65,7 @@ $SqlShop = "SELECT name,city,shop_code FROM `mst_shops` where id='2' and status=
 $resShop = mysqli_query($connNew,$SqlShop);
 $rowShop = mysqli_fetch_object($resShop);
 
-echo '<br>'.$rowShop->shop_code;
+echo '<br>'.$dataShopChk->shop_code;
 		/*	
 		// ✅ Check table exists
 $tableCheck = mysqli_query($connNew, "
