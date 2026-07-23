@@ -572,7 +572,7 @@ if($report_show!=1){
 									
 									//$dateCheckin
 									foreach($BookingStatusArray[$dateCheckin]['Booking Status']  as $statusName=>$StatusValue){
-										echo '<b>'.$statusName.': <span style="float: right;">'.$StatusValue.'</span></b><br>';
+										//echo '<b>'.$statusName.': <span style="float: right;">'.$StatusValue.'</span></b><br>';
 									}
 									
 									?></td><td style="color:#000;background-color:#c2d69a;"><b><?php echo $adults; ?></b></td>
@@ -584,7 +584,7 @@ if($report_show!=1){
 									
 									//$dateCheckin
 									foreach($BookingStatusArray[$dateCheckin]['Front Office Status']  as $statusName=>$StatusValue){
-										echo '<b>'.$statusName.': <span style="float: right;">'.$StatusValue.'</span></b><br/>';
+										echo '<b>'.$statusName.': <span>'.$StatusValue.'</span></b><br/>';
 									}
 									
 									?></td>
