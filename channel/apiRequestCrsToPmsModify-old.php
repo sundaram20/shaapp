@@ -2,25 +2,25 @@
 
  $query 			  =	mysqli_query($connNew ,"select * From ".FO_RESERVATIONS." Where other_reference='".$other_reference."'");
  $appNumberOfRows	=	mysqli_num_rows($query);
- $y=1;
+ $y=1; 
 if($appNumberOfRows>'0'){
-	if(strtotime($checkin)>=strtotime(date('Y-m-d'))){
+	if(strtotime($checkin)>=strtotime(date('Y-m-d'))){ echo 'date ei';die;
 	//if($y=='1'){
 	$BookingRecordrow=	mysqli_fetch_object($query);																										
 		$SqlCheckStatusDetails = mysqli_query($connNew,"SELECT checkin_status FROM fo_reservations_details WHERE id_fo_reservations='".$BookingRecordrow->id."' order by checkin_status desc ");
 		$NumRowCheckStatus	=	mysqli_num_rows($SqlCheckStatusDetails); 
 		$resRoomCheckStatusDetails= mysqli_fetch_object($SqlCheckStatusDetails);
 			
-//Get API Details//
+		//Get API Details//
 	if($resRoomCheckStatusDetails->checkin_status =='0' ||  $NumRowCheckStatus=='0'){	
-//Get API Details//
+		//Get API Details//
 	
 		  
-	  $bookingThrough	 =$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['bookingThrough'];
-	  $Segment			=$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['Segment'];
-	  $amendmentIn		=$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['amendmentIn'];
+	  $bookingThrough	  =$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['bookingThrough'];
+	  $Segment			  =$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['Segment'];
+	  $amendmentIn		  =$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['amendmentIn'];
 	  $bookingSource	  =$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['bookingSource'];
-	  $bookingStatus	  		=$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['bookingStatus'];
+	  $bookingStatus	  =$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['bookingStatus'];
 	  
 	  $paymentStatus	  	  =$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['paymentStatus'];
 	  $specialInstructions	=$xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['specialInstructions'];
@@ -38,14 +38,14 @@ if($appNumberOfRows>'0'){
 if (is_array($internal_remarks)) {
     $internal_remarks = $internal_remarks[0] ?? ''; // Access first element or set as empty if not present
 }
-$internal_remarks= empty($internal_remarks) ? "" : $internal_remarks;	
+	$internal_remarks= empty($internal_remarks) ? "" : $internal_remarks;	
 	
 		
 		$specialInstructions = $xmlarray['Body']['OTA_HotelResNotifRQ']['HotelReservations']['HotelReservation']['MiscellaneousInfo']['specialInstructions'];
 if (is_array($specialInstructions)) {
     $specialInstructions = $specialInstructions[0] ?? ''; // Access first element or set as empty if not present
 }
-$specialInstructions= empty($specialInstructions) ? "" : $specialInstructions;
+	$specialInstructions= empty($specialInstructions) ? "" : $specialInstructions;
 		
 		
 	 // $booking_status		=	selectColumn(TBL_ATTRIBUTES,'id'," WHERE `table_name` = 'bookingstatus' and field_value='".addslashes($bookingStatus)."'");
@@ -59,7 +59,7 @@ $id_mst_attributes_amendment		=	selectColumn(TBL_ATTRIBUTES,'id'," WHERE `table_
 $res_bookingsourcee =	selectColumn(TBL_ATTRIBUTES,'id'," WHERE `table_name` = 'booking_source' and status='1' and field_value='".addslashes($bookingSource)."'");
 	
 	
-	$pay_sts=	selectColumn(TBL_ATTRIBUTES,'id'," WHERE `table_name` = 'payment_status' and status='1' and field_value='".addslashes($paymentStatus)."'");
+$pay_sts=	selectColumn(TBL_ATTRIBUTES,'id'," WHERE `table_name` = 'payment_status' and status='1' and field_value='".addslashes($paymentStatus)."'");
 
 /*$paymentStatus		=	selectColumn(TBL_ATTRIBUTES,'name'," WHERE id_lang='1' AND status='1' and id_order_state='".addslashes($row->payment_status)."'");
 $bookingThrough		=	selectColumn(TBL_ATTRIBUTES,'name'," WHERE status='1' and id='".addslashes($row->booking_hrough)."'");
@@ -119,7 +119,7 @@ $bookingSource		=	selectColumn(TBL_ATTRIBUTES,'name'," WHERE status='1' and id='
 			//`reference`='".$ReferenceID."',
 			
 				
-			
+				
 				//echo $sql; die;
 			
 
@@ -432,7 +432,98 @@ $resRoomId = mysqli_fetch_object($queryRoomId);
 
 	
 	
+	//Tax iD======INSERT=================================================================		
+			
+			$SelectTaxDateSQL = executeSql(
+    "SELECT * FROM `" . TBL_TAX_DATE_RULE . "` 
+     WHERE id_shop='" . addslashes($id_shop) . "' 
+       AND start_date <= CURDATE() AND status='1' 
+     ORDER BY start_date DESC"
+);
+$SelectTaxDateRow = $db->fetch_object2($SelectTaxDateSQL);
+$SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
+
+//1 for inclusive | 2 for exclusive	
+
+    
+			
+	$tax_detail	=	selectColumn(TBL_RATE_PLAN,'tax_detail'," WHERE `id` = '".$Room_rate_plan_id."'");
+		
+	if($tax_detail=='1'){//1 for inclusive
+		
+		
+	 /*$price =$subtotal1;		
 	
+       $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($id_shop) . "' 
+           AND ((tax_inc_slabs_from <= '$price' AND tax_inc_slabs_to >= '$price') 
+             OR (tax_inc_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_inc_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );	*/
+		$price =$subtotal1;		
+	 $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($id_shop) . "' 
+           AND ((tax_slabs_from <= '$price' AND tax_slabs_to >= '$price') 
+             OR (tax_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );
+		 
+		 
+	}else{//2 for exclusive	
+		
+		
+	$price =$subtotal1;		
+	 $resNewTaxInclution = mysqli_query(
+        $connNew,
+        "SELECT * FROM `" . TBL_TAX_RULE . "` 
+         WHERE id_shop='" . addslashes($id_shop) . "' 
+           AND ((tax_slabs_from <= '$price' AND tax_slabs_to >= '$price') 
+             OR (tax_slabs_from BETWEEN '$price' AND '$price') 
+             OR (tax_slabs_to BETWEEN '$price' AND '$price')) 
+           AND tax_uniqueid='$SlectedDateNewTax_id' 
+         ORDER BY start_date DESC LIMIT 1"
+    );
+	}
+			
+					
+			
+	
+
+    $tax_percent = 0;
+    $tax_rule_id = 0;
+    if (mysqli_num_rows($resNewTaxInclution) > 0) {
+        $rowNewTaxInclution = mysqli_fetch_object($resNewTaxInclution);
+        $tax_percent = $rowNewTaxInclution->tax_percent;
+        $tax_rule_id = $rowNewTaxInclution->id;
+
+        $tax_multiplier = 1 + ($tax_percent / 100);
+        $tariff_excl_tax = round($price / $tax_multiplier, 2, PHP_ROUND_HALF_UP);
+        $tax_amount = round($price - $tariff_excl_tax, 2);
+    } else {
+        $tariff_excl_tax = $price;
+        $tax_amount = 0;
+    }
+
+     $RoomListArray[$roomInc] = [
+        'tariff_per_room_excl_tax' => $tariff_excl_tax,
+        'tariff_per_room_incl_tax' => $price,
+        'tax_amount' => $tax_amount,
+        'tax_percent' => $tax_percent,
+        'tax_rule_id' => $tax_rule_id
+    ];
+
+    
+
+
+//Tax iD=======================================================================
 	
 		$SqlCheckOrderDetails = mysqli_query($connNew,"SELECT * FROM fo_reservations_details WHERE id_fo_reservations='".$id_fo_reservations."' AND `id_mst_hotels`='".$id_mst_hotels."' AND `id_mst_guest`='".$id_mst_guest."' AND `id_mst_room_types`='".$id_mst_room_types."' AND  `dated`='".addslashes(date("Y-m-d",strtotime($dated)))."' AND `room_quantity`='".$RoomType_NumberOfUnits."' AND `adults_per_room`='".$adults_per_room."' and `tariff_price_per_day_per_room`='".$subtotal1."' ");
 		$NumRow	=	mysqli_num_rows($SqlCheckOrderDetails); 
@@ -462,11 +553,10 @@ $resRoomId = mysqli_fetch_object($queryRoomId);
 			
 			//$order_by_room='0';
 			for($r=1;$r<=$RoomType_NumberOfUnits;$r++){
-			
-		 $Insert_into_Order_Details= "INSERT INTO fo_reservations_details (id_fo_reservations,id_mst_hotels,id_mst_guest,id_mst_room_types,plan,id_rate,id_fo_rate_plan,dated,room_quantity,adults_per_room,tariff_price_per_day_per_room,tax_per_day_per_room,unique_code,checkin_status,id_shop,order_by_room) 
-	Values('$id_fo_reservations','$id_mst_hotels','$id_mst_guest',$id_mst_room_types,'$Room_rate_plan_id','$id_rate','$Room_rate_plan_id','$dated','$RoomType_NumberOfUnits','$adults_per_room','$subtotal1','$tax_per_day_per_room','$unique_code','$checkin_status','".addslashes($id_shop)."','$order_by_room')";
+				
+		 $Insert_into_Order_Details= "INSERT INTO fo_reservations_details (id_fo_reservations,id_mst_hotels,id_mst_guest,id_mst_room_types,plan,id_rate,id_fo_rate_plan,dated,room_quantity,adults_per_room,tariff_price_per_day_per_room,tax_per_day_per_room,unique_code,checkin_status,id_shop,order_by_room,tax_percent,id_tax_configuration) 
+	Values('$id_fo_reservations','$id_mst_hotels','$id_mst_guest',$id_mst_room_types,'$Room_rate_plan_id','$id_rate','$Room_rate_plan_id','$dated','$RoomType_NumberOfUnits','$adults_per_room','$subtotal1','$tax_per_day_per_room','$unique_code','$checkin_status','".addslashes($id_shop)."','$order_by_room','$tax_percent','$tax_rule_id')";
 	//exit;
-					echo 'Modify3w'.$Insert_into_Order_Details.$date_created;die;	
 	 	$order_by_room++;
 	$Insert_into_Order_Details_Run = executeSql($Insert_into_Order_Details);
 		
@@ -494,9 +584,13 @@ $resRoomId = mysqli_fetch_object($queryRoomId);
 											   
 		if($Set=='1'){
 			$order_by_room = $Setorder_by_room;
-		}									   
+		}	
+		
+		
 		} 
-	}
+	} //Order New Room
+
+
 }
 	
 }
@@ -563,6 +657,8 @@ $updateInventory = executeSql("UPDATE  `".FO_RESERVATIONS."`  SET
 		
 
 	$Booking_no = $BookingRecordrow->booking_no;
+updateOTA('1', $checkin,$checkout,$connNew);
+
 
 $data = [
 			'EchoToken' => $ReferenceID,

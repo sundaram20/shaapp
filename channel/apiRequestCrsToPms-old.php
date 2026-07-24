@@ -33,6 +33,7 @@ $query =	mysqli_query($appConnect ,"select * from app_shops_api Where user_name=
 $appNumberOfRows=	mysqli_num_rows($query);
 if($appNumberOfRows=='1'){	
 	$row=	mysqli_fetch_object($query);
+	$id_app_shops	= $row->id_app_shops;
 	include_once("../config/api_auto_loader.php");
 	include_once("guestDocConfig.php");
 	
@@ -65,11 +66,11 @@ $resChannel = mysqli_fetch_object($queryChannel);
 
 
 
-	 $sql = "SELECT * FROM fs_hotel_mapping WHERE booking_engine_id ='".$mappingHotelCode."' and channel_id='".$channelId."'";
+	$sql = "SELECT * FROM fs_hotel_mapping WHERE booking_engine_id ='".$mappingHotelCode."' and channel_id='".$channelId."'";
 	$result = mysqli_query($connNew, $sql);
 	if (mysqli_num_rows($result) == 0) {
 
-		echo $data = [
+		$data = [
 			'EchoToken' => $ReferenceID,
 			'PmsResID_Value' => $rese_id,
 			'status' => 'Hotel Code not exist '.$mappingHotelCode,
@@ -80,12 +81,12 @@ $resChannel = mysqli_fetch_object($queryChannel);
 
 		executeSql("Insert into api_request set channel_id = '1' , request='".$postData."',date_created='".date('Y-m-d H:i:s')."',company_name='".$CompanyName."',booking_referance_id='".$ReferenceID."',response_status='Hotel Code not exist',id_pms_response='".$otherRefrenceId."',failed_at='".date('Y-m-d H:i:s')."',booking_type='Commit'");
 
-		echo '<?xml version="1.0" encoding="UTF-8"?>
+		/*echo '<?xml version="1.0" encoding="UTF-8"?>
 		<OTA_HotelResNotifRS xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 		xmlns="http://www.opentravel.org/OTA/2003/05" hotel_name="'.$hotel_name.'"  Version="1.0">
 		<Success>"'.$mappingHotelCode.'" Code not exist'.$mappingHotelCode.'</Success>
-		</OTA_HotelResNotifRS>';
+		</OTA_HotelResNotifRS>';*/
 
 		//////////////////////////////////////////////////
 		//	mail sent function needs to write - afsal	//
@@ -136,8 +137,9 @@ else{
 			  mysqli_query($connNew, $updateDetailsSql);
 			 $checkinInv	= date('Y-m-d',strtotime($res['checkin']));
 		     $checkoutInv	= date('Y-m-d',strtotime($res['checkout']));
-			 updateOTA('1', $checkinInv,$checkoutInv,$connNew);
-			  
+			if($id_app_shops!='57'){
+				updateOTA('1', $checkinInv,$checkoutInv,$connNew);
+			}
 			  $data = [
 			'EchoToken' => $ReferenceID,
 			'CrsResID_Value' => $otherRefrenceId,
@@ -572,7 +574,7 @@ if($daysNew == '0'){
 				//	Modify response needs to send - afsal	//
 				//////////////////////////////////////////////
 
-				include_once("apiRequestCrsToPmsModify.php");
+				include_once("apiRequestCrsToPmsModify-old.php");
 				exit;
 			}
 			else	
@@ -696,7 +698,7 @@ $bookingSource		=	selectColumn(TBL_ATTRIBUTES,'name'," WHERE status='1' and id='
 			`created_by` = '".$last_modified_by."',
 			`last_modified` = '".currenDateTime()."',
 			`last_modified_by` = '".$last_modified_by."' ";
-					//echo $sql;//die;
+					//echo $sql;die;
 					
 			
 			
@@ -926,9 +928,9 @@ while(strtotime($dated)!=strtotime($checkout)){
 
 if(mysqli_num_rows($SQLRateId) > 0){
     $FetchArrayRateId   = mysqli_fetch_object($SQLRateId);
-    echo $Room_rate_plan_id  = $FetchArrayRateId->rate_id;
+    $Room_rate_plan_id  = $FetchArrayRateId->rate_id;
 } else {
-    echo $Error .= 'Rate mapping - '.$RatePlansMappingID.' Not Found<br>';
+    $Error .= 'Rate mapping - '.$RatePlansMappingID.' Not Found<br>';
 }
 		
 		
@@ -971,7 +973,7 @@ if(mysqli_num_rows($SQLRateId) > 0){
 			    $SubTotalTax	+=round($tax_perday_perroom*$RoomType_NumberOfUnits,2);
 			}
 			
-					
+						
 	
 $queryRoomId = mysqli_query($connNew,"SELECT * FROM fs_room_mapping WHERE hotel_mapping_id ='".$resChannel->id."' and booking_engine_id='".$roomCodeRoom."'");
 
@@ -1038,7 +1040,8 @@ $queryRoomId = mysqli_query($connNew,"SELECT * FROM fs_room_mapping WHERE hotel_
 	$date_created = date('Y-m-d');
 
 
-//Tax iD======INSERT=================================================================		
+	
+	//Tax iD======INSERT=================================================================		
 			
 			$SelectTaxDateSQL = executeSql(
     "SELECT * FROM `" . TBL_TAX_DATE_RULE . "` 
@@ -1123,7 +1126,6 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 //Tax iD=======================================================================
 	
 	
-	
 	if($Set==''){ $order_by_room='1';
 		/*$SqlCheckOrderDetails = mysqli_query($connNew,"SELECT * FROM fo_reservations_details WHERE id_fo_reservations='".$id_fo_reservations."' AND `id_mst_hotels`='".$id_mst_hotels."' AND `id_mst_guest`='".$id_mst_guest."' AND `id_mst_room_types`='".$id_mst_room_types."' AND  `dated`='".addslashes(date("Y-m-d",strtotime($dated)))."' AND `room_quantity`='".$RoomType_NumberOfUnits."' AND `adults_per_room`='".$adults_per_room."'");
 		$NumRow	=	mysqli_num_rows($SqlCheckOrderDetails); 
@@ -1148,7 +1150,7 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 			//$order_by_room='0';
 			for($r=1;$r<=$RoomType_NumberOfUnits;$r++){
 				
-		  $Insert_into_Order_Details= "INSERT INTO fo_reservations_details (id_fo_reservations,id_mst_hotels,id_mst_guest,id_mst_room_types,plan,id_rate,id_fo_rate_plan,dated,room_quantity,adults_per_room,tariff_price_per_day_per_room,tax_per_day_per_room,unique_code,checkin_status,id_shop,order_by_room,tax_percent,id_tax_configuration) 
+		 $Insert_into_Order_Details= "INSERT INTO fo_reservations_details (id_fo_reservations,id_mst_hotels,id_mst_guest,id_mst_room_types,plan,id_rate,id_fo_rate_plan,dated,room_quantity,adults_per_room,tariff_price_per_day_per_room,tax_per_day_per_room,unique_code,checkin_status,id_shop,order_by_room,tax_percent,id_tax_configuration) 
 	Values('$id_fo_reservations','$id_mst_hotels','$id_mst_guest',$id_mst_room_types,'$Room_rate_plan_id','$id_rate','$Room_rate_plan_id','$dated','$RoomType_NumberOfUnits','$adults_per_room','$subtotal1','$tax_per_day_per_room','$unique_code','$checkin_status','".addslashes($id_shop)."','$order_by_room','$tax_percent','$tax_rule_id')";
 	//exit;
 	 	
@@ -1254,7 +1256,9 @@ $updateInventory = executeSql("UPDATE  `".FO_RESERVATIONS."`  SET
 //Other Charges Start=================================================================
 	
 	}
+				if($id_app_shops!='57'){
 				updateOTA('1', $checkin,$checkout,$connNew);
+				}
 				
 $Booking_no	= addslashes($docConfig['prefix']).addslashes($docConfig['po_no']).addslashes($docConfig['suffix']);
 	$data = [
