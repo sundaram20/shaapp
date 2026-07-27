@@ -45,7 +45,7 @@ $headers = getallheaders();
         include_once("../../config/api_auto_loader.php");
         include_once("../guestDocConfig.php");
         $id_shop    = 2;
-        $channelId  = '2';
+        $channelId  = '3';
 
         //API CODE START====================================================================================
 
