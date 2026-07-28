@@ -248,6 +248,20 @@ $headers = getallheaders();
         $other_reference = $otherRefrenceId;
         $checkin  = $data['stay']['checkIn']  ?? '';
         $checkout = $data['stay']['checkOut'] ?? '';
+        
+        if (empty($checkin) || empty($checkout) || strtotime($checkin) === false || strtotime($checkout) === false || strtotime($checkout) <= strtotime($checkin)) {
+
+        executeSql("Insert into api_request set channel_id = '" . $channelId . "' , request='" . addslashes($postData) . "',date_created='" . date('Y-m-d H:i:s') . "',company_name='" . ($data['bookingSource']['name'] ?? '') . "',booking_referance_id='" . $ReferenceID . "',response_status='Invalid checkin/checkout date',id_pms_response='" . $id . "',failed_at='" . date('Y-m-d H:i:s') . "',booking_type='Commit'");
+
+        $out = [
+            'EchoToken'      => $id,
+            'CrsResID_Value' => $id,
+            'status'         => 'Invalid checkin/checkout date',
+        ];
+        echo json_encode($out, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    
         $no_of_days = max(1, abs((strtotime($checkin) - strtotime($checkout)) / 86400));
 
         $rooms = $data['rooms'] ?? [];
