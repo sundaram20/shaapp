@@ -261,8 +261,20 @@ $headers = getallheaders();
         echo json_encode($out, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         exit;
     }
-    
+
         $no_of_days = max(1, abs((strtotime($checkin) - strtotime($checkout)) / 86400));
+
+        if ($no_of_days > 90) { // pick a sane max for your property
+    executeSql("Insert into api_request set channel_id = '" . $channelId . "' , request='" . addslashes($postData) . "',date_created='" . date('Y-m-d H:i:s') . "',company_name='" . ($data['bookingSource']['name'] ?? '') . "',booking_referance_id='" . $ReferenceID . "',response_status='Stay length exceeds maximum',id_pms_response='" . $id . "',failed_at='" . date('Y-m-d H:i:s') . "',booking_type='Commit'");
+
+    $out = [
+        'EchoToken'      => $id,
+        'CrsResID_Value' => $id,
+        'status'         => 'Stay length exceeds maximum allowed nights',
+    ];
+    echo json_encode($out, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
         $rooms = $data['rooms'] ?? [];
         $total_rooms  = count($rooms);
