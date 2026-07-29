@@ -1287,7 +1287,7 @@ function AddTextBox() {
 	
 	var res_room_type_new = $("#res_room_type_new").val();
 	var res_rate_plan_new = $("#res_rate_plan_new").val();
-	
+	//alert(res_room_type_new);
   if(res_room_type_new.trim() === ""){
       document.querySelector(".res_room_type_new-error").innerHTML = 
       "This value is required.";
@@ -1352,14 +1352,14 @@ function AddTextBox() {
     days = DiffDays;
 
     var DiffDays = Math.round(days);
-    var uncodeRoomCode = Math.floor(Math.random() * 1000) + 5;
+    var uncodeRoomCode = Math.floor(Math.random() * 10000) + 155;
 	var roomCount=0;
    
 		//alert(DiffDays);
 		//alert(res_room_no);
 	for (var q = 0; q < res_room_no; q++) {
 		 roomCount =roomCount +  Number(1); 
-		 var groupRowCount = Math.floor(Math.random() * 1500) + 4;
+		 var groupRowCount = Math.floor(Math.random() * 15000) + 54;
         var loopDate = start;
        var row;
 	   
@@ -1379,7 +1379,7 @@ function AddTextBox() {
             var res_adult_per_room = $("#res_adult_per_room").val();
             var res_child_below_5_year = $("#res_child_below_5_year").val();
             var res_child_above_5_year = $("#res_child_above_5_year").val();
-            var uncode = Math.floor(Math.random() * 500) + 1; //Math.floor(Math.random() * 15);
+            var uncode = Math.floor(Math.random() * 1000000) + 1 + res_room_type_new; //Math.floor(Math.random() * 15);
 			
 			
 			//alert('RowCount = '+k+new_date);
@@ -1806,6 +1806,7 @@ days = DiffDays;
                 order_by_roomRowCount,roomCount,CategoryCount,res_total);
 				
 				CategoryCount ='5';
+
             //div2.innerHTML=div.innerHTML
             //    var Datas	=	div2.append(div);
             //div2.append(div);
