@@ -7,12 +7,22 @@ if($appNumberOfRows>'0'){
 	if(strtotime($checkin)>=strtotime(date('Y-m-d'))){
 	//if($y=='1'){
 	$BookingRecordrow=	mysqli_fetch_object($query);																										
-		$SqlCheckStatusDetails = mysqli_query($connNew,"SELECT checkin_status FROM fo_reservations_details WHERE id_fo_reservations='".$BookingRecordrow->id."' order by checkin_status desc ");
+		/*$SqlCheckStatusDetails = mysqli_query($connNew,"SELECT checkin_status FROM fo_reservations_details WHERE id_fo_reservations='".$BookingRecordrow->id."' and checkin_status='1' order by checkin_status desc ");
 		$NumRowCheckStatus	=	mysqli_num_rows($SqlCheckStatusDetails); 
 		$resRoomCheckStatusDetails= mysqli_fetch_object($SqlCheckStatusDetails);
 			
 //Get API Details//
-	if($resRoomCheckStatusDetails->checkin_status =='0' ||  $NumRowCheckStatus=='0'){	
+	if($resRoomCheckStatusDetails->checkin_status =='0' ||  $NumRowCheckStatus=='0'){	*/
+
+	$SqlCheckStatusDetails = mysqli_query($connNew,"
+    SELECT 1
+    FROM fo_reservations_details
+    WHERE id_fo_reservations='".$BookingRecordrow->id."'
+      AND checkin_status='1'
+    LIMIT 1
+");
+
+if(mysqli_num_rows($SqlCheckStatusDetails) == 0){
 //Get API Details//
 	
 		  
