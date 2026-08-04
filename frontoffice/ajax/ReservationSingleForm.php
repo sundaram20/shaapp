@@ -982,7 +982,7 @@ $(function() {
 				
 				
 				
-<div class="form-group col-sm-2">
+                <div class="form-group col-sm-2">
                     <label for="reference" style="float:left;">Reference</label>
                     <input type="text" class="form-control " <?php //echo $readonly; ?> placeholder="Reference" id="reference" name="reference" value="<?php echo $row->reference?>">
                 </div>
@@ -1167,7 +1167,42 @@ $(function() {
 		<?php // }; ?>
                 </div>
             </div>
-        </div>
+        </div>  
+         <?php if($row->date_created){?><br>
+         <div class="col-md-9 col-sm-9 col-xs-9" style="display : flex; margin-top:10px;  border : 0px solid #d2d6de;">
+                <div class="clearfix"></div>
+                <div class="form-group col-sm-3">
+                   <label for="last_modified_by">Created By</label>
+                  
+                   <?php
+                  
+                    $created_by    = selectColumn('mst_users','name','WHERE id = "'.$row->created_by.'"');
+                                      
+                    ?>
+                   <input type="text" disabled="disabled" class="form-control"  id="last_modified_by"  value="<?php echo stripslashes($created_by);?>">
+                 </div>
+                <div class="form-group col-sm-3">
+                   <label for="date_created">Date Created</label>
+                   <input type="text" disabled="disabled" class="form-control" id="date_created"  value="<?php echo stripslashes(dateformat($row->date_created));?>">
+
+                 </div>
+                <div class="form-group col-sm-3">
+                   <label for="last_modified">Last Updated</label>
+                   <input type="text" disabled="disabled" class="form-control" id="last_modified" value="<?php echo stripslashes(dateformat($row->last_modified));?>">
+                 </div>
+                <div class="form-group col-sm-3">
+                   <label for="last_modified_by">Last Updated By</label>
+                   <?php 
+                    $last_modified_by    = selectColumn('mst_users','name','WHERE id = "'.$row->last_modified_by.'"');
+                   
+                   ?>
+    <input type="text" disabled="disabled" class="form-control"  id="last_modified_by"
+      value="<?php echo $last_modified_by;?>">
+                 </div>  </div>
+                <?php } ?>
+
+
+                
         <div class="" style="padding : 15px; display : flex; justify-content: flex-end; width : 100%!important;">
             <div>
                 <button class="btn n-btn" onclick="saveReservationSingleForm();" type="button" style="padding: 7px 20px!important; ">Save</button>
