@@ -268,6 +268,29 @@ if (in_array($invSearchValue, $AccessArray)) { ?>
     
   </section>
 </div>
-<!-- /.content-wrapper -->
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootbox@5.5.3/dist/bootbox.min.js"></script>
+<!-- /.content-wrapper -->
+<?php
+if (!empty($_SESSION['subscription_expired'])) {
+    $message = $_SESSION['subscription_expired'];
+    unset($_SESSION['subscription_expired']); // Show only once
+?>
+<script>
+$(function () {
+    bootbox.alert({
+        title: "Subscription Notice",
+        message: <?= json_encode($message) ?>,
+        buttons: {
+            ok: {
+                label: "Continue",
+                className: "btn-primary"
+            }
+        }
+    });
+});
+</script>
+<?php } ?>
 <?php include_once("includes/footer.php")?>

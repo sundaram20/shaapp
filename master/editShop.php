@@ -73,7 +73,8 @@ if($_POST['Save']){
 							`email` = '".addslashes($_POST['email'])."',
 							`rateletter_url` = '".addslashes($_POST['rateletter_url'])."',
 							`email_format_url` = '".addslashes($_POST['email_format_url'])."',	
-							`website_url` = '".addslashes($_POST['website_url'])."',						
+							`website_url` = '".addslashes($_POST['website_url'])."',	
+							`subscription_expired` = '".addslashes($_POST['subscription_expired'])."',					
 							`short_code` = '".addslashes($_POST['short_code'])."'";
 			$addSql .= "	,`phone` = '".addslashes($_POST['phone'])."'";
 				if($_FILES['image']['name'] != ''){				
@@ -195,6 +196,7 @@ $sql1 = executeSql("SELECT * FROM `".TBL_SHOP."` ORDER BY id DESC LIMIT 1");
 							`email_format_url` = '".addslashes($_POST['email_format_url'])."',	
 							`website_url` = '".addslashes($_POST['website_url'])."',	
 							`short_code` = '".addslashes($_POST['short_code'])."',
+							`subscription_expired` = '".addslashes($_POST['subscription_expired'])."',	
 							`use_night_audit_date` = '".addslashes($_POST['use_night_audit_date'])."'";							
 			$editSql .= "	,`phone` = '".addslashes($_POST['phone'])."'";
 				if($_FILES['image']['name'] != ''){				
@@ -476,6 +478,15 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 				</div>
 				<hr/>
 				<div class="row">
+
+<div class="form-group col-md-6">
+	                  <label for="Subscription expired">Subscription expired</label>
+	                  <textarea class="form-control" id="subscription_expired" name="subscription_expired" rows="3"><?php if($_POST['subscription_expired']) echo $_POST['subscription_expired'];else echo stripslashes($rowUserDetail->subscription_expired);?></textarea>
+					 <?php echo $err_subscription_expired;?>
+	                </div>
+
+
+
 					<div class="form-group col-md-12">
 		                <label for="status">Status</label>
 		                <input type="radio" class="flat-red" <?php if($_POST['status'] == '1'){echo "checked";}else{if($rowUserDetail->status == 1)echo "checked";}?> value="1" name="status" checked /> Active
