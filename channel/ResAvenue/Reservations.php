@@ -281,7 +281,7 @@ $query = mysqli_query($connNew,
 );
 //"SELECT id FROM fo_reservations WHERE other_reference='$other_reference'";
 if (mysqli_num_rows($query) > 0) {
-
+$last_modified_by="9";	
     // MODIFY
     $row = mysqli_fetch_assoc($query);
     $rese_id = $row['id'];
@@ -295,6 +295,7 @@ if (mysqli_num_rows($query) > 0) {
             checkin='$checkin',
             checkout='$checkout',
 			`res_payment_status`='".$id_payStatus."',
+            `last_modified_by` = '".$last_modified_by."',
             last_modified=NOW()
          WHERE id='$rese_id'"
     );
@@ -315,7 +316,8 @@ $id_shop_group = "1";
 $id_mst_shop = "2";
 $id_mst_country_lang = "0";
 $id_mst_hotels = $hotel_id;
-	$booking_status="1";	
+	$booking_status="1";
+    $last_modified_by="9";	
 //$booking_status		=	selectColumn('fo_booking_status','id'," WHERE name='".addslashes($bookingStatus)."'");
 $daysNew = (strtotime($checkout) - strtotime($checkin)) / 86400;
 
