@@ -562,7 +562,8 @@ $SlectedDateNewTax_id = $SelectTaxDateRow->id ?? 0;
 					`net_booking_amount`='".$net_booking_amount."',
 					`total_addon_price`='".$total_addon_amount."',
 					`total_tax`='".$tax_per_day_per_room."',
-					
+					`last_modified_by` = '".$_SESSION['userId']."',
+					`last_modified` = '".currenDateTime()."',
 					`balance`='".$net_booking_amount."'
 						
 						WHERE  
