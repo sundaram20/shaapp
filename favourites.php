@@ -281,7 +281,7 @@ if (!empty($_SESSION['subscription_expired'])) {
 <script>
 $(function () {
     bootbox.alert({
-        title: "Subscription Notice",
+        title: "Subscription Expired",
         message: <?= json_encode($message) ?>,
         buttons: {
             ok: {
