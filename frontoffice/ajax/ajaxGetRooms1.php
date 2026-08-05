@@ -73,7 +73,7 @@ if (mysqli_num_rows($occupied_room_based_on_reservation_query) > 0) {
 $folio_array = json_encode($folio_array);
 
   //echo "SELECT DISTINCT room.id,room.room_no,room.id_mst_room_types,room.room_status,resdetails.id_fo_reservations, resdetails.id_mst_guest,resdetails.id_fo_folio_to ,resdetails.id_fo_bill, resdetails.order_by_room, resdetails.child_below_5_year,resdetails.child_above_5_year,resdetails.adults_per_room, resdetails.checkin_date, resdetails.checkout_date, resdetails.checkout_status, reservation.booking_status, resdetails.`no_showoff`, resdetails.`dated`, reservation.checkout as reservation_checkout, resdetails.checkin_time FROM `mst_room_no_allocation` as room INNER JOIN fo_reservations_details as resdetails ON room.id=resdetails.id_mst_room_no_reserved INNER JOIN fo_reservations as reservation ON resdetails.id_fo_reservations=reservation.id WHERE resdetails.`no_showoff`='0'and  resdetails.dated BETWEEN '".$today."' AND '".$reservation_checkout."' and room.id_mst_room_types = '".$id_mst_room_types."'  and room_availability = 'Reserv'";
-$allocated_All_room_query = mysqli_query($connNew, "SELECT DISTINCT room.id,room.room_no,room.id_mst_room_types,room.room_status,resdetails.id_fo_reservations, resdetails.id_mst_guest,resdetails.id_fo_folio_to ,resdetails.id_fo_bill, resdetails.order_by_room, resdetails.child_below_5_year,resdetails.child_above_5_year,resdetails.adults_per_room, resdetails.checkin_date, resdetails.checkout_date, resdetails.checkout_status, reservation.booking_status, resdetails.`no_showoff`, resdetails.`dated`, reservation.checkout as reservation_checkout, resdetails.checkin_time FROM `mst_room_no_allocation` as room INNER JOIN fo_reservations_details as resdetails ON room.id=resdetails.id_mst_room_no_reserved INNER JOIN fo_reservations as reservation ON resdetails.id_fo_reservations=reservation.id WHERE resdetails.`no_showoff`='0'and  resdetails.dated BETWEEN '".$today."' AND '".$reservation_checkout."' and room.id_mst_room_types = '".$id_mst_room_types."'  and room_availability = 'Reserv'");
+$allocated_All_room_query = mysqli_query($connNew, "SELECT DISTINCT room.id,room.room_no,room.id_mst_room_types,room.room_status,resdetails.id_fo_reservations, resdetails.id_mst_guest,resdetails.id_fo_folio_to ,resdetails.id_fo_bill, resdetails.order_by_room, resdetails.child_below_5_year,resdetails.child_above_5_year,resdetails.adults_per_room, resdetails.checkin_date, resdetails.checkout_date, resdetails.checkout_status, reservation.booking_status, resdetails.`no_showoff`, resdetails.`dated`, reservation.checkout as reservation_checkout, resdetails.checkin_time FROM `mst_room_no_allocation` as room INNER JOIN fo_reservations_details as resdetails ON room.id=resdetails.id_mst_room_no_reserved INNER JOIN fo_reservations as reservation ON resdetails.id_fo_reservations=reservation.id WHERE resdetails.`no_showoff`='0' and reservation.booking_status !='4' and  resdetails.dated BETWEEN '".$today."' AND '".$reservation_checkout."' and room.id_mst_room_types = '".$id_mst_room_types."'  and room_availability = 'Reserv'");
 if (mysqli_num_rows($allocated_All_room_query) > 0) {
     while ($row = mysqli_fetch_object($allocated_All_room_query)) {
 		$allocation_All_room_ids[$row->id] = [
@@ -83,7 +83,7 @@ if (mysqli_num_rows($allocated_All_room_query) > 0) {
 	}
 }
 
-$allocated_room_query = mysqli_query($connNew, "SELECT DISTINCT room.id,room.room_no,room.id_mst_room_types,room.room_status,resdetails.id_fo_reservations, resdetails.id_mst_guest,resdetails.id_fo_folio_to ,resdetails.id_fo_bill, resdetails.order_by_room, resdetails.child_below_5_year,resdetails.child_above_5_year,resdetails.adults_per_room, resdetails.checkin_date, resdetails.checkout_date, resdetails.checkout_status, reservation.booking_status, resdetails.`no_showoff`, resdetails.`dated`, reservation.checkout as reservation_checkout, resdetails.checkin_time FROM `mst_room_no_allocation` as room INNER JOIN fo_reservations_details as resdetails ON room.id=resdetails.id_mst_room_no_reserved INNER JOIN fo_reservations as reservation ON resdetails.id_fo_reservations=reservation.id WHERE resdetails.`no_showoff`='0' and resdetails.`dated`='".$today."' and room.id_mst_room_types = '".$id_mst_room_types."' and resdetails.id_fo_reservations = '".$reservation_id."' and room_availability = 'Reserv'");
+$allocated_room_query = mysqli_query($connNew, "SELECT DISTINCT room.id,room.room_no,room.id_mst_room_types,room.room_status,resdetails.id_fo_reservations, resdetails.id_mst_guest,resdetails.id_fo_folio_to ,resdetails.id_fo_bill, resdetails.order_by_room, resdetails.child_below_5_year,resdetails.child_above_5_year,resdetails.adults_per_room, resdetails.checkin_date, resdetails.checkout_date, resdetails.checkout_status, reservation.booking_status, resdetails.`no_showoff`, resdetails.`dated`, reservation.checkout as reservation_checkout, resdetails.checkin_time FROM `mst_room_no_allocation` as room INNER JOIN fo_reservations_details as resdetails ON room.id=resdetails.id_mst_room_no_reserved INNER JOIN fo_reservations as reservation ON resdetails.id_fo_reservations=reservation.id WHERE resdetails.`no_showoff`='0' and reservation.booking_status !='4' and resdetails.`dated`='".$today."' and room.id_mst_room_types = '".$id_mst_room_types."' and resdetails.id_fo_reservations = '".$reservation_id."' and room_availability = 'Reserv'");
 if (mysqli_num_rows($allocated_room_query) > 0) {
     while ($row = mysqli_fetch_object($allocated_room_query)) {
 		$allocation_room_ids[$row->id] = [
@@ -138,9 +138,9 @@ $start .='
 // echo "<pre>";
 //debugData($allocation_room_ids);echo "<br>";
 //debugData($allocation_All_room_ids);echo "<br>";
- //debugData($occupied_room_ids);echo "<br>";
+//debugData($occupied_room_ids);echo "<br>";
 //debugData($occupied_based_on_reservation_room_ids);echo "<br>";
-// debugData($all_rooms);
+//debugData($all_rooms);
 // echo "sdf";
 // exit;
 
