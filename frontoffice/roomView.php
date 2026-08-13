@@ -61,7 +61,7 @@ $resRes = mysqli_query($connNew,$sqlRes);
 	<?php $session=$_GET['submenu'];
 //echo $_REQUEST['id_posbilling'];
 	 ?>
-	<section class="content-header">
+	<section class="content-header d-none">
 		<div class="row">
 			<div class="col-md-4 col-xs-12">
 				<!--<h5 style="margin:0px 0px 0px 0px !important;padding:0px 0px 0px 0px !important;">
@@ -112,16 +112,16 @@ $resRes = mysqli_query($connNew,$sqlRes);
 		/* Individual room card */
 		.rvn-room-card {
 
-			padding: 10px;
+			/* padding: 4px; */
 			width: 25%;
 		}
 
 		.rvn-room-card-sub {
 			background-color: #fff;
-			border-radius: 12px;
+			border-radius: 4px;
 			box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
 
-			padding: 10px;
+			padding: 5px;
 			position: relative;
 			font-family: 'Arial', sans-serif;
 			transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -138,20 +138,20 @@ $resRes = mysqli_query($connNew,$sqlRes);
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			margin-bottom: 12px;
+			margin-bottom: 0px;
 			border-bottom: 1px solid #f1f1f1;
 			padding: 0px 0px 5px 0px;
 		}
 
 		.rvn-room-number {
-			font-size: 22px;
+			font-size: 1.8rem;
 			font-weight: bold;
 			color: #333;
 		}
 
 		.rvn-room-type {
 			font-size: 13px;
-			color: #888;
+			    color: #585858;
 			margin-top: 4px;
 		}
 
@@ -394,7 +394,7 @@ $resRes = mysqli_query($connNew,$sqlRes);
 			display: flex;
 
 			align-items: center;
-			padding: 1rem;
+			padding: 0.5rem 1rem;
 			background-color: #f8f9fa;
 			border-bottom: 1px solid #ddd;
 		}
@@ -457,8 +457,10 @@ $resRes = mysqli_query($connNew,$sqlRes);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 2px;
 	margin-left: 3rem;
+	width: 100%;
+	font-size: 1.2rem;
 }
 
 .cstmStatus {
@@ -490,20 +492,217 @@ $resRes = mysqli_query($connNew,$sqlRes);
     background-color: #ffa50099;
 }
 
+/* ==========================================
+           DYNAMIC GRID LAYOUT (EXPANDED VS COLLAPSED)
+           ========================================== */
+        
+        #roomCardContainer {
+            display: grid;
+            transition: all 0.3s ease;
+        }
+
+        /* ⬇️ COLLAPSED MODE: Dense packing (5-7 per row) */
+        .layout-collapsed {
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 5px;
+        }
+
+        /* ⬇️ EXPANDED MODE: Exactly 4 cards per row */
+        .layout-expanded {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        /* Mobile fallback so phones don't try to squeeze 4 cards */
+        @media (max-width: 1024px) {
+            .layout-expanded {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        .rvn-room-card {
+            width: 100%;
+        }
+
+        .rvn-room-card-sub {
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+            position: relative;
+            font-family: 'Inter', sans-serif;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevents absolutely any bleeding outside the card */
+        }
+
+        .rvn-room-card-sub:hover {
+            transform: translateY(-3px);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ==========================================
+           HEADER STRUCTURAL FIXES (Solves Overflows)
+           ========================================== */
+        .rvn-room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 10px;
+            border-bottom: 1px solid #f1f1f1;
+            min-height: 52px; /* Locks all cards to identical heights */
+        }
+
+        .rvn-room-header-left {
+            display: flex;
+            flex-direction: column;
+            width: 55%; /* Gives Left side 55% space */
+            min-width: 0; /* CRITICAL: Forces flexbox to respect constraints */
+        }
+
+        .rvn-room-header-right {
+            display: flex;
+            flex-direction: column;
+            width: 45%; /* Gives Right side 45% space */
+            align-items: flex-end;
+            text-align: right;
+            min-width: 0; /* CRITICAL: Forces flexbox to respect constraints */
+        }
+
+        .rvn-room-number {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.1;
+        }
+
+        /* Truncation classes to stop text wrapping and height stretching */
+        .rvn-room-type, .res-no-txt {
+            font-size: 11px;
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            width: 100%; 
+            display: block;
+        }
+
+        .rvn-room-type {
+            color: #393a3c;
+            margin-top: 4px;
+        }
+
+        .res-no-txt {
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .rvn-reservation-status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+		/* ==========================================
+           SMART HOVER POPOVER FOR COLLAPSED MODE
+           ========================================== */
+        
+        /* 1. Default Card Hover State (Opening Down) */
+        #roomCardContainer.layout-collapsed .rvn-room-card-sub:hover {
+            overflow: visible !important;
+            z-index: 100;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        /* Modifier: Card Hover State (Opening Up) */
+        #roomCardContainer.layout-collapsed .rvn-room-card-sub.popover-up:hover {
+            border-radius: 0 0 6px 6px !important; /* Restore bottom corners */
+            border-top-left-radius: 0 !important;
+            border-top-right-radius: 0 !important;
+        }
+
+        /* 2. Base Popover Container */
+        #roomCardContainer.layout-collapsed .rvn-room-card-sub .collapsible-card-body {
+            flex-direction: column;
+            position: absolute;
+            width: max-content;
+            min-width: 280px;
+            max-width: 320px;
+            background-color: #fff;
+            border: 1px solid #cbd5e1;
+            z-index: 101;
+        }
+
+        /* Default Placement: Down and Right */
+        #roomCardContainer.layout-collapsed .rvn-room-card-sub:hover .collapsible-card-body {
+            display: flex !important;
+            top: 100%;
+            bottom: auto;
+            left: -1px;
+            right: auto;
+            border-top: none;
+            border-bottom: 1px solid #cbd5e1;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.2);
+            animation: popoverFadeDown 0.2s ease-out forwards;
+        }
+
+        /* Smart Placement: Opening UP */
+        #roomCardContainer.layout-collapsed .rvn-room-card-sub.popover-up:hover .collapsible-card-body {
+            top: auto;
+            bottom: 100%;
+            border-bottom: none;
+            border-top: 1px solid #cbd5e1;
+            border-radius: 6px 6px 0 0;
+            box-shadow: 0px -15px 30px rgba(0, 0, 0, 0.2);
+            animation: popoverFadeUp 0.2s ease-out forwards;
+        }
+
+        /* Smart Placement: Opening LEFT */
+        #roomCardContainer.layout-collapsed .rvn-room-card-sub.popover-left:hover .collapsible-card-body {
+            left: auto;
+            right: -1px;
+        }
+
+        /* 3. Keep normal flow when expanded */
+        #roomCardContainer.layout-expanded .collapsible-card-body {
+            position: static !important;
+            width: 100% !important;
+            box-shadow: none !important;
+            border: none !important;
+            animation: none !important;
+        }
+
+        @keyframes popoverFadeDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popoverFadeUp {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 	</style>
 	<section class="content">
 
 		<header class="rvnHeader">
 			<!-- Search Bar -->
 			<div class="search-container col-md-5" style="position: relative;">
-				<input type="text" id="roomSearch"
-					placeholder="Search by Room No., Room Type, Res No, Guest Name, or Folio No." class="search-input"
-					style="padding: 8px; width: 100%; border-radius: 4px; border: 1px solid #ccc;">
-				<span class="shortcut"
-					style="position: absolute; right: 25px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #888; border : 1px solid gray; padding : 3px 5px; border-radius : 4px; font-family: 'Inter';">
-					Ctrl+S
-				</span>
-			</div>
+    <input type="text" id="roomSearch"
+        placeholder="Search by Room No. ,Type, Res No, Guest Name, or Folio No." class="search-input"
+        style="padding: 8px 12px 8px 12px; width: 100%; border-radius: 4px; border: 1px solid #ccc;">
+    <!-- <span class="shortcut"
+        style="position: absolute; right: 25px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #888; border: 1px solid gray; padding: 3px 5px; border-radius: 4px; background-color: #fff; pointer-events: none;">
+        Ctrl+S
+    </span> -->
+</div>
 			<?php 
 			
 
@@ -531,22 +730,33 @@ $formattedDate = date('d-m-Y', strtotime(str_replace('-', '/', $today)));?>
 
 
 			<!-- Filter Dropdowns -->
-			<div class="rvnFilterGroup">
-				<!-- Status Filter -->
-				<select class="rvnDropdown roomStatusFilter" name="roomStatus_Filter" id="roomStatus_Filter" onChange="loadRoomFilter(this.value);">
-					<option value="0">All</option>
-					<option selected value="3">Occupied</option>
-					<option value="4">Vacant</option>
-					<option value="2">Expected Arrivals</option>
-					<option value="5">Expected Departures</option>
-					<!-- <option value="5">Blocked</option>
-                    <option value="1">Dirty</option>
-					<option value="6">Maintenance</option> -->
-				</select>
-				
-				
-				<p style=" width:72px;padding-top: 10px;"><b><span id="room_count"></span></b></p>
-			</div>
+			<!-- Filter Dropdowns -->
+            <div class="rvnFilterGroup">
+                
+                <!-- NEW: Group By Filter -->
+                <select class="rvnDropdown" id="groupByFilter" onChange="loadRoomFilter($('#roomStatus_Filter').val());">
+    <option value="">No Grouping</option>
+    <option value="room_type" selected>Group by Room Type</option>
+    <option value="status">Group by Status</option>
+</select>
+
+                <!-- EXISTING: Status Filter (UNCHANGED) -->
+                <select class="rvnDropdown roomStatusFilter" name="roomStatus_Filter" id="roomStatus_Filter" onChange="loadRoomFilter(this.value);">
+                    <option value="0">All</option>
+                    <option selected value="3">Occupied</option>
+                    <option value="4">Vacant</option>
+                    <option value="2">Expected Arrivals</option>
+                    <option value="5">Expected Departures</option>
+                </select>
+                
+                <p style=" width:72px;padding-top: 10px;"><b><span id="room_count"></span></b></p>
+            </div>
+	<button type="button" id="expandCollapseBtn" class="btn btn-sm bg-white border shadow-sm text-secondary" 
+        style="height: 32px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; border-color: #cbd5e1 !important; cursor: pointer; margin-right : 12px!important;" 
+        title="Expand All">
+    <i class="fas fa-expand-arrows-alt" id="expandCollapseIcon"></i>
+    <span id="expandCollapseText" style="margin-left: 6px; font-weight: 500; font-size: 13px; white-space: nowrap;">Expand</span>
+</button>
             <?php 
 $sqlNightAudit = mysqli_query($connNew,"SELECT max(night_audit_date) as dated FROM `night_audit` order by id desc limit 1 ");
 $numRowsNightAudit =  mysqli_num_rows($sqlNightAudit);
@@ -903,7 +1113,7 @@ $BalanceAmount = round($CurrentTotal-$receipt_amount,2);
 }
 </style>
 
-<div class="cstmStatusStrp" style="margin-left: 104px !important;">
+<div class="cstmStatusStrp" style="margin-left: 20px !important;">
 
    
     <div class="cstmStatus">
@@ -1370,52 +1580,42 @@ $today = date('Y-m-d',strtotime('+1 day',strtotime($rowNightAudit->dated)));
 	};
 
 	function roomview() {
+    var groupBy = $('#groupByFilter').val() || 'room_type'; // Defaults to room_type
+    $.ajax({
+        url: "ajax/ajaxRoomView.php",
+        data: 'room_status=3&group_by=' + groupBy,
+        type: "GET",
+        success: function (data) {
+            $("#roomCardContainer").html(data);
+        }
+    });
+}
 
-		$.ajax({
-			url: "ajax/ajaxRoomView.php",
-			data: 'room_status=3',
-			type: "GET",
-			success: function (data) {
-				$("#roomCardContainer").html(data);
-				// alert(data);
-				//  roomStats();
-			}
-		});
-		/* var newUrl = window.location.href + "&room_type=" + roomTypeName;
-		window.location.href = newUrl; */
-	}
-function loadRoomFilterDate() {
-	alert('1');
-	var roomStatus_Filter = $('#roomStatus_Filter').val();
-		var datefilterNightAudit2 = $('#datefilterNightAudit2').val();
-		$.ajax({
-			url: "ajax/ajaxRoomView.php",
-			data: 'room_status=' + roomStatus_Filter + '&DateFilter='+ datefilterNightAudit2,
-			type: "GET",
-			success: function (data) {
-				$("#roomCardContainer").html(data);
-				// alert(data);
-				//  roomStats();
-			}
-		});
-		/* var newUrl = window.location.href + "&room_type=" + roomTypeName;
-		window.location.href = newUrl; */
-	}
-	function loadRoomFilter(value) { 
-		
-		$.ajax({
-			url: "ajax/ajaxRoomView.php",
-			data: 'room_status=' + value,
-			type: "GET",
-			success: function (data) {
-				$("#roomCardContainer").html(data);
-				// alert(data);
-				//  roomStats();
-			}
-		});
-		/* var newUrl = window.location.href + "&room_type=" + roomTypeName;
-		window.location.href = newUrl; */
-	}
+    function loadRoomFilterDate() {
+        var roomStatus_Filter = $('#roomStatus_Filter').val();
+        var datefilterNightAudit2 = $('#datefilterNightAudit2').val();
+        var groupBy = $('#groupByFilter').val(); // Capture group filter
+        $.ajax({
+            url: "ajax/ajaxRoomView.php",
+            data: 'room_status=' + roomStatus_Filter + '&DateFilter='+ datefilterNightAudit2 + '&group_by=' + groupBy,
+            type: "GET",
+            success: function (data) {
+                $("#roomCardContainer").html(data);
+            }
+        });
+    }
+
+    function loadRoomFilter(value) { 
+        var groupBy = $('#groupByFilter').val(); // Capture group filter
+        $.ajax({
+            url: "ajax/ajaxRoomView.php",
+            data: 'room_status=' + value + '&group_by=' + groupBy,
+            type: "GET",
+            success: function (data) {
+                $("#roomCardContainer").html(data);
+            }
+        });
+    }
 	
 		function download_excel() {
 		const btn = event.target;
@@ -1466,3 +1666,72 @@ function loadRoomFilterDate() {
 }
 
 </script>
+
+<script>
+    $(document).ready(function() {
+        let isExpanded = false; 
+
+        // Set the initial grid layout to collapsed (dense mode)
+        $('#roomCardContainer').addClass('layout-collapsed');
+
+        $('#expandCollapseBtn').on('click', function() {
+            isExpanded = !isExpanded;
+            
+            if (isExpanded) {
+                // Switch to Expanded Grid Layout
+                $('#roomCardContainer')
+                    .removeClass('layout-collapsed')
+                    .addClass('layout-expanded');
+
+                $('.collapsible-card-body').slideDown(250); 
+                
+                $('#expandCollapseIcon').removeClass('fa-expand-arrows-alt text-secondary').addClass('fa-compress-arrows-alt text-primary');
+                $('#expandCollapseText').text('Collapse').addClass('text-primary').removeClass('text-secondary');
+                $(this).attr('title', 'Collapse All');
+            } else {
+                // Switch back to Dense Grid Layout
+                $('.collapsible-card-body').slideUp(200); 
+                
+                // Wait for the slide up animation to finish before snapping the grid back
+                setTimeout(function() {
+                    $('#roomCardContainer')
+                        .removeClass('layout-expanded')
+                        .addClass('layout-collapsed');
+                }, 200);
+
+                $('#expandCollapseIcon').removeClass('fa-compress-arrows-alt text-primary').addClass('fa-expand-arrows-alt text-secondary');
+                $('#expandCollapseText').text('Expand').addClass('text-secondary').removeClass('text-primary');
+                $(this).attr('title', 'Expand All');
+            }
+        });
+    });
+
+
+	// ==========================================
+        // SMART POPOVER BOUNDARY DETECTION
+        // ==========================================
+        $(document).on('mouseenter', '#roomCardContainer.layout-collapsed .rvn-room-card-sub', function() {
+            var $card = $(this);
+            
+            // 1. Reset any previous directional classes
+            $card.removeClass('popover-up popover-left');
+
+            // 2. Measure the exact position of the hovered card on the screen
+            var rect = this.getBoundingClientRect();
+            
+            // Expected sizes of the hidden popover
+            var popoverHeight = 260; // Max height of the details block
+            var popoverWidth = 320;  // Max width of the details block
+
+            // 3. Bottom Collision: If dropping down pushes it off the bottom of the screen, force it UP
+            if (rect.bottom + popoverHeight > $(window).height()) {
+                $card.addClass('popover-up');
+            }
+
+            // 4. Right Collision: If opening right pushes it off the side of the screen, force it LEFT
+            if (rect.left + popoverWidth > $(window).width()) {
+                $card.addClass('popover-left');
+            }
+        });
+</script>
+
