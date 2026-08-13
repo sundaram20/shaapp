@@ -13,7 +13,7 @@ background :  #a7ffa7!important
 }
 
 .rvn-room-header {
-	padding : 0rem 0.7rem;
+	padding : 0.3rem 0.7rem;
 	border-radius : 4px;
 }
 .cstmBgBlocked{
@@ -650,46 +650,102 @@ $BalanceAmount = round($CurrentTotal-$receipt_amount,2);
     echo '</table>';
     exit;
 	}else{
-	$i = 0;
-    foreach($folioArray as $roomcount=>$roomData) { //echo 'Shafeer '; 
-        // Replace these dynamic variables with real data from a database or an array.
-        $roomNumber = $roomData['room_no'];
-        $roomType = $roomData['RoomType']; // Pick a random room type
-        $reservationNumber =  $roomData['mdoc_no'];
-        $guestName = $roomData['GuestName']; // Pick a random guest name
-        $guests = $roomData['Guest'];
-        $adults = $roomData['adults_per_room'];
-        $childBelow = $roomData['child_below_5_year'];
-		$childAbove = $roomData['child_above_5_year'];
-        $checkInDate = $roomData['Checkin'];
-        $checkOutDate = $roomData['Checkout'];
-        $folioNumber = $roomData['folio_mdoc_no'];
-        $balance = "&#8377;".$roomData['BalanceAmount'];
-        $roomServiceStatus = $roomData['status']; // Static example, if you want to keep it
+        // 1. CAPTURE GROUPING PREFERENCE
+        $groupBy = isset($_REQUEST['group_by']) ? $_REQUEST['group_by'] : '';
+        
+        $groupedRooms = [];
+        $i = 0;
+        $yy = '';
 
-        // Randomly assign a room status
-        $roomStatus = $roomData['status'];
-		$roomClass = $roomData['roomClass'];
-		if ($roomStatus == 'Occupied' && $today == $roomData['checkout_text']) {
-			$roomClass = 'cstmBgOccupiedDepart';
-		}
-		$id_mst_guest = $roomData['id_mst_guest'];
-		$id_resevation = $roomData['id_fo_reservations'];
-		
-		$id_mst_guest_order_by_room	=  selectColumn('fo_reservations_details','order_by_room'," WHERE `id_fo_reservations` = '".$id_resevation."' and id_mst_room_no_allocation = '".$roomData['id_mst_room_no_allocation']."'");
-		$id_mst_guest_order_by_room =$roomData['id_fo_reservations'];
-		$id_owner_room =selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$roomData['id_fo_bill']."'");
-		//================================================
-		
-		
-		
-		//========================================
-		
-		$id_folio =$roomData['id_fo_view_folio'];
-		
-		//echo $id_mst_guest.','. addslashes($id_resevation).','.$id_owner_room.','.$id_mst_guest_order_by_room.','.$id_owner_room.',1,'.$id_folio;//
-        $text = '
-        <div class="rvn-room-card " 
+        // 2. PRE-FILTER AND GROUP THE DATA
+        foreach($folioArray as $roomcount => $roomData) {
+            $showRoom = false;
+            
+            // Check visibility logic
+            if (isset($actual_room_status) && $actual_room_status != '5') {
+                $showRoom = true;
+            } elseif (!isset($actual_room_status)) {
+                 $showRoom = true;
+            } else {
+                if ($today == $roomData['checkout_text']) {
+                    $showRoom = true;
+                    $yy = 'BC';
+                }
+            }
+
+            if ($showRoom) {
+                $i++;
+                
+                // Determine the group key
+                $key = '';
+                if ($groupBy == 'room_type') {
+                    $key = $roomData['RoomName']; // Groups by base Room Type name
+                } elseif ($groupBy == 'status') {
+                    $key = ucfirst($roomData['status']); // Groups by Occupied, Vacant, etc.
+                }
+
+                $groupedRooms[$key][$roomcount] = $roomData;
+            }
+        }
+
+        // 3. LOOP THROUGH GROUPS AND PRINT CARDS
+        foreach ($groupedRooms as $groupName => $roomsInGroup) {
+            
+            // Print the Group Header if a grouping is selected
+           // Print the Group Header if a grouping is selected
+            if ($groupName !== '') {
+                echo '<div style="grid-column: 1 / -1; width: 100%; margin-top: 8px; margin-bottom: 0px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; padding-left: 4px;">
+                        <h5 style="font-weight: 700; color: #334155; margin: 0; font-size: 1.25rem; display: flex; align-items: center; font-family: \'Inter\', sans-serif;">' . 
+                            $groupName . ' 
+                            <span style="background: #64748b; color: white; border-radius: 20px; padding: 2px 10px; font-size: 1.1rem; font-weight: 600; margin-left: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);">' . count($roomsInGroup) . ' Rooms</span>
+                        </h5>
+                      </div>';
+            }
+
+            // Print the cards for this specific group
+            foreach ($roomsInGroup as $roomcount => $roomData) {
+                
+                $roomNumber = $roomData['room_no'];
+                $roomType = $roomData['RoomType']; 
+                $reservationNumber =  $roomData['mdoc_no'];
+                $guestName = $roomData['GuestName']; 
+                $guests = $roomData['Guest'];
+                $adults = $roomData['adults_per_room'];
+                $childBelow = $roomData['child_below_5_year'];
+                $childAbove = $roomData['child_above_5_year'];
+                $checkInDate = $roomData['Checkin'];
+                $checkOutDate = $roomData['Checkout'];
+                $folioNumber = $roomData['folio_mdoc_no'];
+                $balance = "&#8377;".$roomData['BalanceAmount'];
+                
+                $roomStatus = $roomData['status'];
+                $roomClass = $roomData['roomClass'];
+                if ($roomStatus == 'Occupied' && $today == $roomData['checkout_text']) {
+                    $roomClass = 'cstmBgOccupiedDepart';
+                }
+                
+                $id_mst_guest = $roomData['id_mst_guest'];
+                $id_resevation = $roomData['id_fo_reservations'];
+                $id_mst_guest_order_by_room = $roomData['id_fo_reservations'];
+                $id_owner_room = selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$roomData['id_fo_bill']."'");
+                $id_folio = $roomData['id_fo_view_folio'];
+                
+                // Determine HK Status
+                if($roomData['house_keeping_status'] == '4'){
+                    $HKStatus ='Clean';
+                } elseif($roomData['house_keeping_status'] == '2'){
+                    $HKStatus ='Maintenance';
+                } elseif($roomData['house_keeping_status'] == '3'){
+                    $HKStatus ='Block';
+                } else{
+                    $HKStatus ='Dirty';
+                }
+
+                $vare="''"; 
+
+                // Generate Card HTML
+             $text = '
+        <div class="rvn-room-card" 
             data-room-number="' . strtolower($roomNumber) . '" 
             data-room-type="' . strtolower($roomType) . '" 
             data-res-no="' . strtolower($reservationNumber) . '" 
@@ -697,228 +753,125 @@ $BalanceAmount = round($CurrentTotal-$receipt_amount,2);
             data-folio-no="' . strtolower($folioNumber) . '">
             
             <div class="rvn-room-card-sub">
+                <!-- Cleaned up Header Structure for Dense Packing -->
                 <div class="rvn-room-header '.$roomClass.'" >
-                    <div>
-                        <span class="rvn-room-number">' . $roomNumber . '</span><br>
-                        <span class="rvn-room-type" style="font-family: inter;">' . $roomType . '</span>
+                    <div class="rvn-room-header-left">
+                        <span class="rvn-room-number">' . $roomNumber . '</span>
+                        <span class="rvn-room-type" title="' . $roomType . '">' . $roomType . '</span>
                     </div>
-                    <div>
-                        <div style="margin-bottom : 5px!important;"><span style="font-family: inter;">Res No: #' . $reservationNumber . '</span></div>
-                        <span class="rvn-reservation-status rvn-status-' . strtolower($roomStatus) . '" style="margin-top : 5px!important;">' . $roomStatus . '</span>
+                    <div class="rvn-room-header-right">
+                        <span class="res-no-txt">Res No: #' . $reservationNumber . '</span>
+                        <span class="rvn-reservation-status rvn-status-' . strtolower($roomStatus) . '">' . $roomStatus . '</span>
                     </div>
                 </div>
-                <div class="rvn-room-details">
-                    <div style="width: 48%;">
-                        <p>Folio Owner: <strong><a href="javascript:void(0);" style="color:black;" id="res_guestAddId"
-                onclick="GetEditGuestDetail('.$id_mst_guest.','. addslashes($id_resevation).','.$id_owner_room.','.$id_mst_guest_order_by_room.','.$id_owner_room.',1,'.$id_folio.');">' . $guestName . '
-                </a></strong></p>';
 
-						foreach ($guests as $guest) {
-							//$text .= '<p>Sharer Guest : <strong>' . $guest . '</strong></p>';
-						}
+                <!-- START COLLAPSIBLE BODY -->
+                <div class="collapsible-card-body" style="display: none;">
+                    <div class="rvn-room-details" style="padding: 10px;">
+                        <div style="width: 48%;">
+                                    <p>Folio Owner: <strong><a href="javascript:void(0);" style="color:black;" id="res_guestAddId"
+                                    onclick="GetEditGuestDetail('.$id_mst_guest.','. addslashes($id_resevation).','.$id_owner_room.','.$id_mst_guest_order_by_room.','.$id_owner_room.',1,'.$id_folio.');">' . $guestName . '</a></strong></p>';
 
+                                    foreach ($guests as $guest) { }
 
-						$text .= '</div>
-                    <div style="width: 51%;">
-                        <p>Adults:<b> ' . $adults . ' </b></p>
-						<p>Child:<b> ' . $childAbove . ' | ' . $childBelow . '</b></p>
-                    </div>
-                    <div style="width: 48%;">
-                        <p style="font-family: inter;"><b>Check-in:</b> ' . $checkInDate . '</p>
-                    </div>
-                    <div style="width: 51%;">
-                        <p style="font-family: inter;"><b>Exp. Check-out:</b> ' . $checkOutDate . '</p>
-                    </div>
-					<div style="width: 48%;">
-                        <p style="font-family: inter;"><b>Check-in Time:</b> ' . $roomData['CheckinTime'] . '</p>
-                    </div>
-					
-					
-                    <div style="width: 48%;">
-                        <p ><b>Folio No:</b> <a  href="'.$SITE_URL.'/frontoffice/onewindow.php?p=6&folio='.$id_folio.'">' . $folioNumber . '</a></p>
-                    </div>
-                    <div style="width: 51%;">
-                        <p><b>Folio Total:</b> <span class="rvn-room-balance">' . $balance . '</span></p>
-                    </div>
-					<div style="width: 100%;">';
-                     
-							$k=1;
-						foreach ($guests as $id_guest=>$guest) {
-							if($k==1){
-							$gtatile	=	'Room Guest: <br/>';
-							}else{
-							$gtatile	=	'';
-							}
-							$k++;
-							$text .= '<p> '.$gtatile.' <strong><a href="javascript:void(0);" style="color:black;" id="res_guestAddId"
-							onclick="GetEditGuestDetail('.$id_guest.','. addslashes($id_resevation).','.$id_owner_room.','.$id_mst_guest_order_by_room.','.$id_owner_room.',1,'.$id_folio.');">'  . $guest . '</a></strong></p>';
-						}
+                                $text .= '</div>
+                                <div style="width: 51%;">
+                                    <p>Adults:<b> ' . $adults . ' </b></p>
+                                    <p>Child:<b> ' . $childAbove . ' | ' . $childBelow . '</b></p>
+                                </div>
+                                <div style="width: 48%;">
+                                    <p style="font-family: inter;"><b>Check-in:</b> ' . $checkInDate . '</p>
+                                </div>
+                                <div style="width: 51%;">
+                                    <p style="font-family: inter;"><b>Exp. Check-out:</b> ' . $checkOutDate . '</p>
+                                </div>
+                                <div style="width: 48%;">
+                                    <p style="font-family: inter;"><b>Check-in Time:</b> ' . $roomData['CheckinTime'] . '</p>
+                                </div>
+                                <div style="width: 48%;">
+                                    <p><b>Folio No:</b> <a href="'.$SITE_URL.'/frontoffice/onewindow.php?p=6&folio='.$id_folio.'">' . $folioNumber . '</a></p>
+                                </div>
+                                <div style="width: 51%;">
+                                    <p><b>Folio Total:</b> <span class="rvn-room-balance">' . $balance . '</span></p>
+                                </div>
+                                <div style="width: 100%;">';
+                                 
+                                $k = 1;
+                                foreach ($guests as $id_guest => $guest) {
+                                    $gtatile = ($k == 1) ? 'Room Guest: <br/>' : '';
+                                    $k++;
+                                    $text .= '<p> '.$gtatile.' <strong><a href="javascript:void(0);" style="color:black;" id="res_guestAddId"
+                                    onclick="GetEditGuestDetail('.$id_guest.','. addslashes($id_resevation).','.$id_owner_room.','.$id_mst_guest_order_by_room.','.$id_owner_room.',1,'.$id_folio.');">'  . $guest . '</a></strong></p>';
+                                }
 
-$vare="''";		
-	
-		if($roomData['house_keeping_status'] == '4'){
-			
-			$HKStatus ='Clean';
-		
-		
-	}elseif($roomData['house_keeping_status'] == '2'){
-			
-			$HKStatus ='Maintenance';
-		
-		
-	}elseif($roomData['house_keeping_status'] == '3'){
-			
-			$HKStatus ='Block';
-		
-		
-	}else{
-	
-	$HKStatus ='Dirty';
-		}
-		$text .= '</div>
-					
-					
-					
-                </div>
-                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; border-top: 1px solid #f1f1f1; padding: 8px 0px !important;">
-                    <div class="roomServiceStatus" style="width: 35%;">
-                        <div style="float: left; margin: 5px 14px;">
-                            <p style="font-size: 12px; margin-bottom: 4px!important; font-family: inter;">HK Status</p>
-                        </div><a type="button" data-toggle="modal"
-                                            data-target="#EditRoomStatusModal'.$roomcount.'" class="btn"
-                                            style="border : 1px solid #f4f4f4; display : flex; justify-content : center; align-items : bottom; height: 25px; width: 25px;" title="Change HK Status">
-                                            
-                                       
-                        <span class="rvnRoomserviceStatus" id="rvnRoomserviceStatus_'.$roomcount.'">'.$HKStatus.'</span> &nbsp;<i class="fas fa-edit" style="margin:3px 0px 0px 0px"></i></a>
-                    </div>
-                   <div class="rvn-room-actions" style="width: 65%; padding-top: 0!important;">
-                      <!--  <button id="amendStayBtn"  onclick="amendStayBtnOpen();" class="cstmActionBtn" title="Amend Stay" style="background: #eff6ff; border-radius: 50%; height: 4rem; width: 4rem;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#3b82f6" class="bi bi-pencil-square" viewBox="0 0 16 16" stroke-width="0.7">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                            </svg>
-                        </button>
-                        <button id="changeRoomBtn" class="cstmActionBtn" title="Change Room" style="background: #fefce8; border-radius: 50%; height: 4rem; width: 4rem;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#eab308" class="bi bi-arrow-left-right" viewBox="0 0 16 16" stroke="#eab308" stroke-width="0.4">
-                                <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 1 1 .708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5" />
-                            </svg>
-                        </button>
-                        <button id="checkOutBtn" class="cstmActionBtn" title="Check out" style="background: #fef2f2; border-radius: 50%; height: 4rem; width: 4rem; ">
+                                $text .= '</div>
+                            </div>
                             
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f1f1; padding: 0px 15px !important;">
+                                <!-- Left Side: HK Status -->
+                                <div class="roomServiceStatus" style="display: flex; flex-direction: column;">
+                                    <span style="font-size: 12px; margin-bottom: 2px; font-family: inter; color: #6c757d;">HK Status</span>
+                                    <a type="button" data-toggle="modal" data-target="#EditRoomStatusModal'.$roomcount.'" 
+                                       style="display: flex; align-items: center; text-decoration: none; cursor: pointer; color: #0275d8;" title="Change HK Status">
+                                        <span class="rvnRoomserviceStatus" id="rvnRoomserviceStatus_'.$roomcount.'" style="font-weight: 500;">'.$HKStatus.'</span> 
+                                        <i class="fas fa-edit" style="margin-left: 5px; font-size: 0.9rem;"></i>
+                                    </a>
+                                </div>
 
-							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#ef4444" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-  <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
-</svg>
-                        </button>
-                        <button id="noteBtn" class="cstmActionBtn" title="Notes" style="background: #f0f9ff; border-radius: 50%; height: 4rem; width: 4rem; position : relative; ">
-                      
-
-
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#38bdf8" class="bi bi-sticky-fill" viewBox="0 0 16 16">
-<path d="M2.5 1A1.5 1.5 0 0 0 1 2.5v11A1.5 1.5 0 0 0 2.5 15h6.086a1.5 1.5 0 0 0 1.06-.44l4.915-4.914A1.5 1.5 0 0 0 15 8.586V2.5A1.5 1.5 0 0 0 13.5 1zm6 8.5a1 1 0 0 1 1-1h4.396a.25.25 0 0 1 .177.427l-5.146 5.146a.25.25 0 0 1-.427-.177z"/>
-</svg>
-
-                            <span class="note-count" style="position: absolute; top: -5px;
-							right: 0px; background: red; border-radius: 50%; color: white; padding: 2px 5px; font-size: 0.7rem;">0</span>
-                        </button>-->
-						
-						<div style="margin-left: 156px;">
-						<a href="javascript:void(0);" style="color:black;" id="res_guestAddId"
-		onclick="GetAddNewSharedGuestDetail('.$vare.','. addslashes($id_resevation).','.$roomData['id_mst_room_no_allocation'].','.$roomData['order_by_room'].','.$id_owner_room.',2,'.$id_folio.');">
-						<button id="guestBtn" class="cstmActionBtn" title="Guest" style="background: #f0f9ff; border-radius: 50%; height: 4rem; width: 4rem; display: flex; align-items: center; justify-content: center; position: relative;">
-    <!-- Plus Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-    </svg>
-
-    <!-- Guest Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16" style="position: absolute; bottom: 5px; right: 5px;">
-        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-    </svg>
-</button>
-						</a></div>
+                                <!-- Right Side: Add Guest Button -->
+                                <div class="rvn-room-actions">
+                                    <a href="javascript:void(0);" style="text-decoration: none;" id="res_guestAddId"
+                                       onclick="GetAddNewSharedGuestDetail('.$vare.','. addslashes($id_resevation).','.$roomData['id_mst_room_no_allocation'].','.$roomData['order_by_room'].','.$id_owner_room.',2,'.$id_folio.');">
+                                        <button type="button" id="guestBtn" class="cstmActionBtn" title="Add Guest" 
+                                                style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 50%; height: 36px; width: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; margin: 0; box-shadow: none;">
+                                            <i class="fas fa-user-plus" style="font-size: 1.2rem; color: #0284c7; margin-left: 2px;"></i>
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div> <!-- END COLLAPSIBLE BODY -->
                     </div>
-                </div>
-            </div>
-        </div>'; ?>
+                </div>'; 
+                
+                // Add the Modal
+                $text .= '
+                <div class="modal " id="EditRoomStatusModal'.$roomcount.'" tabindex="-1" role="dialog" aria-labelledby="EditRoomStatusModalLabel">
+                    <div style="width : 40%!important; margin : auto;!important;">
+                        <div class="modal-dialog" role="document" style="width : 60%!important;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">House Keeping Status <br><b>Room No '.$roomNumber.'</b></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute!important; top: 15px!important; right: 10px!important;">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="roomstatusform'.$roomData['id_mst_room_no_allocation'].'" method="post">
+                                    <div class="modal-body">
+                                        <input type="hidden" class="rm_id" name="rm_id" id="rm_id'.$roomData['id_mst_room_no_allocation'].'" value="'.$roomcount.'">
+                                        <label for="exampleSelect">Status</label>
+                                        <select class="form-control" class="cur_room_status" id="cur_room_status'.$roomData['id_mst_room_no_allocation'].'" name="cur_room_status">
+                                            <option value="4" ' . (($roomData['house_keeping_status'] == 4) ? 'selected' : '') . '>Clean</option>
+                                            <option value="1" ' . (($roomData['house_keeping_status'] == 1) ? 'selected' : '') . '>Dirty</option>
+                                        </select>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" onclick="saveHouseKeepingStatusForm(this);">Update</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>';
 
-<div class="modal " id="EditRoomStatusModal<?=$roomcount; ?>" tabindex="-1"
-                                            role="dialog" aria-labelledby="EditRoomStatusModalLabel" style="">
-                                            <div style="width : 40%!important; margin : auto;!important;">
-                                                <div class="modal-dialog" role="document" style="width : 60%!important;">
-                                                    <div class="modal-content">
-                                                            <!-- Modal Header -->
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">House Keeping Status <br><b>Room No <?php echo $roomNumber ?></b></h5>
-                                                                <button type="button" class="close" data-dismiss="modal"
-                                                                    aria-label="Close"
-                                                                    style="position: absolute!important; top: 15px!important; right: 10px!important;">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-
-                                                            <form id="roomstatusform<?= $rmno->id ?>" method="post">
-                                                            <!-- Modal Content -->
-                                                            <div class="modal-body">
-
-                                                                <input type="hidden" class="rm_id" name="rm_id" id="rm_id<?= $roomData['id_mst_room_no_allocation'] ?>" value="<?php echo $roomcount; ?>">
-
-                                                                <!-- Select and Buttons -->
-                                                                <label for="exampleSelect">Status</label>
-                                                                <select class="form-control" class="cur_room_status" id="cur_room_status<?= $rmno->id ?>" name="cur_room_status">
-                                                                    
-                                                                   
-                                                                    <option value="4"
-                                                                        <?php echo ($roomData['house_keeping_status'] == 4) ? 'selected' : ''; ?>>Clean
-                                                                    </option>
-                                                                    <option value="1"
-                                                                        <?php echo ($roomData['house_keeping_status'] == 1) ? 'selected' : ''; ?>>Dirty
-                                                                    </option>
- <?php /* ?> <option value="2"
-                                                                        <?php echo ($roomData['house_keeping_status'] == 2) ? 'selected' : ''; ?>>Maintenance 
-                                                                    </option>
-																	
-				 <option value="3"
-                                                                        <?php echo ($roomData['house_keeping_status'] == 3) ? 'selected' : ''; ?>>Block 
-                                                                    </option>													
-																	<?php */ ?>
-																	
-                                                                </select>
-
-                                                            </div>
-
-                                                            <!-- Modal Footer -->
-                                                            <div class="modal-footer">
-                                                                <button type="button"
-                                                                    class="btn btn-primary" onclick="saveHouseKeepingStatusForm(this);">Update</button>
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">Close</button>
-                                                            </div>
-                                                        </form>
-                                                        </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- modal ends  -->
-<?php 
-		if ($actual_room_status != '5') {
-			$i++;
-			echo $text;
-		} else {
-			if ($today == $roomData['checkout_text']) {
-				$i++;$yy='BC';
-				echo $text;
-			}
-		}
+                echo $text;
+            }
+        }
     }
-}
-    ?>
-
-	<script>
-		$('#room_count').text('<?php echo "Rooms :- ".$i.$yy; ?>');
-	</script>
+?>
+    <script>
+        $('#room_count').text('<?php echo "Rooms :- ".$i.$yy; ?>');
+    </script>
 
 
 <script>
