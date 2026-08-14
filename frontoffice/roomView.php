@@ -689,6 +689,76 @@ $resRes = mysqli_query($connNew,$sqlRes);
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+		/* ===== MOBILE HEADER FIXES ===== */
+#mobileFilterToggleBtn { display: none; }
+
+@media (max-width: 767px) {
+    .rvnHeader {
+        flex-wrap: wrap;
+        padding: 0.5rem;
+        align-items: center;
+    }
+
+    /* Search bigger, icons beside it */
+    .rvnHeader .search-container.col-md-5 {
+        width: 70%;
+        flex: 0 0 70%;
+        order: 1;
+        margin-right: 0;
+		padding: 0rem 0.2rem;
+    }
+    .rvnHeader .search-container input#roomSearch {
+        padding: 10px 12px;
+        font-size: 15px;
+    }
+
+    /* Filter toggle + expand/collapse icons sit beside search */
+    #mobileFilterToggleBtn,
+    #expandCollapseBtn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
+        width: 38px;
+        padding: 0 !important;
+        flex: 0 0 auto;
+        margin: 0 0 0 6px !important;
+        border-radius: 4px;
+        border-color: #cbd5e1 !important;
+    }
+    #mobileFilterToggleBtn { order: 2; }
+    #expandCollapseBtn { order: 3; }
+    #expandCollapseText { display: none !important; } /* icon only, no text */
+
+    /* Group-by, status, room count all hidden until toggle opened */
+    #groupByFilter,
+    #roomStatus_Filter,
+    #room_count {
+        display: none;
+    }
+
+    .rvnFilterGroup {
+        flex-wrap: wrap;
+        width: 100%;
+        order: 4;
+        gap: 8px;
+    }
+
+    .rvnHeader.mobile-filters-open #groupByFilter,
+    .rvnHeader.mobile-filters-open #roomStatus_Filter,
+    .rvnHeader.mobile-filters-open #room_count {
+        display: inline-flex;
+        width: 100%;
+        margin-top: 6px;
+    }
+
+    /* Status strip + export button hidden on mobile */
+    .cstmStatusStrp,
+    .btn-export {
+        display: none !important;
+    }
+}
 	</style>
 	<section class="content">
 
@@ -703,6 +773,10 @@ $resRes = mysqli_query($connNew,$sqlRes);
         Ctrl+S
     </span> -->
 </div>
+<button type="button" id="mobileFilterToggleBtn" class="btn btn-sm bg-white border shadow-sm text-secondary">
+    <i class="fas fa-sliders-h"></i>
+</button>
+
 			<?php 
 			
 
@@ -1536,6 +1610,10 @@ $today = date('Y-m-d',strtotime('+1 day',strtotime($rowNightAudit->dated)));
 			}
 		});
 	});
+
+	$(document).on('click', '#mobileFilterToggleBtn', function () {
+    $('.rvnHeader').toggleClass('mobile-filters-open');
+});
 </script>
 
 
