@@ -83,7 +83,8 @@ if($_POST['Save']){
 							`description` = '".addslashes($_POST['description'])."',
 							`online_url` = '".addslashes($_POST['online_url'])."',
 							`inventory` = '".addslashes($_POST['inventory'])."',
-							`display_order` = '".addslashes($_POST['display_order'])."'";
+							`allow_overbooking` = '".addslashes($_POST['allow_overbooking'])."',
+                  			`display_order` = '".addslashes($_POST['display_order'])."'";
 				if($_FILES['image']['name'] != ''){				
 					$addSql .= "	,`image` = '".addslashes($insert_image)."'";
 				}else{
@@ -204,6 +205,7 @@ $sql1 = executeSql("SELECT * FROM `".TBL_ASSIGN_HOTEL_ROOM."` ORDER BY id DESC L
 							`ids_mst_room_amenities` = '".addslashes(implode(',',$_POST['ids_mst_room_amenities']))."',
 							`online_url` = '".addslashes($_POST['online_url'])."',
 							`inventory` = '".addslashes($_POST['inventory'])."',
+							`allow_overbooking` = '".addslashes($_POST['allow_overbooking'])."',
 							`display_order` = '".addslashes($_POST['display_order'])."'";
 			if($_FILES['image']['name'] != ''){
 				$editSql .= "	,`image` = '".addslashes($insert_image)."'";
@@ -452,8 +454,30 @@ if(!empty($_REQUEST['id']) && $_REQUEST['action']=='edit'){
                   			<input type="text" class="form-control" placeholder="Enter online url" id="online_url" name="online_url" value="<?php if( $_POST['online_url']) echo $_POST['online_url'];else echo stripslashes($row->online_url);?>">
 							<?php echo $err_online_url;?>
                 		</div>
+<?php 
+	 if($row->allow_overbooking == 1)
+		 $select_allow_overbooking1= 'selected="selected"'; 
+	 else
+		 $select_allow_overbooking0 = 'selected="selected"'; 
+ ?>
+
+						<div class="form-group col-md-4">
+                  			<label for="online_url">Allow Overbooking</label>
+                  			 <select class="form-control select2" name="allow_overbooking" id="allow_overbooking">
+	 <option value="1" <?php echo $select_allow_overbooking1 ?> >Yes</option>
+	 <option value="0" <?php echo $select_allow_overbooking0 ?> >No</option>
+ </select><?php echo $err_allow_overbooking;?>
+                		</div>
+
 
             		</div>
+
+
+
+
+
+
+
             		<div class="row">
             			<div class="form-group col-md-12">
                  			<label for="description">Description</label>
