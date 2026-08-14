@@ -1323,6 +1323,31 @@ $GuestName = $GuestTitle.' '.$guest;
    
 	var form=$("#saveReservationDateform");
 
+
+$.ajax({
+
+        type: "POST",
+
+        url: 'ajax/checkReservationInventory.php',
+
+        data: form.serialize(),
+
+        dataType: 'json',
+
+        success: function (inventoryResponse) {
+
+            if (inventoryResponse.status == '0') {
+
+                // Inventory not available
+                $('.loading').hide();
+
+                //alert(inventoryResponse.message);
+                bootbox.alert(inventoryResponse.message);
+                return false;
+            }
+
+
+
 	if(form.parsley().validate()){
 
 	$('.loading').css('display','flex');
@@ -1357,7 +1382,9 @@ $GuestName = $GuestTitle.' '.$guest;
 	return false;
 
 	}
+ }
 
+      });
 	}
 	
 	function getCompanyContact(companyId,contactId){	
