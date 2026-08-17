@@ -1,15 +1,10 @@
 <?php
 include_once("../../config/auto_loader.php");
 
-
-
-//debugData($_REQUEST);
-
-//header('Content-Type: application/json');
-
 try {
 
     $id_hotel = (int) ($_POST['id_mst_hotels_new'] ?? 0);
+    $editId   = (int) ($_POST['editid'] ?? 0);
 
     $reservationData = $_POST['ReservationDataArray'] ?? [];
 
@@ -28,7 +23,6 @@ try {
         ]);
         exit;
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -51,8 +45,8 @@ try {
                 continue;
             }
 
-            $dates      = $reservation['resdate'] ?? [];
-            $roomTypes  = $reservation['room_type_id'] ?? [];
+            $dates     = $reservation['resdate'] ?? [];
+            $roomTypes = $reservation['room_type_id'] ?? [];
 
             foreach ($dates as $index => $date) {
 
@@ -70,45 +64,38 @@ try {
                     $requestedRooms[$roomTypeId][$date] = 0;
                 }
 
-                /*
-                 * Count requested rooms
-                 */
                 $requestedRooms[$roomTypeId][$date]++;
             }
         }
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | STEP 2
-    | Get all inventory for requested date range
+    | Get all requested dates
     |--------------------------------------------------------------------------
     */
 
     $allDates = [];
 
-    foreach ($requestedRooms as $roomTypeId => $dates) {
-
+    foreach ($requestedRooms as $dates) {
         foreach ($dates as $date => $qty) {
             $allDates[] = $date;
         }
     }
 
     if (empty($allDates)) {
-
         echo json_encode([
             'status' => '0',
             'message' => 'No room dates found.'
         ]);
-
         exit;
     }
 
-
     /*
     |--------------------------------------------------------------------------
-    | Get minimum and maximum date
+    | STEP 3
+    | Convert dates
     |--------------------------------------------------------------------------
     */
 
@@ -116,24 +103,28 @@ try {
 
     foreach ($allDates as $date) {
 
-        $dateObj = DateTime::createFromFormat(
-            'd-m-Y',
-            $date
-        );
+        $dateObj = DateTime::createFromFormat('d-m-Y', $date);
 
         if ($dateObj) {
             $dateObjects[] = $dateObj;
         }
     }
 
+    if (empty($dateObjects)) {
+        echo json_encode([
+            'status' => '0',
+            'message' => 'Invalid reservation dates.'
+        ]);
+        exit;
+    }
+
     $startDate = min($dateObjects)->format('Y-m-d');
     $endDate   = max($dateObjects)->format('Y-m-d');
 
-
     /*
     |--------------------------------------------------------------------------
-    | STEP 3
-    | Get inventory in ONE query
+    | STEP 4
+    | Get inventory
     |--------------------------------------------------------------------------
     */
 
@@ -151,6 +142,12 @@ try {
 
     $stmt = mysqli_prepare($connNew, $sql);
 
+    if (!$stmt) {
+        throw new Exception(
+            'Unable to prepare inventory query: ' . mysqli_error($connNew)
+        );
+    }
+
     mysqli_stmt_bind_param(
         $stmt,
         "iss",
@@ -159,72 +156,170 @@ try {
         $endDate
     );
 
-    mysqli_stmt_execute($stmt);
+    if (!mysqli_stmt_execute($stmt)) {
+        throw new Exception(
+            'Unable to execute inventory query: ' . mysqli_stmt_error($stmt)
+        );
+    }
 
     $result = mysqli_stmt_get_result($stmt);
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Store inventory
-    |--------------------------------------------------------------------------
-    */
 
     $inventoryData = [];
 
     while ($row = mysqli_fetch_assoc($result)) {
 
         $roomTypeId = (int) $row['id_mst_room_types'];
-
-        $date = $row['allocation_date'];
+        $date       = $row['allocation_date'];
 
         $inventoryData[$roomTypeId][$date] = [
-
             'confirmed' => (int) $row['confirmed'],
-
             'tentative' => (int) $row['tentative'],
-
-            'blocked' => (int) $row['blocked_hotel']
+            'blocked'   => (int) $row['blocked_hotel']
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | STEP 5
+    | EDIT MODE
+    |
+    | Get rooms already assigned to this reservation.
+    |
+    | fo_reservations_details:
+    |     room type
+    |
+    | fo_reservations:
+    |     checkin / checkout
+    |--------------------------------------------------------------------------
+    */
+
+    $existingRooms = [];
+
+if ($editId > 0) {
+
+    $sqlExisting = "
+        SELECT
+            d.id_mst_room_types,
+            DATE(r.checkin) AS checkin,
+            DATE(r.checkout) AS checkout
+        FROM fo_reservations_details d
+        INNER JOIN fo_reservations r
+            ON r.id = d.id_fo_reservations
+        WHERE d.id_fo_reservations = ?
+    ";
+
+    $stmtExisting = mysqli_prepare($connNew, $sqlExisting);
+
+    if (!$stmtExisting) {
+        throw new Exception(
+            'Unable to prepare existing reservation query: '
+            . mysqli_error($connNew)
+        );
+    }
+
+    mysqli_stmt_bind_param(
+        $stmtExisting,
+        "i",
+        $editId
+    );
+
+    if (!mysqli_stmt_execute($stmtExisting)) {
+        throw new Exception(
+            'Unable to execute existing reservation query: '
+            . mysqli_stmt_error($stmtExisting)
+        );
+    }
+
+    $existingResult = mysqli_stmt_get_result($stmtExisting);
+
+    while ($row = mysqli_fetch_assoc($existingResult)) {
+
+        $roomTypeId = (int) $row['id_mst_room_types'];
+
+        if (empty($row['checkin']) || empty($row['checkout'])) {
+            continue;
+        }
+
+        $existingCheckin  = new DateTime($row['checkin']);
+        $existingCheckout = new DateTime($row['checkout']);
+
+        /*
+         * Example:
+         *
+         * Checkin  = 15-08-2026
+         * Checkout = 16-08-2026
+         *
+         * Consumed inventory:
+         * 15-08-2026
+         *
+         * Checkout date is NOT consumed.
+         */
+        while ($existingCheckin < $existingCheckout) {
+
+            $existingDate = $existingCheckin->format('Y-m-d');
+
+            if (!isset($existingRooms[$roomTypeId])) {
+                $existingRooms[$roomTypeId] = [];
+            }
+
+            if (!isset($existingRooms[$roomTypeId][$existingDate])) {
+                $existingRooms[$roomTypeId][$existingDate] = 0;
+            }
+
+            $existingRooms[$roomTypeId][$existingDate]++;
+
+            $existingCheckin->modify('+1 day');
+        }
+    }
+
+    mysqli_stmt_close($stmtExisting);
+}
 
     /*
     |--------------------------------------------------------------------------
-    | STEP 4
+    | STEP 6
     | Check availability
     |--------------------------------------------------------------------------
     */
 
-    $availability = [];
-
+    $availability     = [];
     $overallAvailable = true;
 
     foreach ($requestedRooms as $roomTypeId => $dates) {
 
         /*
-         * Total inventory assigned to this room type
+         * Check overbooking configuration
          */
-		$allowOverbooking = selectColumn(
-    TBL_ASSIGN_HOTEL_ROOM,
-    'allow_overbooking',
-    "WHERE `id_mst_hotels` = '" . $id_hotel . "'
-     AND `id_mst_room_types` = '" . (int)$roomTypeId . "'"
-);
 
+        $allowOverbooking = selectColumn(
+            TBL_ASSIGN_HOTEL_ROOM,
+            'allow_overbooking',
+            "WHERE `id_mst_hotels` = '" . $id_hotel . "'
+             AND `id_mst_room_types` = '" . (int) $roomTypeId . "'"
+        );
 
-if ($allowOverbooking == '1') {
+        /*
+         * Existing code checks only allow_overbooking = 1.
+         * Keep the same behavior.
+         */
 
+        if ($allowOverbooking != '1') {
+            continue;
+        }
+
+        /*
+         * Total inventory
+         */
 
         $inventory = selectColumn(
             TBL_ASSIGN_HOTEL_ROOM,
             'inventory',
             "WHERE `id_mst_hotels` = '" . $id_hotel . "'
-             AND `id_mst_room_types` = '" . (int)$roomTypeId . "' and allow_overbooking='1'"
+             AND `id_mst_room_types` = '" . (int) $roomTypeId . "'
+             AND allow_overbooking = '1'"
         );
 
         $inventory = (int) $inventory;
-
 
         foreach ($dates as $date => $requestedQty) {
 
@@ -233,65 +328,93 @@ if ($allowOverbooking == '1') {
                 $date
             );
 
+            if (!$dateObj) {
+                $overallAvailable = false;
+
+                $availability[] = [
+                    'room_type_id' => (int) $roomTypeId,
+                    'date'         => $date,
+                    'requested'    => (int) $requestedQty,
+                    'status'       => 'NOT AVAILABLE'
+                ];
+
+                continue;
+            }
+
             $sqlDate = $dateObj->format('Y-m-d');
 
-
             /*
-             * If inventory record doesn't exist
+             * Current inventory usage
              */
-            if (
-                !isset(
-                    $inventoryData[$roomTypeId][$sqlDate]
-                )
-            ) {
 
-                $available = 0;
-
-                $confirmed = 0;
-                $tentative = 0;
-                $blocked = 0;
-
-            } else {
+            if (isset($inventoryData[$roomTypeId][$sqlDate])) {
 
                 $inv = $inventoryData[$roomTypeId][$sqlDate];
 
                 $confirmed = $inv['confirmed'];
-
                 $tentative = $inv['tentative'];
+                $blocked   = $inv['blocked'];
 
-                $blocked = $inv['blocked'];
+            } else {
 
-
-                /*
-                 * YOUR ORIGINAL CALCULATION
-                 */
-                $available =
-                    $inventory
-                    - $confirmed
-                    - $tentative
-                    - $blocked;
-
-                /*
-                 * Don't return negative availability
-                 */
-                $available = max(0, $available);
+                $confirmed = 0;
+                $tentative = 0;
+                $blocked   = 0;
             }
 
+            /*
+             * ---------------------------------------------------------------
+             * IMPORTANT FOR EDIT
+             * ---------------------------------------------------------------
+             *
+             * If reservation 231 already has 2 rooms on this date:
+             *
+             * inventory = 10
+             * confirmed = 8
+             * existing reservation = 2
+             *
+             * Normal availability:
+             *
+             * 10 - 8 = 2
+             *
+             * But those 2 confirmed rooms include reservation 231.
+             *
+             * So add the existing reservation rooms back.
+             */
+
+            $existingQty = 0;
+
+            if (
+                isset($existingRooms[$roomTypeId][$sqlDate])
+            ) {
+                $existingQty =
+                    (int) $existingRooms[$roomTypeId][$sqlDate];
+            }
 
             /*
-             * Compare requested vs available
+             * Calculate availability after removing
+             * this reservation's old allocation.
              */
-            $isAvailable = $available >= $requestedQty;
 
+            $available =
+                $inventory
+                - $confirmed
+                - $tentative
+                - $blocked
+                + $existingQty;
+
+            $available = max(0, $available);
+
+            /*
+             * Compare new requested quantity.
+             */
+
+            $isAvailable = $available >= $requestedQty;
 
             if (!$isAvailable) {
                 $overallAvailable = false;
             }
 
-
-            /*
-             * Result
-             */
             $availability[] = [
 
                 'room_type_id' => (int) $roomTypeId,
@@ -308,6 +431,8 @@ if ($allowOverbooking == '1') {
 
                 'blocked' => (int) $blocked,
 
+                'existing' => (int) $existingQty,
+
                 'available' => (int) $available,
 
                 'status' => $isAvailable
@@ -315,13 +440,11 @@ if ($allowOverbooking == '1') {
                     : 'NOT AVAILABLE'
             ];
         }
-	}
     }
-
 
     /*
     |--------------------------------------------------------------------------
-    | STEP 5
+    | STEP 7
     | Return result
     |--------------------------------------------------------------------------
     */
@@ -334,13 +457,13 @@ if ($allowOverbooking == '1') {
             ? 'All rooms are available.'
             : 'Please check the availability. Overbooking is not Allowed.',
 
+        'editid' => $editId,
+
         'availability' => $availability
 
     ]);
 
-//'Some rooms are unavailable. Please check the availability.',
     exit;
-
 
 } catch (Throwable $e) {
 
@@ -356,6 +479,4 @@ if ($allowOverbooking == '1') {
 
     exit;
 }
-
-
 ?>
