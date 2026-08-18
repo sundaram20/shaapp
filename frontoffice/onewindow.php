@@ -9324,7 +9324,7 @@ function ValidateRoomSelected(roomNumber, roomId, checkboxValue) {
     var expected_arrivals_rooms = $("input[name='expected_arrivals_rooms[]']:checked").map(function () {
       return $(this).val();
     }).get();
-    if (expected_arrivals_rooms != '') {
+   // if (expected_arrivals_rooms != '') {
       $.ajax({
         url: 'ajax/ajaxRoomAllocationsingleForm.php',
         type: 'POST',
@@ -9340,9 +9340,9 @@ function ValidateRoomSelected(roomNumber, roomId, checkboxValue) {
 
         }
       });
-    } else {
-      bootbox.alert("Please Select a room");
-    }
+   // } else {
+    //  bootbox.alert("Please Select a room");
+    //}
 
   }
 
