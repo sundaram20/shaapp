@@ -16,8 +16,20 @@ if (mysqli_num_rows($Vali) > 0) {
 	die;
 } else {
 		$id_folio = selectColumn(FO_BILL,'id_fo_folio_to'," WHERE `id` = '".$id_fo_bill."'");
+		//echo "Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."'";
+		$DateOrderByRoom = array();
+		$sqlOrderDetailFolio = mysqli_query($connNew,"Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."' group by order_by_room order by id_fo_folio_to");
+		if (mysqli_num_rows($sqlOrderDetailFolio) > 0) {
+			while($sqlOrderDetailFolioRow = mysqli_fetch_object($sqlOrderDetailFolio)) {
+				$DateOrderByRoom[]= $sqlOrderDetailFolioRow->order_by_room;
+			}
+		}
+//echo '111';
+$DateOrderByRoom	= implode(',',$DateOrderByRoom);
+//print_r($DateOrderByRoom);die;
+
 		//==Balance================================================
-		$sqlOrderDetail = mysqli_query($connNew,"Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."'");
+		$sqlOrderDetail = mysqli_query($connNew,"Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."' and `order_by_room` IN (".$DateOrderByRoom.")");
 		if (mysqli_num_rows($sqlOrderDetail) > 0) {
 			while($rowOrderDetail = mysqli_fetch_object($sqlOrderDetail)) {
 				$CurrentTotal += $rowOrderDetail->tariff_price_per_day_per_room + $rowOrderDetail->tax_per_day_per_room;
@@ -86,7 +98,7 @@ if (mysqli_num_rows($Vali) > 0) {
 
 				$DateArray = array();
 				while(strtotime($DatedNightAudit) != strtotime($reservation_checkout)) {
-					$check_status = selectColumn(FO_RESERVATIONS_DETAILS,'checkin_status','WHERE id_fo_reservations = "'.$id_reservation.'" and checkin_status = "0" and dated = "'.date("Y-m-d",strtotime($DatedNightAudit)).'"');
+					$check_status = selectColumn(FO_RESERVATIONS_DETAILS,'checkin_status','WHERE id_fo_reservations = "'.$id_reservation.'" and checkin_status = "0" and dated = "'.date("Y-m-d",strtotime($DatedNightAudit)).'" and `order_by_room` IN (".$DateOrderByRoom.")');
 					if ($check_status == '0') {
 						$DateArray[] = date("Y-m-d",strtotime($DatedNightAudit));
 					}
@@ -94,7 +106,7 @@ if (mysqli_num_rows($Vali) > 0) {
 				}
 				$DateArray = "'".implode ( "','", $DateArray )."'";
 				//================================================================================
-				$sqlOrderDetail = mysqli_query($connNew, "SELECT * FROM ( SELECT * FROM fo_reservations_details WHERE id_fo_reservations = '".$id_reservation."' ORDER BY dated DESC LIMIT 18446744073709551615 ) AS sub GROUP BY order_by_room;");
+				$sqlOrderDetail = mysqli_query($connNew, "SELECT * FROM ( SELECT * FROM fo_reservations_details WHERE id_fo_reservations = '".$id_reservation."' and `order_by_room` IN (".$DateOrderByRoom.") ORDER BY dated DESC LIMIT 18446744073709551615 ) AS sub GROUP BY order_by_room;");
 				if (mysqli_num_rows($sqlOrderDetail) > 0) { 
 					while ($rowOrderDetail = mysqli_fetch_object($sqlOrderDetail)) {
 						$roomNo = selectColumn(TBL_ROOMNO,'room_no'," WHERE `id` = '".$rowOrderDetail->id_mst_room_no_allocation."'");
@@ -122,13 +134,13 @@ if (mysqli_num_rows($Vali) > 0) {
 				$DatedNightAudit1 = date('Y-m-d',strtotime($rowNightAudit->dated));
 				$DatedNightAudit = date('d-m-Y',strtotime('+1 day',strtotime($rowNightAudit->dated)));
 				$id_owner_room = selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$id_fo_bill."'");
-				$sql = "UPDATE ".FO_BILL." SET status = '2' , `checkout_date`='".date($DatedNightAudit2.' H:i:s')."' WHERE id_reservations='".$id_reservation."'";
+				$sql = "UPDATE ".FO_BILL." SET status = '2' , `checkout_date`='".date($DatedNightAudit2.' H:i:s')."' WHERE id_reservations='".$id_reservation."' and `id` = '".$id_fo_bill."'";
 				if (mysqli_query($connNew,$sql)) {
-	 				$insertGrid =  "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `no_showoff`= '1' where `id_fo_reservations` = '".$id_reservation."' and  DATE(dated) IN (".stripslashes($DateArray).")";
+	 				$insertGrid =  "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `no_showoff`= '1' where `id_fo_reservations` = '".$id_reservation."' and  DATE(dated) IN (".stripslashes($DateArray).") and `order_by_room` IN (".$DateOrderByRoom.")";
 					$insertOrder = mysqli_query($connNew,$insertGrid);
 
 					if ($checkout_time != '') {
-						$updateCheckoutTime = "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `checkout_time`='".$checkout_time."', `room_availability`='checkout' where `id_fo_reservations` = '".$id_reservation."'";
+						$updateCheckoutTime = "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `checkout_time`='".$checkout_time."', `room_availability`='checkout' where `id_fo_reservations` = '".$id_reservation."' and `order_by_room` IN (".$DateOrderByRoom.")";
 						$insertOrder = mysqli_query($connNew,$updateCheckoutTime);
 					}
 					//================================================================================
@@ -146,30 +158,28 @@ if (mysqli_num_rows($Vali) > 0) {
 					if ($daysNew == '1') {
 						$reservationcheckout = date('Y-m-d',strtotime($reservationcheckout));
 						$checkOutDated = selectColumn(FO_RESERVATIONS_DETAILS,'dated','WHERE id_fo_reservations="'.$id_reservation.'"  and checkin_status="1" and no_showoff="0"  and checkout_status="0" order by dated desc');
-	  					$insertGrid2 = "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `checkout_status`='1', `checkout_date` = '".date($reservationcheckout.' H:i:s')."' where `id_fo_reservations` = '".$id_reservation."' and id IN (".stripslashes($idOfOrder).")";
+	  					$insertGrid2 = "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `checkout_status`='1', `checkout_date` = '".date($reservationcheckout.' H:i:s')."' where `id_fo_reservations` = '".$id_reservation."' and `order_by_room` IN (".$DateOrderByRoom.") and id IN (".stripslashes($idOfOrder).")";
 						mysqli_query($connNew, $insertGrid2);
 					} else {
 						$checkOutDated = selectColumn(FO_RESERVATIONS_DETAILS,'dated','WHERE id_fo_reservations="'.$id_reservation.'"  and checkin_status="1" and no_showoff="0"  and checkout_status="0" order by dated desc');
-	 					$insertGrid2 = "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `checkout_status` = '1', `checkout_date` = '".date($checkOutDated.' H:i:s')."' where `id_fo_reservations` = '".$id_reservation."' and id IN (".stripslashes($idOfOrder).")";
+	 					$insertGrid2 = "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `checkout_status` = '1', `checkout_date` = '".date($checkOutDated.' H:i:s')."' where `id_fo_reservations` = '".$id_reservation."' and `order_by_room` IN (".$DateOrderByRoom.") and id IN (".stripslashes($idOfOrder).")";
 						mysqli_query($connNew,$insertGrid2);
 					}
 
 					$reservationcheckout = date('d-m-Y',strtotime(selectColumn(FO_RESERVATIONS,'checkout','WHERE id="'.$id_reservation.'"')));
 					$DateArrayDate = array();
 					while (strtotime($DatedNightAudit) != strtotime($reservationcheckout)) {
-						$check_status = selectColumn(FO_RESERVATIONS_DETAILS,'checkin_status','WHERE id_fo_reservations = "'.$id_reservation.'" and checkin_status = "0" and dated = "'.date("Y-m-d",strtotime($DatedNightAudit)).'"');
+						$check_status = selectColumn(FO_RESERVATIONS_DETAILS,'checkin_status','WHERE id_fo_reservations = "'.$id_reservation.'" and checkin_status = "0" and dated = "'.date("Y-m-d",strtotime($DatedNightAudit)).'" and `order_by_room` IN (".$DateOrderByRoom.")');
 						if ($check_status == '0') {
 							$DateArrayDate[] = date("Y-m-d",strtotime($DatedNightAudit));
 						}
 						$DatedNightAudit = date('Y-m-d',strtotime('+1 day',strtotime($DatedNightAudit)));
 					}
 					$DateArrayDate = "'".implode ( "','", $DateArrayDate )."'";
-					$insertGridDate =  "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `no_showoff` = '1' where `id_fo_reservations` = '".$id_reservation."' and DATE(dated) IN (".stripslashes($DateArrayDate).")";
+					$insertGridDate =  "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `no_showoff` = '1' where `id_fo_reservations` = '".$id_reservation."' and DATE(dated) IN (".stripslashes($DateArrayDate).") and `order_by_room` IN (".$DateOrderByRoom.")";
 					$insertOrder = mysqli_query($connNew, $insertGridDate);
 					
-					
-					
-					
+										
 					
 					$dataArray['status'] = '1';
 					$dataArray['message'] = 'Checkout updated sucessfully';
