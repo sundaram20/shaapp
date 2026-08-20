@@ -128,9 +128,7 @@ $report_show	= $_REQUEST['report_show'];
     <span class="caret"></span> <span class="sr-only">Toggle Dropdown</span> </button>
      <ul class="dropdown-menu " role="menu">
       <li><a title="Export to excel file" onClick="downloadExcelPdf(2);" href="javascript:void(0)"><img src="../images/excel-icon.jpg" width="20" height="20">&nbsp;Excel</a></li>
-      <li><a title="Export to pdf file" onClick="downloadExcelPdf(3);" href="javascript:void(0)"><img src="../images/pdf.jpg" width="20" height="20">&nbsp;Pdf</a></li>
-       <li><a title="Export to JPG file" onClick="downloadExcelPdf(3);" href="javascript:void(0)"><i class="fas fa-file-image"></i>&nbsp;JPG</a></li>
-    </ul>
+      </ul>
   </div>
 
 <div class="btn-group s-btt"  > <a type="button" class="btn c-btn2" href="javascript:void(0)"><i class="fa fa-fw fa-cloud-download"></i> Share</a>
