@@ -1,6 +1,231 @@
 <?php
 include_once("../../config/auto_loader.php");
 
+
+$startDate=$_POST['checkin_extend_date'];
+$startEnd=date ("Y-m-d", strtotime("+7 day", strtotime($_POST['checkout_extend_date'])));  ;
+$id_hotel='1';
+
+$data5=array();
+$checkoutDate_upadate = date ("Y-m-d", strtotime($startEnd));
+$startDateCheckAvailability = date ("Y-m-d", strtotime($startDate));
+
+$sqlHot="SELECT id,name FROM ".TBL_HOTELS." WHERE id_shop='".$_SESSION['shop']."' AND status='1' ";
+				$resHot=mysqli_query($connNew,$sqlHot);
+				$objHot=mysqli_fetch_object($resHot);	
+//HOtel====================================================
+//HOtel====================================================
+$fromDate =$startDateCheckAvailability;
+$toDate =$checkoutDate_upadate;
+
+updateBlockedHotelsForShop($connNew, $_SESSION['shop'], $fromDate, $toDate);
+function updateBlockedHotelsForShop($conn, $shopId, $fromDate, $toDate) {
+    // get all hotels for this shop
+    $sqlHot = "SELECT id, name 
+               FROM ".TBL_HOTELS." 
+               WHERE id_shop='".mysqli_real_escape_string($conn, $shopId)."' 
+               AND status='1'";
+    $resHot = mysqli_query($conn, $sqlHot);
+
+    while ($objHot = mysqli_fetch_object($resHot)) {
+        $hotelId = $objHot->id;
+
+        // get all assigned room types for this hotel
+        $sqlRoomType = "SELECT id_mst_room_types 
+                        FROM `".TBL_ASSIGN_HOTEL_ROOM."` 
+                        WHERE id_mst_hotels = '$hotelId' 
+                        ORDER BY status_active_date DESC";
+        $resRoomType = mysqli_query($conn, $sqlRoomType);
+
+        while ($rowRoomType = mysqli_fetch_object($resRoomType)) {
+             $roomTypeId = $rowRoomType->id_mst_room_types;
+
+            // call processor for this (hotel, room type)
+            processBlockedRoomDates($conn, $hotelId, $roomTypeId, $fromDate, $toDate);
+        }
+    }
+
+   // return true;
+}
+function processBlockedRoomDates($conn, $hotelId, $roomTypeId, $fromDate, $toDate) {
+    $arrayOfDates = [];
+    $from = new DateTime($fromDate);
+    $to   = new DateTime($toDate);
+
+    // prepare all dates in range with 0 first
+    for ($current = clone $from; $current <= $to; $current->modify('+1 day')) {
+        $dateStr = $current->format('Y-m-d');
+        $arrayOfDates[$dateStr] = 0;
+    }
+
+    // fetch blocked ranges
+    $query = "SELECT blocked_room_dates 
+              FROM `".TBL_ROOMNO."`
+              WHERE id_mst_room_types = '".mysqli_real_escape_string($conn, $roomTypeId)."'
+              AND id_mst_hotels = '".mysqli_real_escape_string($conn, $hotelId)."'
+              AND status = '1'
+              AND blocked_room_dates != ''";
+    $resSQL = mysqli_query($conn, $query);
+
+    while ($Record = mysqli_fetch_object($resSQL)) {
+        $ranges = explode(',', $Record->blocked_room_dates);
+
+        foreach ($ranges as $selectedDateRange) {
+            $dates = explode(' - ', trim($selectedDateRange));
+            if (count($dates) != 2) continue;
+
+            $start = DateTime::createFromFormat('d/m/Y', trim($dates[0]));
+            $end   = DateTime::createFromFormat('d/m/Y', trim($dates[1]));
+            if (!$start || !$end) continue;
+
+            for ($current = clone $start; $current <= $end; $current->modify('+1 day')) {
+                if ($current >= $from && $current <= $to) {
+                    $dateStr = $current->format('Y-m-d');
+                    $arrayOfDates[$dateStr]++;  // increment block count
+                }
+            }
+        }
+    }
+
+    // now update inventory (always write a value, even if 0)
+    foreach ($arrayOfDates as $date => $count) {
+         $sql = "UPDATE fo_inventory
+                SET blocked_hotel = $count
+                WHERE id_mst_room_types = '".mysqli_real_escape_string($conn, $roomTypeId)."'
+                AND id_mst_hotels = '".mysqli_real_escape_string($conn, $hotelId)."'
+                AND allocation_date = '$date'";
+        mysqli_query($conn, $sql);
+    }
+
+    return true;
+}
+
+
+
+//=============================Load CheckAvailability	
+while (strtotime($startDateCheckAvailability) < strtotime($checkoutDate_upadate)){	
+
+$startDateCheckAvailability = date("Y-m-d",strtotime($startDateCheckAvailability));	
+
+
+			
+		 $AssRoomRoomType	=	" SELECT * FROM `".TBL_ASSIGN_HOTEL_ROOM."` WHERE `id_mst_hotels` = '".$objHot->id."' ORDER BY status_active_date DESC ";
+			$resHotRoomType=mysqli_query($connNew,$AssRoomRoomType);	
+			
+		while($rowResRoomType = mysqli_fetch_object($resHotRoomType)){
+			
+			 $sqlRes="SELECT count(fo_reservations_details.room_quantity) as qty ,fo_reservations.booking_status,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
+FROM `fo_reservations_details` left join fo_reservations on fo_reservations_details.id_fo_reservations =fo_reservations.id
+where fo_reservations.booking_status!='4' and fo_reservations_details.no_showoff='0'  and  fo_reservations_details.dated='".$startDateCheckAvailability."' 
+ and fo_reservations_details.id_mst_room_types='".$rowResRoomType->id_mst_room_types."'
+GROUP by fo_reservations_details.dated ,fo_reservations_details.id_mst_room_types ORDER BY `fo_reservations_details`.`dated` DESC";
+
+
+
+
+$resRes = mysqli_query($connNew,$sqlRes);
+			if(mysqli_num_rows($resRes)>0){
+			while($rowRes = mysqli_fetch_object($resRes)){ 
+						
+						$sqla = "SELECT * FROM ".FO_INVENTORY." WHERE id_mst_room_types='".$rowRes->id_mst_room_types."' and allocation_date='".$rowRes->dated."' and id_mst_hotels = '".$rowRes->id_mst_hotels."' ";
+						$resnew = mysqli_query($connNew,$sqla);
+						//$rownew = mysqli_fetch_object($resnew);
+						
+						$rownew = mysqli_fetch_object($resnew);
+						
+						//================================
+					 $sqlResConfirm="SELECT count(fo_reservations_details.room_quantity) as Confirmqty ,fo_reservations.booking_status,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
+FROM `fo_reservations_details` left join fo_reservations on fo_reservations_details.id_fo_reservations =fo_reservations.id
+where fo_reservations.booking_status='1' and fo_reservations_details.no_showoff='0'  and   fo_reservations_details.id_mst_room_types='".$rowRes->id_mst_room_types."' and fo_reservations_details.dated='".$startDateCheckAvailability."' 
+GROUP by fo_reservations_details.dated  ORDER BY `fo_reservations_details`.`dated` DESC";		
+						$resnewConfirm = mysqli_query($connNew,$sqlResConfirm);	
+							$rownewConfirm = mysqli_fetch_object($resnewConfirm);
+							$Confirmqty	= $rownewConfirm->Confirmqty;
+							$Confirmqty=$Confirmqty==''?'0':$Confirmqty;
+	
+ $sqlResTenditive="SELECT count(fo_reservations_details.room_quantity) as Tenditivemqty ,fo_reservations.booking_status,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
+FROM `fo_reservations_details` left join fo_reservations on fo_reservations_details.id_fo_reservations =fo_reservations.id
+where fo_reservations.booking_status='2' and fo_reservations_details.no_showoff='0'  and   fo_reservations_details.id_mst_room_types='".$rowRes->id_mst_room_types."' and fo_reservations_details.dated='".$startDateCheckAvailability."' 
+GROUP by fo_reservations_details.dated  ORDER BY `fo_reservations_details`.`dated` DESC";			
+						$resnewTenditive = mysqli_query($connNew,$sqlResTenditive);	
+							$rownewTenditive = mysqli_fetch_object($resnewTenditive);
+							$Tenditiveqty	= $rownewTenditive->Tenditivemqty;							
+								$Tenditiveqty=$Tenditiveqty==''?'0':$Tenditiveqty;
+								
+								
+								
+								//==============================
+						$sqlRoom=  "SELECT rt.name, ahr.id_mst_hotels,ahr.inventory, ahr.id_mst_room_types from `".TBL_ASSIGN_HOTEL_ROOM."` ahr left join `".TBL_ROOM_TYPE."` rt on ahr.id_mst_room_types = rt.id where ahr.status='1' and rt.status='1' and ahr.id_mst_hotels = '".$rowRes->id_mst_hotels."' and ahr.id_mst_room_types='".addslashes($rowRes->id_mst_room_types)."'" ;
+						
+						
+						$resRoom = mysqli_query($connNew,$sqlRoom);
+						$rowRoom = mysqli_fetch_object($resRoom);
+						//if($rowRes->booking_status=='2'){
+						
+							
+							$crs_available = $rowRoom->inventory - $rowRes->qty ; 
+							$tentative =  $rowRes->qty ;
+							$insertGrid = "UPDATE ".FO_INVENTORY." SET `crs_available`='".$crs_available."',`tentative`='".$Tenditiveqty."',`confirmed`='".$Confirmqty."' ";
+							$insertGrid .=" WHERE id_mst_room_types='".$rowRes->id_mst_room_types."' and allocation_date='".$rowRes->dated."' and id_mst_hotels = '".$rowRes->id_mst_hotels."'";
+						//echo '<br><br>2==='.$rowRes->dated.$insertGrid;
+						  mysqli_query($connNew,$insertGrid);
+						/*}else{
+						
+							$crs_available = $rowRoom->inventory - $rowRes->qty ; 
+							$confirmed =  $rowRes->qty ;
+							$insertGrid = "UPDATE ".FO_INVENTORY." SET `crs_available`='".$crs_available."',`confirmed`='".$confirmed."' ";
+							$insertGrid .=" WHERE id_mst_room_types='".$rowRes->id_mst_room_types."' and allocation_date='".$rowRes->dated."' and id_mst_hotels = '".$rowRes->id_mst_hotels."'";
+						echo '<br><br>1==='.$rowRes->dated.$insertGrid;
+						  mysqli_query($connNew,$insertGrid);
+						}*/
+					
+						
+						}
+			}else{
+				
+				
+					 $roomId=$rowResRoomType->id_mst_room_types;
+				$hotelId=$id_hotel;		
+				//echo "SELECT sum(ahr.inventory) as totalRoom from `".TBL_ASSIGN_HOTEL_ROOM."` ahr left join `".TBL_ROOM_TYPE."` rt on ahr.room_id = rt.id where ahr.status='1' and rt.status='1' and ahr.hotel_id='".addslashes($hotelId)."' and ahr.room_id='".addslashes($roomId)."'";
+				$sqlSum=mysqli_query($connNew,"SELECT sum(ahr.inventory) as totalRoom from `".TBL_ASSIGN_HOTEL_ROOM."` ahr left join `".TBL_ROOM_TYPE."` rt on ahr.id_mst_room_types = rt.id where ahr.status='1' and rt.status='1' and ahr.id_mst_hotels='".addslashes($hotelId)."' and ahr.id_mst_room_types='".addslashes($roomId)."'");
+		$rowResSum = mysqli_fetch_object($sqlSum);
+		$totalRoom	= $rowResSum->totalRoom;
+	
+		$crs_available = $rowRoom->inventory - $rowResRoomType->qty ; 
+							$confirmed =  $rowResRoomType->qty ;
+							$insertGrid = "UPDATE ".FO_INVENTORY." SET `crs_available`='".$totalRoom."',`confirmed`='0',`tentative`='0' ";
+							$insertGrid .=" WHERE id_mst_room_types='".$rowResRoomType->id_mst_room_types."' and allocation_date = '".$startDateCheckAvailability."' and   id_mst_hotels = '".$rowResRoomType->id_mst_hotels."'";
+						//echo $insertGrid;
+						  mysqli_query($connNew,$insertGrid);
+		
+				
+			}
+		
+		
+		
+		
+		
+		
+		
+		}
+		
+		
+		
+		
+			
+				
+	//echo '<br>===='.
+	$startDateCheckAvailability = date ("Y-m-d", strtotime("+1 day", strtotime($startDateCheckAvailability)));	
+
+			  			
+  }		
+/////////////////////////////////////////
+
+
+
+
+
+
 try {
 
     $id_hotel = (int) ($_POST['id_mst_hotels_new'] ?? 0);
