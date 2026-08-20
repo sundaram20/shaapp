@@ -447,22 +447,7 @@ $(function() {
                 </div>
                 <div class="form-group col-sm-2" style="">
                     <label for="checkin" style="float:left;" readonly="readonly">Guest Name</label>
-                    <?php
-                     /*   $categoryDropDown = '<select class="form-control select2" name="id_mst_guest_form" id="id_mst_guest_form">
-                            <option value="">Select Guest</option>';
-                            $SQL = "select *  from ".TBL_GUEST." where status='1' and `id_shop` = '".addslashes($_SESSION['shop'])."'";
-                            $query = mysqli_query($connNew, $SQL);
-                            while ($resultCat=mysqli_fetch_assoc($query)) {
-                                if ($row->id_mst_guest == $resultCat['id']) {
-                                    $selected = 'selected="selected"';
-                                } else {
-                                    $selected = '';
-                                }
-                                $categoryDropDown .= '<option value="'.$resultCat['id'].'"  '.$selected.' >'.$resultCat['guest_reg_no'] . ' - ' . $resultCat['first_name'].' '. $resultCat['last_name'].' - '.$resultCat['email'].'-' . $resultCat['city'].'</option>';
-                            }
-                            echo $categoryDropDown .= '</select>';
-							*/
-                    ?><select class="form-control select2-guest itemGuest" 
+                    <select class="form-control select2-guest itemGuest" 
         name="id_mst_guest_form" 
         id="id_mst_guest_form">
     <option value="">Select Guest</option>
@@ -472,6 +457,17 @@ $(function() {
                 <div class="input-group-addon form-group col-sm-1" data-toggle="modal" data-target="#guestNewaddeditModal" style="width: auto;border: 1px solid #fefefe; margin-top : 2.5rem;">
                     <a href="javascript:void(0);" style="color:black;" id="res_guestAddId">
                         <i class="fa fa-plus"></i>
+                    </a>
+                </div>
+                <div class="input-group-addon form-group col-sm-1" id="guestEditBtnWrap" style="width: auto;border: 1px solid #fefefe; margin-top : 2.5rem; display:none;" title="Edit Guest">
+                    <a href="javascript:void(0);" style="color:black;" id="res_guestEditId" onclick="openGuestEditPage();">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                </div>
+
+                <div class="input-group-addon form-group col-sm-1" id="guestHistoryBtnWrap" style="width: auto;border: 1px solid #fefefe; margin-top : 2.5rem; display:none;" title="Guest Stay History">
+                    <a href="javascript:void(0);" style="color:black;" id="res_guestHistoryId" onclick="openGuestStayHistory();">
+                        <i class="fa fa-history"></i>
                     </a>
                 </div>
                 <div class="form-group col-md-2">
@@ -2233,6 +2229,8 @@ $(document).ready(function() {
                     $('#id_mst_guest_form')
                         .append(option)
                         .trigger('change.select2');
+
+                        toggleGuestActionButtons();
                 }
 
             }
@@ -2390,4 +2388,116 @@ $(document).ready(function () {
         $('#tentative_date').datepicker('setDate', val);
     }
 });
+
+function toggleGuestActionButtons() {
+    var guestId = $('#id_mst_guest_form').val();
+    if (guestId && parseInt(guestId) > 0) {
+        $('#guestEditBtnWrap').show();
+        $('#guestHistoryBtnWrap').show();
+    } else {
+        $('#guestEditBtnWrap').hide();
+        $('#guestHistoryBtnWrap').hide();
+    }
+}
+
+$('#id_mst_guest_form').on('change', toggleGuestActionButtons);
+
+function openGuestEditPage() {
+    var guestId = $('#id_mst_guest_form').val();
+    if (!guestId) return;
+
+    $.ajax({
+        url: 'ajax/ajax_guest_get_details.php',
+        type: 'GET',
+        data: { id: guestId },
+        dataType: 'json',
+        success: function (g) {
+            if (!g || !g.id) return;
+
+            // reset to Add mode fields, then fill for Edit
+            $('#EditCustomerID').val(g.id);
+
+            $('#Nametitle').val(g.id_mst_attributes_title || '').trigger('change');
+            $('#first_name').val(g.first_name || '');
+            $('#last_name').val(g.last_name || '');
+            $('#email').val(g.email || '');
+            $('#mobile').val(g.primary_mobile || g.mobile || '');
+            $('#city').val(g.city || '');
+            $('#id_country').val(g.id_country || '').trigger('change');
+            $('#user_type').val(g.user_type || '').trigger('change');
+
+            // proof_type + its conditional fields
+            $('#proof_type').val(g.proof_type || '').trigger('change');
+
+            // give the proof_type change handler (which likely reloads #appenddata
+            // via AJAX) a moment to finish, then fill in the specific proof fields
+            setTimeout(function () {
+                $('#voter_no').val(g.voter_no || '');
+                $('#adhar_no').val(g.adhar_no || '');
+                $('#passport_no').val(g.passport_no || '');
+                $('#authority').val(g.authority || '');
+                if (g.passport_expiry_date && g.passport_expiry_date !== '0000-00-00') {
+                    $('#passport_expiry_date').val(formatDateDMY(g.passport_expiry_date));
+                }
+                if (g.visa_expiry_date && g.visa_expiry_date !== '0000-00-00') {
+                    $('#visa_expiry_date').val(formatDateDMY(g.visa_expiry_date));
+                }
+                if (g.cform_expiry_date && g.cform_expiry_date !== '0000-00-00') {
+                    $('#cform_expiry_date').val(formatDateDMY(g.cform_expiry_date));
+                }
+            }, 300);
+
+            $('#guestNewaddeditModal .modal-title').text('Edit Guest Details');
+            $('#guestNewaddeditModal').modal('show');
+        }
+    });
+}
+
+function formatDateDMY(mysqlDate) {
+    var parts = mysqlDate.split('-'); // yyyy-mm-dd
+    if (parts.length !== 3) return '';
+    return parts[2] + '-' + parts[1] + '-' + parts[0];
+}
+
+$('#res_guestAddId').on('click', function () {
+    $('#guestNewpopupform')[0].reset();
+    $('#EditCustomerID').val('');
+    $('#guestNewaddeditModal .modal-title').text('Add Guest Details');
+});
+
+function openGuestStayHistory() {
+    var guestId = $('#id_mst_guest_form').val();
+    if (!guestId) return;
+
+    $('#guestStayHistoryBody').html('<tr><td colspan="4" class="text-center">Loading...</td></tr>');
+    $('#guestStayHistoryModal').modal('show');
+
+    $.ajax({
+        url: 'ajax/ajax_guest_stay_history.php',
+        type: 'GET',
+        data: { guest_id: guestId },
+        dataType: 'json',
+        success: function (rows) {
+            if (!rows || rows.length === 0) {
+                $('#guestStayHistoryBody').html('<tr><td colspan="4" class="text-center">No stay history found.</td></tr>');
+                return;
+            }
+
+            var html = '';
+            $.each(rows, function (i, r) {
+                html += '<tr>' +
+                    '<!--<td data-label="Booking Number">' + (r.booking_no || '') + '</td>-->' +
+                    '<td data-label="Check In">' + (r.checkin || '') + '</td>' +
+                    '<td data-label="Check Out">' + (r.checkout || '') + '</td>' +
+                    '<td data-label="Room No.">' + (r.room_nos || '') + '</td>' +
+                    '</tr>';
+            });
+            $('#guestStayHistoryBody').html(html);
+        },
+        error: function () {
+            $('#guestStayHistoryBody').html('<tr><td colspan="4" class="text-center">Failed to load stay history.</td></tr>');
+        }
+    });
+}
+
 </script>
