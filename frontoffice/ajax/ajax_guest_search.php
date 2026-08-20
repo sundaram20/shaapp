@@ -18,7 +18,7 @@ if (!empty($selectedId)) {
 
     $selectedId = (int)$selectedId;
 
-     $sqlSelected = "SELECT id, guest_reg_no, first_name, last_name, email, city
+     $sqlSelected = "SELECT id, guest_reg_no, first_name, last_name, email, city, primary_mobile
                     FROM ".TBL_GUEST."
                     WHERE $where AND id = '".$selectedId."' 
                     LIMIT 1";
@@ -31,7 +31,7 @@ if (!empty($selectedId)) {
 
         $data[] = [
             "id"   => $row['id'],
-            "text" => $row['guest_reg_no'].' - '.$row['first_name'].' '.$row['last_name'].' - '.$row['email'].' - '.$row['city']
+            "text" => $row['guest_reg_no'].' - '.$row['first_name'].' '.$row['last_name'].' - '.$row['primary_mobile'].' - '.$row['email'].' - '.$row['city']
         ];
     }
 }
@@ -39,7 +39,7 @@ if (!empty($selectedId)) {
 /* ==============================
    🔥 QUERY 2: SEARCH / DEFAULT (20)
 ============================== */
-$sql = "SELECT id, guest_reg_no, first_name, last_name, email, city
+$sql = "SELECT id, guest_reg_no, first_name, last_name, email, city, primary_mobile
         FROM ".TBL_GUEST."
         WHERE $where";
 
@@ -51,7 +51,8 @@ if (!empty($search)) {
         first_name LIKE '%$search%' OR
         last_name LIKE '%$search%' OR
         email LIKE '%$search%' OR
-        guest_reg_no LIKE '%$search%'
+        guest_reg_no LIKE '%$search%' OR
+        primary_mobile LIKE '%$search%'
     )";
 }
 
@@ -70,7 +71,7 @@ while ($row = mysqli_fetch_assoc($res)) {
 
     $data[] = [
         "id"   => $row['id'],
-        "text" => $row['guest_reg_no'].' - '.$row['first_name'].' '.$row['last_name'].' - '.$row['email'].' - '.$row['city']
+        "text" => $row['guest_reg_no'].' - '.$row['first_name'].' '.$row['last_name'].' - '.$row['primary_mobile'].' - '.$row['email'].' - '.$row['city']
     ];
 }
 

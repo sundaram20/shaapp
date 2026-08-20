@@ -1559,6 +1559,37 @@ height : 0px!important;
 
 
 
+<div class="modal fade" id="guestStayHistoryModal" tabindex="-1" role="dialog" aria-labelledby="guestStayHistoryModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #1296f3; color: #fff; text-align: center;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="guestStayHistoryModalLabel">Guest Stay History</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <!--<th>Booking Number</th>-->
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Room No.</th>
+              </tr>
+            </thead>
+            <tbody id="guestStayHistoryBody">
+              <!-- populated via AJAX -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 <!-- Begain Booker By Model -->
 <div class="modal fade" id="houseeditModal" tabindex="-1" role="dialog" aria-labelledby="houseeditModalLabel"
   style="width: 100%; height: 100%;">
