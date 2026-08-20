@@ -518,8 +518,14 @@ function getReportOrderBy(id_order_by){
     var id_order_by = $("#id_order_by").val();
 	var showItemReport = $("#showItemReport").val();
 	
-    
-        let url2 = 'ajax/ajaxDateWiseReports.php?period='+period+'&id_report_type='+id_report_type+'&id_main_group='+id_main_group+'&id_sub_group='+id_sub_group+'&id_item='+id_item+'&ReportShowType='+ReportShowType+'&id_order_by='+id_order_by+'&showItemReport='+showItemReport;
+    if(id_report_type=='1'){
+		 reportTypeFile  ='ajaxDateWiseReports.php';
+		}else{
+			 reportTypeFile  ='ajaxAvailabilityReportsExcel.php';
+		}
+
+
+        let url2 = 'ajax/'+reportTypeFile+'?period='+period+'&id_report_type='+id_report_type+'&id_main_group='+id_main_group+'&id_sub_group='+id_sub_group+'&id_item='+id_item+'&ReportShowType='+ReportShowType+'&id_order_by='+id_order_by+'&showItemReport='+showItemReport;
          window.open(url2);
 	
         
