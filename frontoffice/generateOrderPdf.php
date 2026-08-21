@@ -114,16 +114,11 @@ foreach($EmailHotels as $dataEmail){
 }
 
 $content = '';
-if($_SESSION['shop_code']=='abr'){
-	
-	$color = '#348feb';
-}else{
-$color = 'red';
-}
+
 	
 						
  $content .= '
-              <table class="table" style="padding-top:0;margin-top:-10px;border:0px solid ' .$color. ';" width="100%">
+              <table class="table" style="padding-top:0;margin-top:-10px;border:0px solid red;" width="100%">
 						<tr>
 						  <td width="30%" style="padding:0!important;">';
 							/* $content .= '<address style="width:170px;padding:0!important;margin:0!important;position:absolute;top:0;">
@@ -860,6 +855,13 @@ $content .='
 						</table>';
 
 
+if($_SESSION['shop_code']=='abr'){
+	
+	$color = '#348feb';
+}else{
+$color = '#961b1e;';
+}
+
 
 $content2 = '';
 $content2 .='<header>
@@ -884,7 +886,7 @@ $content2 .='<header>
     right: 0cm;
     height: 15px;
     padding: 0;
-    background-color: #961b1e;
+    background-color: '.$color.';
 }
 body {
     margin-left: 1cm; 
