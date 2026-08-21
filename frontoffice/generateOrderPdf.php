@@ -859,7 +859,7 @@ if($_SESSION['shop_code']=='abr'){
 	
 	$color = '#348feb';
 }else{
-$color = 'red';
+$color = '#961b1e;';
 }
 
 
