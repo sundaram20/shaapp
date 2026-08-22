@@ -936,7 +936,7 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 					                 <select class="form-control select2" name="id_inv_items<?php echo $k;?>" id="id_inv_items<?php echo $k;?>" onchange="itemget(this.id)" data-parsley-required data-parsley-errors-container="#outletError2">
 										<?php $categoryDropDown = '<option value="">Select Item Code</option>';
 										
-									$sqlResult1 = "SELECT * FROM ".TBL_ATTRIBUTES." WHERE table_name = 'items_type' AND field_category IN ('Ingredients Items','Both','Other Items') AND id_shop = ".$_SESSION['shop'] ." ";
+									$sqlResult1 = "SELECT * FROM ".TBL_ATTRIBUTES." WHERE table_name = 'items_type' AND field_category IN ('Ingredients Items','Both','Other Items','Store Items') AND id_shop = ".$_SESSION['shop'] ." ";
 										$QuerySQL1	=	mysqli_query($connNew,$sqlResult1);
 										
 											while($sqlRow = mysqli_fetch_object($QuerySQL1)){
@@ -1142,7 +1142,7 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 
  <?php
 
-											 $sqlResult1 = "SELECT * FROM ".TBL_ATTRIBUTES." WHERE table_name = 'items_type' AND field_category IN ('Ingredients Items','Both','Other Items') AND id_shop = ".$_SESSION['shop'] ." ";
+											 $sqlResult1 = "SELECT * FROM ".TBL_ATTRIBUTES." WHERE table_name = 'items_type' AND field_category IN ('Ingredients Items','Both','Other Items','Store Items') AND id_shop = ".$_SESSION['shop'] ." ";
 												$QuerySQL1	=	mysqli_query($connNew,$sqlResult1);
 												$list2=array();
 													while($sqlRow = mysqli_fetch_object($QuerySQL1)){
