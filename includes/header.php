@@ -154,24 +154,7 @@ header("Pragma: no-cache");
 		  
 		  
         <ul class="nav navbar-nav">
-		<li class="dropdown notifications-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-bell-o"></i>
-              <span class="label label-danger">1</span>            </a>
-            <ul class="dropdown-menu">
-              <li class="header">You have 1 notifications</li>
-              <li>
-                <!-- inner menu: contains the actual data -->
-                <ul class="menu">
-                  <li>
-                    <a href="booknow.php">
-                      <i class="fa fa-shopping-cart text-aqua"></i> Rooms in Cart
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
+
         		<?php 
 		if((file_exists($_SERVER['DOCUMENT_ROOT'].'/uploaded_files/shop/'.$resLogo )) && $resLogo !=''){  
 		  
