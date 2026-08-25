@@ -1152,7 +1152,7 @@ $GuestName = $GuestTitle.' '.$guest;
 
 <script>
 	 function ReservationSingleForm(id, BookingType, id_folio){ 
-    var id_hotel = $("#id_hotel").val();
+    var id_hotel = '1';
 
     // 1. OPEN MODAL FIRST
     $("#EditReservationModal").modal('show');
@@ -1179,13 +1179,15 @@ $GuestName = $GuestTitle.' '.$guest;
         data: {
             id: id,
             BookingType: BookingType,
-            id_folio: id_folio
+            id_folio: id_folio,
+             id_hotel: id_hotel
         },
         success: function (result) {
             // 4. REPLACE LOADER WITH ACTUAL CONTENT
             $('#EditReservationForm').html(result);
 
             $(".select3").select2({});
+            LoadRoomType(id_hotel,'');
             checkTableBody();
         },
         error: function () {
