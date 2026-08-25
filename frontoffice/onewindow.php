@@ -301,7 +301,7 @@ height : 0px!important;
 
           <?php //if($_SESSION['database']=='demo_pms' || $_SESSION['database']=='demo_pos' ){?>
           <div style="width:100%;float:left;">
-            <button class="btn btn-info" onclick="ReservationSingleForm('','New Reservation Form','','');"
+            <button class="btn btn-info" onclick="ReservationSingleForm('','New Reservation Form','','','1');"
               style="overflow-x: auto !important;float:right;">New Reservation</button>
           </div>
           <?php //} ?>
@@ -8705,6 +8705,7 @@ function saveUpdateRoomNumbers() {
 
   function ReservationSingleForm(id, BookingType,id_folio,id_room, id_hotel) {
     //var id_hotel = $("#id_hotel").val();
+    //alert(id_hotel);
     $.ajax({
       type: "POST",
       url: 'ajax/ReservationSingleForm.php',
@@ -8713,7 +8714,8 @@ function saveUpdateRoomNumbers() {
         $("#EditReservationModal").modal('show');
         $('#EditReservationForm').html(result);
         $(".select3").select2({});
-		checkTableBody();
+        LoadRoomType(id_hotel,'');
+		    checkTableBody();
 
 
       }
