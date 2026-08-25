@@ -1,75 +1,61 @@
-<?php
+<?php include_once("../config/auto_loader.php");
 
-include_once("../config/auto_loader.php");
+ $id_inv_items = $_POST["id_inv_items"]; 
 
-$id_inv_items = isset($_POST["id_inv_items"]) ? (int) $_POST["id_inv_items"] : 0;
-$shopId = (int) $_SESSION['shop'];
+$sql = "SELECT * FROM `".TBL_INV_ITEMS."` WHERE `id_shop` = '".addslashes($_SESSION['shop'])."' AND  `id`='".$id_inv_items."' and `status` = '".'1'."' ";
 
-$res = [];
+//print_r($sql);
 
-$sql = "
-    SELECT
-        i.name,
-        i.conversion_qty,
-        i.id_mst_attributes_unit_main,
-        i.id_mst_attributes_unit_alt,
-        i.id_mst_attributes_store,
-        i.id_mst_charges_purchase_local,
+	    $db->query($sql); 
+	    $numRows= $db->num_rows();
+	    while($row = $db->fetch_object()){  
+	    	$name= $row->name; 
+	    	$conversion_qty= $row->conversion_qty; 
+	    	$id_mst_attributes_unit_main= $row->id_mst_attributes_unit_main; 
+	    	$id_mst_attributes_unit_alt= $row->id_mst_attributes_unit_alt; 
+	    	$id_mst_attributes_store= $row->id_mst_attributes_store; 
+	    	$id_mst_charges_purchase_local= $row->id_mst_charges_purchase_local; 
+	    }
 
-        main_unit.field_value AS main_unit,
-        alt_unit.field_value AS alt_unit,
-        store.field_value AS store
+//Main Unit Get Here
 
-    FROM `" . TBL_INV_ITEMS . "` AS i
+$sql = "SELECT * FROM `".TBL_ATTRIBUTES."` WHERE `id_shop` = '".addslashes($_SESSION['shop'])."' AND  `id`='".$id_mst_attributes_unit_main."' and `status` = '".'1'."' ";
 
-    LEFT JOIN `" . TBL_ATTRIBUTES . "` AS main_unit
-        ON main_unit.id = i.id_mst_attributes_unit_main
-        AND main_unit.id_shop = '" . $shopId . "'
-        AND main_unit.status = '1'
+	    $db->query($sql); 
+	    $numRows= $db->num_rows();
+	    while($row = $db->fetch_object()){  
+	    	$main_unit= $row->field_value;  
+	    }  
 
-    LEFT JOIN `" . TBL_ATTRIBUTES . "` AS alt_unit
-        ON alt_unit.id = i.id_mst_attributes_unit_alt
-        AND alt_unit.id_shop = '" . $shopId . "'
-        AND alt_unit.status = '1'
+//Alt Unit Get Here
 
-    LEFT JOIN `" . TBL_ATTRIBUTES . "` AS store
-        ON store.id = i.id_mst_attributes_store
-        AND store.id_shop = '" . $shopId . "'
-        AND store.status = '1'
+$sql = "SELECT * FROM `".TBL_ATTRIBUTES."` WHERE `id_shop` = '".addslashes($_SESSION['shop'])."' AND  `id`='".$id_mst_attributes_unit_alt."' and `status` = '".'1'."' ";
 
-    WHERE i.id_shop = '" . $shopId . "'
-      AND i.id = '" . $id_inv_items . "'
-      AND i.status = '1'
-    LIMIT 1
-";
+	    $db->query($sql); 
+	    $numRows= $db->num_rows();
+	    while($row = $db->fetch_object()){  
+	    	$alt_unit= $row->field_value;  
+	    } 
 
-$db->query($sql);
+//Store Get Here
 
-if ($db->num_rows() > 0) {
+$sql = "SELECT * FROM `".TBL_ATTRIBUTES."` WHERE `id_shop` = '".addslashes($_SESSION['shop'])."' AND  `id`='".$id_mst_attributes_store."' and `status` = '".'1'."' ";
 
-    $row = $db->fetch_object();
+	    $db->query($sql); 
+	    $numRows= $db->num_rows();
+	    while($row = $db->fetch_object()){  
+	    	$store= $row->field_value;  
+	    } 
 
-    $res['name'] = $row->name;
-    $res['main_unit'] = $row->main_unit;
-    $res['alt_unit'] = $row->alt_unit;
-    $res['conversion_qty'] = $row->conversion_qty;
-    $res['id_mst_attributes_store'] = $row->id_mst_attributes_store;
-    $res['store'] = $row->store;
-    $res['id_mst_charges_purchase_local'] = $row->id_mst_charges_purchase_local;
-
-} else {
-
-    $res['name'] = '';
-    $res['main_unit'] = '';
-    $res['alt_unit'] = '';
-    $res['conversion_qty'] = '';
-    $res['id_mst_attributes_store'] = '';
-    $res['store'] = '';
-    $res['id_mst_charges_purchase_local'] = '';
-}
-
-header('Content-Type: application/json');
-
+$res['name'] = $name;
+$res['main_unit'] = $main_unit;
+$res['alt_unit'] = $alt_unit;
+$res['conversion_qty'] = $conversion_qty;
+$res['id_mst_attributes_store'] = $id_mst_attributes_store;
+$res['store'] = $store;
+$res['id_mst_charges_purchase_local'] = $id_mst_charges_purchase_local;
+ 
+ 
 echo json_encode($res);
-exit;
+ empty($res);
 ?>
