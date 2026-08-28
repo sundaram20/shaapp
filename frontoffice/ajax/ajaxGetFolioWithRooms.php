@@ -64,9 +64,9 @@ foreach ($pending_folios as $folio) {
 		$chec2	=$i==0?'1':'0';
 		$RoomArray	.='<tr>
                                 <td class="px-4 py-2 border">Room '.$room_no.'</td>
-                                <td class="px-4 py-2 border flex items-center " >
+                                <td class="px-4 py-2 border flex items-center " >';
                                     
-                    <select class="select2 w-full"  style="width : 80%;" name="id_mst_guest_form_'.$room_id.'" id="id_mst_guest_form_'.$room_id.'">
+              /*      <select class="select2 w-full"  style="width : 80%;" name="id_mst_guest_form_'.$room_id.'" id="id_mst_guest_form_'.$room_id.'">
                             <option value="">Select Guest</option>';
                             
 						   
@@ -87,7 +87,26 @@ foreach ($pending_folios as $folio) {
                                 }
                                 $RoomArray .= '<option value="'.$resultCat['id'].'"  '.$selected.' >'.$resultCat['guest_reg_no'] . ' - ' . $resultCat['first_name'].' '. $resultCat['last_name'].' - '.$resultCat['email'].'-' . $resultCat['city'].'</option>';
                             }
-                             $RoomArray .= '</select>';
+                             $RoomArray .= '</select>';*/
+
+                             $selectedGuestId = '';
+
+if ($i == 0) {
+    $selectedGuestId = $id_mst_guest_reservations;
+}
+
+$RoomArray .= '
+<select
+    class="select2 room-guest-select w-full itemGuest"
+    style="width:80%;"
+    name="id_mst_guest_form_'.$room_id.'"
+    id="id_mst_guest_form_'.$room_id.'"
+    data-room-id="'.$room_id.'"
+    data-selected-guest="'.$selectedGuestId.'"
+>
+    <option value="">Select Guest</option>
+</select>
+';
                     //data-target="#guestMultipleeditModal"
                    $RoomArray	.='<div class="input-group-addon form-group col-sm-1" data-toggle="modal" onclick="OpenGuestRoomModel('.$room_id.');"  style="width: auto;border: 1px solid #fefefe;float:right;">
                     <a href="javascript:void(0);" style="color:black;" id="res_guestAddId">

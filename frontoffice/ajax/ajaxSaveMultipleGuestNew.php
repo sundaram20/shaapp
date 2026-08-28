@@ -154,8 +154,21 @@ $addSql .= "	,`date_created` = '".currenDateTime()."'
 							,`id_mst_user_created_by` = '".$_SESSION['userId']."'
 				,`status` = '1'";
 		//echo $addSql;
-	executeSql($addSql); 
-		$lastInsertId= $db->insert_id();
+	//executeSql($addSql); 
+		//$lastInsertId= $db->insert_id();
+
+		$result = executeSql($addSql);
+
+if (!$result) {
+    echo "Insert failed";
+    echo "<pre>";
+    print_r($db->error);
+    echo "</pre>";
+    exit;
+}
+
+$lastInsertId = mysqli_insert_id($connNew);
+//echo "Last ID: " . $lastInsertId;
 		
 	}?>
 		
@@ -242,30 +255,95 @@ $addSql .= "	,`date_created` = '".currenDateTime()."'
 			 
 		
 		  
-?> <select class="form-control select2" name="id_guest" id="id_guest" data-parsley-errors-container="#guestError" >
-                      <option value="">Select Guest</option>
-                      <?php 
-									$resCat = "SELECT * FROM `".TBL_GUEST."` where status='1'  and id_shop='".addslashes($_SESSION['shop'])."' ";
-												 $db->query($resCat);
-	$numRows= $db->num_rows();
+?> <select class="form-control select2"
+        name="id_guest"
+        id="id_guest"
+        data-parsley-errors-container="#guestError">
 
-	if($numRows > 0){
-		while($resultCat = $db->fetch_object()){
-			
-			
-			
-													
-														if($lastInsertId == $resultCat->id){
-															$selected = 'selected="selected"';
-														}else{
-															$selected = '';
-														}
-														$guestDropDown .= '<option '.$selected.' value="'.$resultCat->id.'">Name : '.ucfirst($resultCat->title).''.ucfirst($resultCat->first_name).' '.ucfirst($resultCat->last_name).' | Email : '.$resultCat->email.' | Mobile : '.$resultCat->mobile.'</option>';
-													}
-												  }
-												  echo $guestDropDown;
-									
-									 ?>
-                    </select>
-		 <div class="input-group-addon guest_open"> <i class="fa fa-plus"></i> </div>
+    <option value="">Select Guest</option>
+
+    <?php
+
+    $guestDropDown = '';
+    $shopId = (int)$_SESSION['shop'];
+    $lastInsertId = (int)$lastInsertId;
+
+    /*
+     * 1. Get latest 50 guests
+     */
+    $resCat = "
+        SELECT *
+        FROM `" . TBL_GUEST . "`
+        WHERE status = '1'
+        AND id_shop = '" . $shopId . "'
+        ORDER BY id DESC
+        LIMIT 50
+    ";
+
+    $db->query($resCat);
+
+    $guestIds = array();
+
+    while ($resultCat = $db->fetch_object()) {
+
+        $guestIds[] = (int)$resultCat->id;
+
+        $selected = ($lastInsertId == $resultCat->id)
+            ? ' selected="selected"'
+            : '';
+
+        $guestDropDown .= '<option value="' . $resultCat->id . '"' . $selected . '>'
+            . $resultCat->guest_reg_no . ' - '
+            . ucfirst($resultCat->title) . ' '
+            . ucfirst($resultCat->first_name) . ' '
+            . ucfirst($resultCat->last_name)
+            . ' | Email : ' . $resultCat->email
+            . ' | Mobile : ' . $resultCat->mobile
+            . '</option>';
+    }
+
+    /*
+     * 2. If newly inserted guest is NOT in latest 50,
+     *    fetch it separately and put it at the top.
+     */
+    if ($lastInsertId > 0 && !in_array($lastInsertId, $guestIds)) {
+
+        $resNew = "
+            SELECT *
+            FROM `" . TBL_GUEST . "`
+            WHERE id = '" . $lastInsertId . "'
+            AND status = '1'
+            AND id_shop = '" . $shopId . "'
+            LIMIT 1
+        ";
+
+        $db->query($resNew);
+
+        if ($db->num_rows() > 0) {
+
+            $newGuest = $db->fetch_object();
+
+            $newOption = '<option value="' . $newGuest->id . '" selected="selected">'
+                . $newGuest->guest_reg_no . ' - '
+                . ucfirst($newGuest->title) . ' '
+                . ucfirst($newGuest->first_name) . ' '
+                . ucfirst($newGuest->last_name)
+                . ' | Email : ' . $newGuest->email
+                . ' | Mobile : ' . $newGuest->mobile
+                . '</option>';
+
+            $guestDropDown = $newOption . $guestDropDown;
+        }
+    }
+
+    echo $guestDropDown;
+
+    ?>
+
+</select>
+
+<div class="input-group-addon guest_open">
+    <i class="fa fa-plus"></i>
+</div>
+
 

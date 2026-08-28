@@ -3740,7 +3740,7 @@ if (folioLinked != "") {
 
 
  */
- function updateCheckinTime(resvId, id_mst_room_types, today = "", pending_folio_id, check_checkout_date) {
+ function updateCheckinTime1111(resvId, id_mst_room_types, today = "", pending_folio_id, check_checkout_date) {
     // ðŸ" Step 1: Initial AJAX call to validate before checking in
 	
 	var expected_arrivals_rooms = $("input[name='expected_arrivals_rooms[]']").map(function () {
@@ -10164,4 +10164,1809 @@ function SaveOtherDetails() {
     });
 }
   
+
+
+  $(document).on('select2:open', '.itemGuest', function () {
+
+    var $select = $(this);
+
+    var $searchBox =
+        $('.select2-container--open .select2-search__field');
+
+
+    // =====================================================
+    // REMOVE SELECT2 CLEAR BUTTON
+    // =====================================================
+    $('.select2-container--open .select2-selection__clear').remove();
+
+
+    // =====================================================
+    // PREVENT DUPLICATE SEARCH HANDLER
+    // =====================================================
+    $searchBox.off('input.guestSearch');
+
+
+    // =====================================================
+    // INITIAL LOAD
+    // =====================================================
+    if (
+        !$select.data('guest-loaded') &&
+        !$select.data('guest-loading')
+    ) {
+
+        $select.data('guest-loading', true);
+
+
+        $.ajax({
+
+            url: "ajax/ajaxGuestSearch.php",
+
+            type: "GET",
+
+            dataType: "json",
+
+            data: {
+                id: '',
+                search: ''
+            },
+
+
+            // =================================================
+            // SUCCESS - INITIAL GUEST LOAD
+            // =================================================
+            success: function (data) {
+
+                console.log(
+                    'Initial Guest Data:',
+                    data
+                );
+
+
+                // ---------------------------------------------
+                // Validate response
+                // ---------------------------------------------
+                if (!Array.isArray(data)) {
+
+                    console.log(
+                        'Invalid guest response'
+                    );
+
+                    return;
+                }
+
+
+                // ---------------------------------------------
+                // Get reservation selected guest
+                // ---------------------------------------------
+                var selectedGuestId =
+                    String(
+                        $select.data('selected-guest') || ''
+                    );
+
+
+                console.log(
+                    'Selected Reservation Guest:',
+                    selectedGuestId
+                );
+
+
+                // =================================================
+                // ADD FIRST 25 GUESTS
+                // =================================================
+                $.each(
+                    data,
+                    function (index, item) {
+
+                        /*
+                         * Prevent duplicate option
+                         */
+                        if (
+                            $select.find(
+                                'option[value="' +
+                                item.id +
+                                '"]'
+                            ).length > 0
+                        ) {
+
+                            return;
+                        }
+
+
+                        /*
+                         * Check whether this is
+                         * reservation guest
+                         */
+                        var isSelected =
+                            selectedGuestId !== '' &&
+                            String(item.id) ===
+                            selectedGuestId;
+
+
+                        /*
+                         * Create option
+                         */
+                        var option =
+                            new Option(
+                                item.text,
+                                item.id,
+                                isSelected,
+                                isSelected
+                            );
+
+
+                        $(option).addClass(
+                            'guest-default-option'
+                        );
+
+
+                        $select.append(
+                            option
+                        );
+
+                    }
+                );
+
+
+                // =================================================
+                // RESERVATION GUEST EXISTS IN FIRST 25
+                // =================================================
+                if (selectedGuestId !== '') {
+
+                    var $selectedOption =
+                        $select.find(
+                            'option[value="' +
+                            selectedGuestId +
+                            '"]'
+                        );
+
+
+                    if ($selectedOption.length > 0) {
+
+                        /*
+                         * Select reservation guest
+                         */
+                        $selectedOption
+                            .prop(
+                                'selected',
+                                true
+                            )
+                            .prop(
+                                'disabled',
+                                false
+                            );
+
+
+                        $select.val(
+                            selectedGuestId
+                        );
+
+
+                        console.log(
+                            'Reservation guest found in first 25:',
+                            selectedGuestId
+                        );
+
+                    }
+
+                    // =================================================
+                    // RESERVATION GUEST NOT IN FIRST 25
+                    // =================================================
+                    else {
+
+                        console.log(
+                            'Reservation guest not found. Loading by ID:',
+                            selectedGuestId
+                        );
+
+
+                        $.ajax({
+
+                            url: "ajax/ajaxGuestSearch.php",
+
+                            type: "GET",
+
+                            dataType: "json",
+
+                            data: {
+
+                                id: selectedGuestId,
+
+                                search: ''
+
+                            },
+
+
+                            success: function (guestData) {
+
+                                console.log(
+                                    'Selected Guest By ID:',
+                                    guestData
+                                );
+
+
+                                if (
+                                    !Array.isArray(
+                                        guestData
+                                    ) ||
+                                    guestData.length === 0
+                                ) {
+
+                                    console.log(
+                                        'Reservation guest not found'
+                                    );
+
+                                    return;
+                                }
+
+
+                                /*
+                                 * Get guest
+                                 */
+                                var guest =
+                                    guestData[0];
+
+
+                                /*
+                                 * Prevent duplicate
+                                 */
+                                var $existing =
+                                    $select.find(
+                                        'option[value="' +
+                                        guest.id +
+                                        '"]'
+                                    );
+
+
+                                if (
+                                    $existing.length === 0
+                                ) {
+
+                                    /*
+                                     * Create selected option
+                                     */
+                                    var option =
+                                        new Option(
+                                            guest.text,
+                                            guest.id,
+                                            true,
+                                            true
+                                        );
+
+
+                                    $(option).addClass(
+                                        'guest-default-option'
+                                    );
+
+
+                                    $select.append(
+                                        option
+                                    );
+
+                                }
+
+                                else {
+
+                                    /*
+                                     * Select existing
+                                     */
+                                    $existing
+                                        .prop(
+                                            'selected',
+                                            true
+                                        )
+                                        .prop(
+                                            'disabled',
+                                            false
+                                        );
+
+                                }
+
+
+                                /*
+                                 * Set value
+                                 */
+                                $select.val(
+                                    guest.id
+                                );
+
+
+                                /*
+                                 * Refresh Select2
+                                 */
+                                $select.trigger(
+                                    'change.select2'
+                                );
+
+
+                                /*
+                                 * Remove clear button
+                                 */
+                                $('.select2-container--open .select2-selection__clear')
+                                    .remove();
+
+                            },
+
+
+                            error: function (xhr) {
+
+                                console.log(
+                                    'Selected Guest Load Error:',
+                                    xhr.responseText
+                                );
+
+                            }
+
+                        });
+
+                    }
+
+                }
+
+                // =================================================
+                // NO RESERVATION GUEST
+                // =================================================
+                else {
+
+                    /*
+                     * IMPORTANT:
+                     * Keep Select2 empty.
+                     *
+                     * Don't select first guest.
+                     */
+                    $select.val(null);
+
+                }
+
+
+                // =================================================
+                // MARK AS LOADED
+                // =================================================
+                $select.data(
+                    'guest-loaded',
+                    true
+                );
+
+
+                // =================================================
+                // REFRESH SELECT2
+                // =================================================
+                $select.trigger(
+                    'change.select2'
+                );
+
+
+                // =================================================
+                // REMOVE CLEAR BUTTON
+                // =================================================
+                $('.select2-container--open .select2-selection__clear')
+                    .remove();
+
+            },
+
+
+            // =================================================
+            // COMPLETE
+            // =================================================
+            complete: function () {
+
+                $select.data(
+                    'guest-loading',
+                    false
+                );
+
+            },
+
+
+            // =================================================
+            // ERROR
+            // =================================================
+            error: function (xhr) {
+
+                console.log(
+                    'Initial Guest Load Error:',
+                    xhr.responseText
+                );
+
+            }
+
+        });
+
+    }
+
+
+    // =====================================================
+    // SEARCH
+    // =====================================================
+    $searchBox.on(
+        'input.guestSearch',
+        function () {
+
+            var searchKey =
+                $.trim(
+                    $(this).val()
+                );
+
+
+            // =================================================
+            // EMPTY SEARCH
+            // =================================================
+            if (searchKey.length === 0) {
+
+                /*
+                 * Remove search results
+                 */
+                $select.find(
+                    'option.guest-search-option'
+                ).remove();
+
+
+                /*
+                 * Enable default guests
+                 */
+                $select.find(
+                    'option.guest-default-option'
+                ).prop(
+                    'disabled',
+                    false
+                );
+
+
+                /*
+                 * Keep selected value
+                 */
+                var currentValue =
+                    $select.val();
+
+
+                /*
+                 * Refresh
+                 */
+                $select.trigger(
+                    'change.select2'
+                );
+
+
+                /*
+                 * Restore selected value
+                 */
+                if (currentValue) {
+
+                    $select.val(
+                        currentValue
+                    );
+
+                }
+
+
+                /*
+                 * Remove clear button
+                 */
+                $('.select2-container--open .select2-selection__clear')
+                    .remove();
+
+                return;
+            }
+
+
+            // =================================================
+            // MINIMUM 2 CHARACTERS
+            // =================================================
+            if (searchKey.length < 2) {
+                return;
+            }
+
+
+            // =================================================
+            // REMOVE OLD SEARCH RESULTS
+            // =================================================
+            $select.find(
+                'option.guest-search-option'
+            ).remove();
+
+
+            // =================================================
+            // SEARCH AJAX
+            // =================================================
+            $.ajax({
+
+                url: "ajax/ajaxGuestSearch.php",
+
+                type: "GET",
+
+                dataType: "json",
+
+                data: {
+
+                    id: '',
+
+                    search: searchKey
+
+                },
+
+
+                success: function (data) {
+
+                    console.log(
+                        'Guest Search:',
+                        searchKey
+                    );
+
+                    console.log(
+                        'Search Results:',
+                        data
+                    );
+
+
+                    /*
+                     * Disable default guests
+                     */
+                    $select.find(
+                        'option.guest-default-option'
+                    ).prop(
+                        'disabled',
+                        true
+                    );
+
+
+                    // =================================================
+                    // ADD SEARCH RESULTS
+                    // =================================================
+                    if (Array.isArray(data)) {
+
+                        $.each(
+                            data,
+                            function (index, item) {
+
+                                /*
+                                 * Remove duplicate
+                                 */
+                                if (
+                                    $select.find(
+                                        'option[value="' +
+                                        item.id +
+                                        '"]'
+                                    ).length > 0
+                                ) {
+
+                                    return;
+                                }
+
+
+                                /*
+                                 * Create option
+                                 */
+                                var option =
+                                    new Option(
+                                        item.text,
+                                        item.id,
+                                        false,
+                                        false
+                                    );
+
+
+                                $(option).addClass(
+                                    'guest-search-option'
+                                );
+
+
+                                $select.append(
+                                    option
+                                );
+
+                            }
+                        );
+
+                    }
+
+
+                    /*
+                     * Refresh Select2
+                     */
+                    $select.trigger(
+                        'change.select2'
+                    );
+
+
+                    /*
+                     * Don't automatically
+                     * select first search result
+                     */
+                    if (!$select.val()) {
+
+                        $select.val(null);
+
+                    }
+
+
+                    /*
+                     * Remove clear button
+                     */
+                    $('.select2-container--open .select2-selection__clear')
+                        .remove();
+
+
+                    /*
+                     * Focus search field
+                     */
+                    setTimeout(
+                        function () {
+
+                            $('.select2-container--open .select2-search__field')
+                                .focus();
+
+                        },
+                        50
+                    );
+
+                },
+
+
+                error: function (xhr) {
+
+                    console.log(
+                        'Guest Search Error:',
+                        xhr.responseText
+                    );
+
+                }
+
+            });
+
+        }
+    );
+
+
+    // =====================================================
+    // GUEST SELECTED
+    // =====================================================
+    $select.off(
+        'select2:select.guestSelected'
+    );
+
+
+    $select.on(
+        'select2:select.guestSelected',
+        function (e) {
+
+            var selectedId =
+                e.params.data.id;
+
+
+            console.log(
+                'Guest Selected:',
+                selectedId
+            );
+
+
+            /*
+             * Set selected guest
+             */
+            $select.val(
+                selectedId
+            );
+
+
+            /*
+             * Convert search result to
+             * default option
+             */
+            $select.find(
+                'option[value="' +
+                selectedId +
+                '"]'
+            )
+            .removeClass(
+                'guest-search-option'
+            )
+            .addClass(
+                'guest-default-option'
+            )
+            .prop(
+                'disabled',
+                false
+            );
+
+
+            /*
+             * Remove other temporary
+             * search options
+             */
+            $select.find(
+                'option.guest-search-option'
+            ).each(function () {
+
+                if (
+                    $(this).val() != selectedId
+                ) {
+
+                    $(this).remove();
+
+                }
+
+            });
+
+
+            /*
+             * Trigger normal change
+             */
+            $select.trigger(
+                'change'
+            );
+
+
+            /*
+             * Remove clear button
+             */
+            $('.select2-selection__clear')
+                .remove();
+
+        }
+    );
+
+});
+
+function updateCheckinTime(
+    resvId,
+    id_mst_room_types,
+    today = "",
+    pending_folio_id,
+    check_checkout_date
+) {
+
+    // =========================================================
+    // STEP 1: Get selected expected-arrival rooms
+    // =========================================================
+    var expected_arrivals_rooms =
+        $("input[name='expected_arrivals_rooms[]']")
+            .map(function () {
+
+                if (
+                    $(this).is(':checked') &&
+                    !$(this).data('is_confirm')
+                ) {
+
+                    return {
+                        key: $(this).data('room_id'),
+                        value: $(this).val()
+                    };
+
+                }
+
+            }).get();
+
+
+    if (expected_arrivals_rooms.length === 0) {
+
+        bootbox.alert("Please select a room.");
+
+        return;
+    }
+
+
+    // =========================================================
+    // STEP 2: Validate before check-in
+    // =========================================================
+    $.ajax({
+
+        type: "POST",
+
+        url: "ajax/ajaxValidateBeforeCheckin.php",
+
+        data: {
+
+            reservation_id: resvId,
+
+            id_mst_room_types: id_mst_room_types,
+
+            expected_arrivals_rooms:
+                JSON.stringify(expected_arrivals_rooms)
+
+        },
+
+
+        success: function (validateResponse) {
+
+            var result;
+
+
+            try {
+
+                result =
+                    typeof validateResponse === "string"
+                        ? JSON.parse(validateResponse)
+                        : validateResponse;
+
+            } catch (e) {
+
+                console.error(
+                    "Validation response:",
+                    validateResponse
+                );
+
+                bootbox.alert(
+                    "Invalid response received from validation server."
+                );
+
+                return;
+            }
+
+
+            // =====================================================
+            // Validation failed
+            // =====================================================
+            if (!result.allow) {
+
+                bootbox.alert(
+                    result.message ||
+                    "Check-in not allowed."
+                );
+
+                return;
+            }
+
+
+            // =====================================================
+            // STEP 3: Check day-close mismatch
+            // =====================================================
+            if (check_checkout_date) {
+
+                bootbox.alert(
+                    "System date and day close date mismatch, so you cannot check in."
+                );
+
+                return false;
+            }
+
+
+            // =====================================================
+            // STEP 4: Get selected rooms again
+            // =====================================================
+            expected_arrivals_rooms =
+                $("input[name='expected_arrivals_rooms[]']")
+                    .map(function () {
+
+                        if (
+                            $(this).is(':checked') &&
+                            !$(this).data('is_confirm')
+                        ) {
+
+                            return {
+
+                                key:
+                                    $(this).data('room_id'),
+
+                                value:
+                                    $(this).val()
+
+                            };
+
+                        }
+
+                    }).get();
+
+
+            if (
+                expected_arrivals_rooms.length === 0
+            ) {
+
+                bootbox.alert(
+                    "Please select a room."
+                );
+
+                return;
+            }
+
+
+            // =====================================================
+            // STEP 5: Get folio and room information
+            // =====================================================
+            $.ajax({
+
+                type: "POST",
+
+                url:
+                    "ajax/ajaxGetFolioWithRooms.php",
+
+                data: {
+
+                    id_mst_room_types:
+                        id_mst_room_types,
+
+                    reservation_id:
+                        resvId,
+
+                    today:
+                        today,
+
+                    expected_arrivals_rooms:
+                        JSON.stringify(
+                            expected_arrivals_rooms
+                        )
+
+                },
+
+
+                success: function (response) {
+
+                    var result;
+
+
+                    try {
+
+                        result =
+                            typeof response === "string"
+                                ? JSON.parse(response)
+                                : response;
+
+                    } catch (e) {
+
+                        console.error(
+                            "Room/Folio response:",
+                            response
+                        );
+
+                        bootbox.alert(
+                            "Invalid response received while loading check-in details."
+                        );
+
+                        return;
+                    }
+
+
+                    // =================================================
+                    // Prepare response values
+                    // =================================================
+                    var text =
+                        result.text || '';
+
+
+                    var folioLinked2 =
+                        result.folioLinked
+                            ? `
+                                <div class="form-group">
+                                    <label>
+                                        ${result.folioLinked}
+                                    </label>
+                                </div>
+                              `
+                            : '';
+
+
+                    var roomCheckinList =
+                        result.RoomCheckinList || '';
+
+
+                    // =================================================
+                    // STEP 6: Open Bootbox
+                    // =================================================
+                    bootbox.dialog({
+
+                        title:
+                            "Checkin Time",
+
+
+                        message: `
+
+                            <div class="form-group">
+
+                                <label>
+                                    Checkin Date: ${today}
+                                </label>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Checkin time:
+                                </label>
+
+                                <input
+                                    type="time"
+                                    class="form-control"
+                                    id="timeInput"
+                                >
+
+                            </div>
+
+
+                            ${folioLinked2}
+
+                            ${text}
+
+                            ${roomCheckinList}
+
+                        `,
+
+
+                        // =================================================
+                        // BUTTONS
+                        // =================================================
+                        buttons: {
+
+                            cancel: {
+
+                                label:
+                                    "Cancel",
+
+                                className:
+                                    "btn-secondary"
+
+                            },
+
+
+                            confirm: {
+
+                                label:
+                                    "Submit",
+
+                                className:
+                                    "btn-primary",
+
+
+                                callback: function () {
+
+                                    // =====================================
+                                    // Get check-in time
+                                    // =====================================
+                                    var checkin_time =
+                                        $('#timeInput').val();
+
+
+                                    // =====================================
+                                    // Guest / room data
+                                    // =====================================
+                                    var guest_room = [];
+
+                                    var check_id_mst_guest_by_room = 1;
+
+
+                                    for (
+                                        let i = 0;
+                                        i < expected_arrivals_rooms.length;
+                                        i++
+                                    ) {
+
+                                        var key =
+                                            expected_arrivals_rooms[i].key;
+
+
+                                        var $guestSelect =
+                                            $('#id_mst_guest_form_' + key);
+
+
+                                        var id_mst_guest_by_room =
+                                            $guestSelect.val();
+
+
+                                        // =================================
+                                        // Folio guest checkbox
+                                        // =================================
+                                        var room_check_folio_guest =
+                                            $('#room_check_folio_guest_' + key)
+                                                .is(':checked')
+                                                ? 1
+                                                : 0;
+
+
+                                        guest_room.push({
+
+                                            id_room_no:
+                                                key,
+
+                                            id_mst_guest:
+                                                id_mst_guest_by_room,
+
+                                            id_folio_guest:
+                                                room_check_folio_guest
+
+                                        });
+
+
+                                        if (
+                                            !id_mst_guest_by_room
+                                        ) {
+
+                                            check_id_mst_guest_by_room =
+                                                0;
+
+                                        }
+
+                                    }
+
+
+                                    // =====================================
+                                    // Validate check-in time
+                                    // =====================================
+                                    if (!checkin_time) {
+
+                                        bootbox.alert(
+                                            "Please select a check-in time."
+                                        );
+
+                                        return false;
+                                    }
+
+
+                                    // =====================================
+                                    // Validate guest assignment
+                                    // =====================================
+                                    if (
+                                        check_id_mst_guest_by_room === 0
+                                    ) {
+
+                                        bootbox.alert(
+                                            "Please assign guest(s) to selected room(s)."
+                                        );
+
+                                        return false;
+                                    }
+
+
+                                    // =====================================
+                                    // Get folio room selections
+                                    // =====================================
+                                    var room_no = [];
+
+
+                                    $('.selectInput').each(function () {
+
+                                        room_no.push({
+
+                                            key:
+                                                $(this).data('folio'),
+
+                                            value:
+                                                $(this).val()
+
+                                        });
+
+                                    });
+
+
+                                    // =====================================
+                                    // FINAL CHECK-IN AJAX
+                                    // =====================================
+                                    userCheckIn(
+
+                                        resvId,
+
+                                        id_mst_room_types,
+
+                                        checkin_time,
+
+                                        JSON.stringify(
+                                            room_no
+                                        )
+
+                                    );
+
+
+                                    return false;
+
+                                }
+
+                            }
+
+                        },
+
+
+                        // =================================================
+                        // BOOTBOX SHOWN
+                        // =================================================
+                        onShown: function () {
+
+                            var $modal =
+                                $('.bootbox.modal:visible')
+                                    .last();
+
+
+                            // =================================================
+                            // INITIALIZE NORMAL SELECT2
+                            // =================================================
+                            $modal.find('.select2')
+                                .not('.itemGuest')
+                                .each(function () {
+
+                                    var $select =
+                                        $(this);
+
+
+                                    if (
+                                        $select.hasClass(
+                                            'select2-hidden-accessible'
+                                        )
+                                    ) {
+
+                                        $select.select2(
+                                            'destroy'
+                                        );
+
+                                    }
+
+
+                                    $select.select2({
+
+                                        width:
+                                            '80%',
+
+                                        dropdownParent:
+                                            $modal,
+
+                                        allowClear:
+                                            false
+
+                                    });
+
+                                });
+
+
+                            // =================================================
+                            // INITIALIZE GUEST SELECT2
+                            // =================================================
+                            $modal.find('.itemGuest')
+                                .each(function () {
+
+                                    var $select =
+                                        $(this);
+
+
+                                    if (
+                                        $select.hasClass(
+                                            'select2-hidden-accessible'
+                                        )
+                                    ) {
+
+                                        $select.select2(
+                                            'destroy'
+                                        );
+
+                                    }
+
+
+                                    // -----------------------------------------
+                                    // Initialize Select2
+                                    // -----------------------------------------
+                                    $select.select2({
+
+                                        width:
+                                            '80%',
+
+                                        placeholder:
+                                            'Select Guest',
+
+                                        allowClear:
+                                            false,
+
+                                        dropdownParent:
+                                            $modal
+
+                                    });
+
+
+                                    // -----------------------------------------
+                                    // Load guests immediately
+                                    // -----------------------------------------
+                                    loadRoomGuest(
+                                        $select
+                                    );
+
+                                });
+
+
+                            // =================================================
+                            // SET CURRENT TIME
+                            // =================================================
+                            var now =
+                                new Date();
+
+
+                            var hours =
+                                String(
+                                    now.getHours()
+                                ).padStart(
+                                    2,
+                                    '0'
+                                );
+
+
+                            var minutes =
+                                String(
+                                    now.getMinutes()
+                                ).padStart(
+                                    2,
+                                    '0'
+                                );
+
+
+                            $modal.find(
+                                '#timeInput'
+                            ).val(
+                                hours + ':' + minutes
+                            );
+
+                        }
+
+                    });
+
+
+                    // =====================================================
+                    // STEP 7: Append room options to folio selects
+                    // =====================================================
+                    if (
+                        text !== "" &&
+                        result.roomOptions
+                    ) {
+
+                        var roomOptions =
+                            result.roomOptions;
+
+
+                        Object.entries(
+                            roomOptions
+                        ).forEach(
+                            function ([key, room]) {
+
+                                var $select =
+                                    $(`#selectInput_${key}`);
+
+
+                                if ($select.length) {
+
+                                    $select.append(
+                                        room
+                                    );
+
+                                }
+
+                            }
+                        );
+
+                    }
+
+                },
+
+
+                error: function (
+                    xhr,
+                    status,
+                    error
+                ) {
+
+                    console.error(
+                        "ajaxGetFolioWithRooms error:",
+                        error
+                    );
+
+                    console.error(
+                        "Response:",
+                        xhr.responseText
+                    );
+
+
+                    bootbox.alert(
+                        "Error loading check-in details."
+                    );
+
+                }
+
+            });
+
+        },
+
+
+        error: function (
+            xhr,
+            status,
+            error
+        ) {
+
+            console.error(
+                "ajaxValidateBeforeCheckin error:",
+                error
+            );
+
+            console.error(
+                "Response:",
+                xhr.responseText
+            );
+
+
+            bootbox.alert(
+                "Something went wrong during validation."
+            );
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   LOAD GUESTS IMMEDIATELY
+   ========================================================= */
+
+function loadRoomGuest($select) {
+
+    // ---------------------------------------------------------
+    // Prevent duplicate loading
+    // ---------------------------------------------------------
+    if ($select.data('guest-loaded')) {
+        return;
+    }
+
+
+    if ($select.data('guest-loading')) {
+        return;
+    }
+
+
+    $select.data(
+        'guest-loading',
+        true
+    );
+
+
+    // ---------------------------------------------------------
+    // Reservation guest ID
+    // ---------------------------------------------------------
+    var selectedGuestId =
+        String(
+            $select.data('selected-guest') || ''
+        );
+
+
+    console.log(
+        'Room:',
+        $select.data('room-id'),
+        'Selected Guest:',
+        selectedGuestId
+    );
+
+
+    // ---------------------------------------------------------
+    // Load first 20 guests
+    // ---------------------------------------------------------
+    $.ajax({
+
+        url:
+            "ajax/ajaxGuestSearch.php",
+
+        type:
+            "GET",
+
+        dataType:
+            "json",
+
+        data: {
+
+            id: '',
+
+            search: ''
+
+        },
+
+
+        success: function (data) {
+
+            if (!Array.isArray(data)) {
+
+                console.log(
+                    'Invalid guest response:',
+                    data
+                );
+
+                return;
+            }
+
+
+            // =================================================
+            // ADD DEFAULT GUESTS
+            // =================================================
+            $.each(
+                data,
+                function (index, item) {
+
+                    if (
+                        $select.find(
+                            'option[value="' +
+                            item.id +
+                            '"]'
+                        ).length
+                    ) {
+
+                        return;
+                    }
+
+
+                    var option =
+                        new Option(
+                            item.text,
+                            item.id,
+                            false,
+                            false
+                        );
+
+
+                    $(option).addClass(
+                        'guest-default-option'
+                    );
+
+
+                    $select.append(
+                        option
+                    );
+
+                }
+            );
+
+
+            // =================================================
+            // SELECT RESERVATION GUEST
+            // =================================================
+            if (selectedGuestId !== '') {
+
+                var $selected =
+                    $select.find(
+                        'option[value="' +
+                        selectedGuestId +
+                        '"]'
+                    );
+
+
+                // ---------------------------------------------
+                // Guest exists in first 20
+                // ---------------------------------------------
+                if ($selected.length) {
+
+                    $selected
+                        .prop(
+                            'selected',
+                            true
+                        );
+
+
+                    $select.val(
+                        selectedGuestId
+                    );
+
+
+                    $select.trigger(
+                        'change'
+                    );
+
+
+                    console.log(
+                        'Guest selected from default list:',
+                        selectedGuestId
+                    );
+
+                }
+
+
+                // ---------------------------------------------
+                // Guest not in first 20
+                // ---------------------------------------------
+                else {
+
+                    loadSelectedGuest(
+                        $select,
+                        selectedGuestId
+                    );
+
+                }
+
+            }
+
+
+            // =================================================
+            // MARK LOADED
+            // =================================================
+            $select.data(
+                'guest-loaded',
+                true
+            );
+
+
+            // =================================================
+            // REMOVE CLEAR BUTTON
+            // =================================================
+            removeGuestClearButton(
+                $select
+            );
+
+        },
+
+
+        error: function (xhr) {
+
+            console.log(
+                'Guest Load Error:',
+                xhr.responseText
+            );
+
+        },
+
+
+        complete: function () {
+
+            $select.data(
+                'guest-loading',
+                false
+            );
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   LOAD SELECTED GUEST BY ID
+   ========================================================= */
+
+function loadSelectedGuest(
+    $select,
+    guestId
+) {
+
+    $.ajax({
+
+        url:
+            "ajax/ajaxGuestSearch.php",
+
+        type:
+            "GET",
+
+        dataType:
+            "json",
+
+        data: {
+
+            id:
+                guestId,
+
+            search:
+                ''
+
+        },
+
+
+        success: function (data) {
+
+            if (
+                !Array.isArray(data) ||
+                data.length === 0
+            ) {
+
+                console.log(
+                    'Selected guest not found:',
+                    guestId
+                );
+
+                return;
+            }
+
+
+            var guest =
+                data[0];
+
+
+            // =================================================
+            // ADD GUEST
+            // =================================================
+            var $existing =
+                $select.find(
+                    'option[value="' +
+                    guest.id +
+                    '"]'
+                );
+
+
+            if (!$existing.length) {
+
+                var option =
+                    new Option(
+                        guest.text,
+                        guest.id,
+                        true,
+                        true
+                    );
+
+
+                $(option).addClass(
+                    'guest-default-option'
+                );
+
+
+                $select.append(
+                    option
+                );
+
+            }
+            else {
+
+                $existing
+                    .prop(
+                        'selected',
+                        true
+                    )
+                    .prop(
+                        'disabled',
+                        false
+                    );
+
+            }
+
+
+            // =================================================
+            // SELECT GUEST
+            // =================================================
+            $select.val(
+                guest.id
+            );
+
+
+            // =================================================
+            // REFRESH SELECT2
+            // =================================================
+            $select.trigger(
+                'change'
+            );
+
+
+            removeGuestClearButton(
+                $select
+            );
+
+
+            console.log(
+                'Selected guest loaded by ID:',
+                guest.id
+            );
+
+        },
+
+
+        error: function (xhr) {
+
+            console.log(
+                'Selected Guest Load Error:',
+                xhr.responseText
+            );
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   REMOVE SELECT2 CLEAR BUTTON
+   ========================================================= */
+
+function removeGuestClearButton($select) {
+
+    setTimeout(
+        function () {
+
+            $select
+                .next('.select2-container')
+                .find(
+                    '.select2-selection__clear'
+                )
+                .remove();
+
+        },
+        20
+    );
+
+}
+
+
+
 </script>
