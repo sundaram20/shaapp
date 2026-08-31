@@ -25,6 +25,36 @@ if (mysqli_num_rows($Vali) > 0) {
 			}
 		}
 //echo '111';
+
+$folio_bill_ids = [$id_fo_bill]; // Main bill ID
+
+$folio_bill_query = mysqli_query(
+    $connNew,
+    "SELECT id_fo_bill 
+     FROM fo_folio 
+     WHERE id_parent_folio = '$id_folio' 
+     ORDER BY id DESC"
+);
+
+while ($row = mysqli_fetch_object($folio_bill_query)) {
+    if (!empty($row->id_fo_bill) && $row->id_fo_bill != 0) {
+        $folio_bill_ids[] = $row->id_fo_bill;
+    }
+}
+
+// Remove 0, empty and duplicate values
+$folio_bill_ids = array_unique(
+    array_filter($folio_bill_ids, function ($value) {
+        return $value != 0 && $value !== '';
+    })
+);
+
+// Implode
+$folio_bill_ids = implode(',', $folio_bill_ids);
+
+//echo $folio_bill_ids;
+//echo $folio_ids;
+
 $DateOrderByRoom	= implode(',',$DateOrderByRoom);
 //print_r($DateOrderByRoom);die;
 
@@ -134,7 +164,9 @@ $DateOrderByRoom	= implode(',',$DateOrderByRoom);
 				$DatedNightAudit1 = date('Y-m-d',strtotime($rowNightAudit->dated));
 				$DatedNightAudit = date('d-m-Y',strtotime('+1 day',strtotime($rowNightAudit->dated)));
 				$id_owner_room = selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$id_fo_bill."'");
-				$sql = "UPDATE ".FO_BILL." SET status = '2' , `checkout_date`='".date($DatedNightAudit2.' H:i:s')."' WHERE id_reservations='".$id_reservation."' and `id` = '".$id_fo_bill."'";
+
+
+				$sql = "UPDATE ".FO_BILL." SET status = '2' , `checkout_date`='".date($DatedNightAudit2.' H:i:s')."' WHERE id_reservations='".$id_reservation."' and `id` IN (".$folio_bill_ids.")";
 				if (mysqli_query($connNew,$sql)) {
 	 				$insertGrid =  "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `no_showoff`= '1' where `id_fo_reservations` = '".$id_reservation."' and  DATE(dated) IN (".stripslashes($DateArray).") and `order_by_room` IN (".$DateOrderByRoom.")";
 					$insertOrder = mysqli_query($connNew,$insertGrid);
