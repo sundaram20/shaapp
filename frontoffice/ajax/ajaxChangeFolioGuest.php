@@ -243,7 +243,7 @@ $dataArr='';
 		
 		$target_id = (!empty($id_folio_owner)) ? $id_folio_owner : $id_guest;
 		
-		if($_SESSION['shop_code']=='deo_demo' || $_SESSION['shop_code']=='TIG' || $_SESSION['shop_code']=='VED'){
+		if($_SESSION['shop_code']=='deo_demo' || $_SESSION['shop_code']=='TIG' || $_SESSION['shop_code']=='ved'){
 		?>
 		
 <div class="form-group" style="margin:0; flex:0 0 auto;">
