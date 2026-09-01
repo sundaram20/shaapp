@@ -30,46 +30,25 @@ checkUserLevelPermission($_SESSION['userLevel'],TBL_PURCH,'view');
 
 	}
 		
-   if(isset($_REQUEST['checkin_radio']) && $_REQUEST['checkin_radio']==2 && $_REQUEST['datefilter']!=''){	
-    $DateExplode = explode(' to ',$_REQUEST['datefilter']);
+   if(isset($_REQUEST['checkin_radio']) && $_REQUEST['checkin_radio']==2 && $_REQUEST['paymentdatefilter']!=''){
+    $DateExplode = explode(' to ',$_REQUEST['paymentdatefilter']);
     $startDate = date('Y-m-d',strtotime($DateExplode['0']));
     $endDate  = date('Y-m-d',strtotime($DateExplode['1']));
-    //$endDate = date ("Y-m-d", strtotime("+1 day", strtotime($endDate)));
-      
-    $searchDocumentType .= " AND DATE(`doc_date`) BETWEEN '".date('Y-m-d',strtotime($startDate))."' And '".date('Y-m-d',strtotime($endDate))."'";
-  }// else{
-    //  $searchDocumentType .= " AND DATE(`doc_date`) BETWEEN '".date('Y-m-d',strtotime('-1 days'))."' And '".date('Y-m-d')."'";
- // }
-	
-elseif(isset($_REQUEST['checkin_radio']) && $_REQUEST['checkin_radio']==1){	
+    $searchDocumentType .= " AND DATE(`payment_date`) BETWEEN '".date('Y-m-d',strtotime($startDate))."' And '".date('Y-m-d',strtotime($endDate))."'";
+}
+elseif(isset($_REQUEST['checkin_radio']) && $_REQUEST['checkin_radio']==1){
 	if($_REQUEST['reservation_checkindate'] != ''){
-		//list($checkin,$checkout) = split(" to ",$_REQUEST['reservation_date']);	
 		$splitArray= explode(" to ",$_REQUEST['reservation_checkindate']);
 		$checkin = $splitArray['0'];
 		$checkout = $splitArray['1'];
-		
-		//$cond .= " AND `".TBL_ORDERS."`.`checkin` BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
-		
 		$searchDocumentType .= " AND DATE(`checkin`) BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
-		
-		
 		$fromPrint = $checkin;
 		$toPrint = $checkout;
 	}
-}elseif(isset($_REQUEST['checkin_radio']) && $_REQUEST['checkin_radio']==3){
-	
-	if($_REQUEST['modified_datefilter'] != ''){
-        $DateExplode = explode(' to ', $_REQUEST['modified_datefilter']);
-        $startDate = date('Y-m-d', strtotime($DateExplode['0']));
-        $endDate   = date('Y-m-d', strtotime($DateExplode['1']));
-        $searchDocumentType .= " AND DATE(`last_modified`) BETWEEN '".date('Y-m-d', strtotime($startDate))."' AND '".date('Y-m-d', strtotime($endDate))."'";
-    }
-
 }else{
-		
-		
-		$searchDocumentType .= " AND DATE(`doc_date`) BETWEEN '".date('Y-m-d',strtotime('-1 days'))."' And '".date('Y-m-d')."'";
-		}
+	// default: last day's checkins (adjust or remove if you don't want a default filter)
+	$searchDocumentType .= " AND DATE(`checkin`) BETWEEN '".date('Y-m-d',strtotime('-1 days'))."' And '".date('Y-m-d')."'";
+}
 	
 	
 if($_REQUEST['search_name'] != ''){
@@ -131,6 +110,14 @@ margin-bottom : 0!important;
 
 #EditCheckinModal .modal-dialog .modal-content{min-height: 100vh;}
   </style>
+  <style>
+/* Fix datepicker showing behind modal */
+.datepicker.dropdown-menu,
+.ui-datepicker,
+.daterangepicker {
+    z-index: 99999 !important;
+}
+</style>
   <div class="content-wrapper"> 
     <!-- Content Header (Page header) -->
 	
@@ -212,40 +199,35 @@ margin-bottom : 0!important;
               
               <!-- /.col -->
               <!--col start-->
-                <div class="form-group col-sm-2">
-                       <?php //debugData($_REQUEST); ?>
-                           <label for="booking_date"><input type="radio" name="checkin_radio" value="2" <?php if($_REQUEST['checkin_radio']=='2'){echo 'checked="checked"'; }else if(isset($_REQUEST['checkin_radio']) && $_REQUEST['checkin_radio']=='1'  ){}else{echo 'checked="checked"';}?>/>&nbsp;Booking Date : From - To</label>
-                                <div class="input-group">
-                      <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
-                          <input type="text" class="form-control pull-right"  placeholder="Select From -  To" name="datefilter" id="dateRangeReport" data-parsley-required value="<?php if($_REQUEST['datefilter']!=''){echo $_REQUEST['datefilter'];}else{ echo date('d-m-Y').' to '.date('d-m-Y'); }?>"   autocomplete="off">
-                        </div>
-                    </div>
-				
-				<div class="form-group col-sm-2">
-    <label for="modified_date">
-        <input type="radio" name="checkin_radio" value="3" 
-            <?php if($_REQUEST['checkin_radio']=='3'){ echo 'checked="checked"'; } ?>
-        />&nbsp;Modified Date : From - To
-    </label>
-    <div class="input-group">
-        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-        <input type="text" class="form-control pull-right appdaterange" 
-            id="modified_datefilter" 
-            name="modified_datefilter" 
-            placeholder="Select From - To"
-            value="<?php echo isset($_REQUEST['modified_datefilter']) ? $_REQUEST['modified_datefilter'] : date('d-m-Y').' to '.date('d-m-Y'); ?>"
-            autocomplete="off">
-    </div>
-</div>
-                  
-                  
-                  <div class="form-group col-sm-2">
-                    <label for="reservation_date"><input type="radio" name="checkin_radio" value="1" <?php if($_REQUEST['checkin_radio']=='1'){echo 'checked="checked"'; }else if(isset($_REQUEST['checkin_radio']) && $_REQUEST['checkin_radio']=='2'  ){}?>/>&nbsp;Checkin Date : From - To </label>
-                    <div class="input-group">
-                      <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
-                      <input type="text" class="form-control pull-right appdaterange" id="reservation_checkindate" placeholder="Enter Checkin date" name="reservation_checkindate"  value="<?php if(isset($_REQUEST['reservation_checkindate'])){ echo $_REQUEST['reservation_checkindate'];}else{ echo date('d-m-Y').' to '.date('d-m-Y');}?>"   automcomplete="off">
-					   
-                    </div>
+                              <div class="form-group col-sm-2">
+                <label for="reservation_date">
+                    <input type="radio" name="checkin_radio" value="1"
+                        <?php if($_REQUEST['checkin_radio']=='2'){ }else{ echo 'checked="checked"'; } ?>
+                    />&nbsp;Checkin Date : From - To
+                </label>
+                <div class="input-group">
+                  <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                  <input type="text" class="form-control pull-right appdaterange" id="reservation_checkindate" placeholder="Enter Checkin date" name="reservation_checkindate"
+                    value="<?php if(isset($_REQUEST['reservation_checkindate'])){ echo $_REQUEST['reservation_checkindate'];}else{ echo date('d-m-Y').' to '.date('d-m-Y');}?>"
+                    autocomplete="off">
+                </div>
+                <span id="reservation_dateError"></span>
+              </div>
+
+              <div class="form-group col-sm-2">
+                <label for="payment_date">
+                    <input type="radio" name="checkin_radio" value="2"
+                        <?php if($_REQUEST['checkin_radio']=='2'){ echo 'checked="checked"'; } ?>
+                    />&nbsp;Payment Date : From - To
+                </label>
+                <div class="input-group">
+                  <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                  <input type="text" class="form-control pull-right appdaterange" id="paymentdatefilter" name="paymentdatefilter"
+                    placeholder="Select From - To"
+                    value="<?php echo isset($_REQUEST['paymentdatefilter']) ? $_REQUEST['paymentdatefilter'] : date('d-m-Y').' to '.date('d-m-Y'); ?>"
+                    autocomplete="off">
+                </div>
+              
                     <!-- /.input group -->
                     <span id="reservation_dateError"></span> </div>
                   
@@ -429,7 +411,15 @@ $GuestName = $GuestTitle.' '.$guest;
 				} 
 					?>
                       <a target="_blank" href="<?php echo $email_format_url; ?>?mailId=<?php echo encryptor('encrypt',$row->id); ?>"  ><i class="fa fa-paper-plane"></i></a>&nbsp;&nbsp;
-				
+                                           
+                      <a href="javascript:void(0);" title="Extend Payment Date"
+                         onclick="openExtendDateModal(
+                             '<?php echo $row->id; ?>',
+                             '<?php echo date('d-m-Y', strtotime($row->payment_date)); ?>',
+                             '<?php echo (int)$row->payment_extend; ?>'
+                         );">
+                        <i class="fa fa-calendar-plus"></i>
+                      </a>&nbsp;&nbsp;
                       
                        
                  <?php //} ?>    
@@ -488,6 +478,48 @@ $GuestName = $GuestTitle.' '.$guest;
       <div class="modal-body" id="popupBody">
         <!-- AJAX content will load here -->
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Extend Payment Date Modal -->
+<div class="modal fade" id="extendDateModal" tabindex="-1" role="dialog" aria-labelledby="extendDateModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#1296f3;color:#fff;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="extendDateModalLabel">Extend Payment Date</h4>
+      </div>
+      <form id="extendDateForm" autocomplete="off">
+        <div class="modal-body">
+          <input type="hidden" id="extend_res_id" name="extend_res_id" value="">
+
+          <div class="form-group">
+            <label>Current Payment Date</label>
+            <input type="text" id="extend_current_date" class="form-control" disabled>
+          </div>
+
+          <div class="form-group">
+            <label>Times Extended</label>
+            <input type="text" id="extend_current_count" class="form-control" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="extend_new_date">New Payment Date <font color="#FF0000">*</font></label>
+            <div class="input-group">
+              <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+              <input type="text" class="form-control datepicker" id="extend_new_date" name="extend_new_date"
+                     placeholder="dd-mm-yyyy" autocomplete="off" data-parsley-required>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="submitExtendDate();"><i class="far fa-save"></i> Update</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -1828,4 +1860,57 @@ function printReceiptBtn(resId) {
     window.open("print_advance_receipt.php?res_id=" + resId, "_blank");
 };
 
+
+function openExtendDateModal(resId, currentPaymentDate, currentExtendCount) {
+    $("#extend_res_id").val(resId);
+    $("#extend_current_date").val(currentPaymentDate);
+    $("#extend_current_count").val(currentExtendCount);
+    $("#extend_new_date").val(currentPaymentDate); // default to current, user changes it
+    $("#extendDateModal").modal('show');
+}
+
+function submitExtendDate() {
+    var form = $("#extendDateForm");
+
+    var resId = $("#extend_res_id").val();
+    var newDate = $("#extend_new_date").val();
+
+    if (newDate.trim() === "") {
+        alert("Please select a new payment date.");
+        return false;
+    }
+
+    if (form.parsley && form.parsley().validate() === false) {
+        return false;
+    }
+
+    $('.loading').show();
+
+    $.ajax({
+        type: "POST",
+        url: 'ajax/ajaxExtendPaymentDate.php',
+        data: form.serialize(),
+        success: function (result) {
+            var response = JSON.parse(result);
+            if (response.status == '1') {
+                alert(response.message);
+                $("#extendDateModal").modal("hide");
+                window.location.reload(); // simplest way to refresh Payment Date + Extended columns
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function () {
+            alert("Something went wrong while extending the date.");
+        },
+        complete: function () {
+            $('.loading').hide();
+        }
+    });
+
+    return false;
+}
+
   </script>
+
+  
