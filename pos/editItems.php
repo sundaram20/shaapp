@@ -1150,7 +1150,7 @@ $submenu = $_GET['submenu'];
 }	
 		*/
 		
-		if($submenu=='88'){
+		if($submenu=='307'){
 	$sqlResult1 = "SELECT * FROM ".TBL_ATTRIBUTES." WHERE table_name = 'items_type' AND field_value IN ('Menu') AND id_shop = ".$_SESSION['shop'] ." ";
 	$QuerySQL1	=	mysqli_query($connNew,$sqlResult1);
 	
