@@ -141,7 +141,7 @@ else if($submenu=='289'){ //Othere Item
 			$string .= $list.',';
 		}
 }	
- $item_list = rtrim($string,',');
+ $item_list = rtrim($string,',');//echo '===================='.$list = $sqlRow->id.$item_list;
 
 //debugData($field_name);debugData($field_label);
 	 $sql = local_SelectQuery_Mst_Items($_REQUEST['tableName'],$field_name,$field_label,$EnableOrderBy,$item_list);
@@ -301,8 +301,8 @@ else if($submenu=='289'){ //Othere Item
 		         
 		          	<ul class="dropdown-menu" role="menu">
 		          		<li><a title="Import to excel file" href="#" data-toggle="modal" data-target="#importComapnyModal" ><img src="../images/excel-icon.jpg" width="20" height="20" />&nbsp;Import</a></li>
-		            	<li><a title="Export to excel file" href="masterExportTable.php?fileType=xls&tableName=<?php echo TBL_INV_ITEMS;?>"><img src="../images/excel-icon.jpg" width="20" height="20" />&nbsp;Export</a></li>
-		            	<li><a title="Export to csv file" href="masterExportTable.php?fileType=csv&tableName=<?php echo TBL_INV_ITEMS;?>"><img  src="../images/excel-csv-icon.jpg" width="20" height="20"  />&nbsp;Export</a></li>
+		            	<li><a title="Export to excel file" href="masterExportTableItem.php?fileType=xls&tableName=<?php echo TBL_INV_ITEMS;?>&itemType=<?php echo $item_list;?>"><img src="../images/excel-icon.jpg" width="20" height="20" />&nbsp;Export</a></li>
+		            	<li><a title="Export to csv file" href="masterExportTableItem.php?fileType=csv&tableName=<?php echo TBL_INV_ITEMS;?>&itemType<?php echo $item_list;?>"><img  src="../images/excel-csv-icon.jpg" width="20" height="20"  />&nbsp;Export</a></li>
 		          
 		          	</ul>
 	        	</div>
