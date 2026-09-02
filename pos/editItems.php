@@ -1736,7 +1736,7 @@ if($row->id_mst_attributes_unit_alt=='')	{ ?>
 						<?php echo $err_item_subgroup;?></div>
 		                </div>
 						
-						 <?php  if($submenu != '235' && $submenu!='289'){ ?>
+						 <?php  if($submenu != '235' && $submenu!='289' && $submenu!='308' && $submenu!='309'){ ?>
 		                <div  class="form-group col-xs-12 col-md-6 col-sm-2">
 		                  <label for="name">Outlet <font color="#FF0000">*</font></label>
 		                   <div class="input-group"> 
@@ -1805,7 +1805,8 @@ if($row->id_mst_attributes_unit_alt=='')	{ ?>
               		<hr> 
 	              	<div class="row">	 
 	              		  <?php 
-						  if($submenu!='235' && $submenu!='289'){
+						 	 if($submenu != '235' && $submenu!='289' && $submenu!='308' && $submenu!='309'){ 
+
 							  $validateErr	='data-parsley-required ';
 							  
 						  }else{
