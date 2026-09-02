@@ -90,7 +90,7 @@
 
 
 $submenu = $_GET['submenu'];
-if($submenu=='88'){
+if($submenu=='307'){
 	$sqlResult1 = "SELECT * FROM ".TBL_ATTRIBUTES." WHERE table_name = 'items_type' AND field_value IN ('Menu') AND id_shop = ".$_SESSION['shop'] ." ";
 	$QuerySQL1	=	mysqli_query($connNew,$sqlResult1);
 	
@@ -154,7 +154,7 @@ else if($submenu=='289'){ //Othere Item
 	$total = @mysqli_num_rows($QuerySQL);
 ?>
 
-<?php include_once("../includes/header.php")?>
+<?php include_once("../includes/header.php"); ?>
 <?php include_once("../includes/left.php")?>
 <style type="text/css">
 	.fieldset {
@@ -302,8 +302,7 @@ else if($submenu=='289'){ //Othere Item
 		          	<ul class="dropdown-menu" role="menu">
 		          		<li><a title="Import to excel file" href="#" data-toggle="modal" data-target="#importComapnyModal" ><img src="../images/excel-icon.jpg" width="20" height="20" />&nbsp;Import</a></li>
 		            	<li><a title="Export to excel file" href="masterExportTableItem.php?fileType=xls&tableName=<?php echo TBL_INV_ITEMS;?>&itemType=<?php echo $item_list;?>"><img src="../images/excel-icon.jpg" width="20" height="20" />&nbsp;Export</a></li>
-		            	<li><a title="Export to csv file" href="masterExportTableItem.php?fileType=csv&tableName=<?php echo TBL_INV_ITEMS;?>&itemType<?php echo $item_list;?>"><img  src="../images/excel-csv-icon.jpg" width="20" height="20"  />&nbsp;Export</a></li>
-		          
+		            	
 		          	</ul>
 	        	</div>
 
