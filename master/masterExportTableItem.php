@@ -78,7 +78,7 @@ AND a.area = b.id*/
 						LEFT JOIN mst_attributes g ON a.id_mst_attributes_printer = g.id
 						LEFT JOIN mst_users uc ON a.id_mst_user_created_by = uc.id
 						LEFT JOIN mst_users um ON a.id_mst_user_modified_by = um.id
-						WHERE  a.id_shop = '".addslashes($_SESSION['shop'])."
+						WHERE  a.id_shop = '".addslashes($_SESSION['shop'])." and a.id_mst_attributes_item_type='".$itemType."'
 						h' AND a.name!='' ORDER BY a.name ASC ";	
 					$fileName = 'Items Data Base Report As On ';	
 					$result = mysqli_query($connNew, $query);
