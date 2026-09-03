@@ -224,7 +224,7 @@ $guestName=$Title.' '.ucwords(strtolower($Firstname)).' '.ucwords(strtolower($La
                                     <button class="btn btn-danger btn-xs"   onclick="ChangeNoshowOff('<?php echo $reservation_id;?>','<?php echo $row->id_mst_room_types;?>','<?php  echo (($room_quantity-$roomPIcked)-($roomNoshowoffArrayCount));?>',[<?php echo $GetOrderByRoom;?>]);" data-toggle="tooltip" title="No Show Off"><i class="fa-solid fa-hotel"></i></button>
                                     <button class="btn btn-primary btn-xs"   onclick="changeRoomType('<?php echo $reservation_id;?>','<?php echo $row->id_mst_room_types;?>','<?php  echo (($room_quantity-$roomPIcked)-($roomNoshowoffArrayCount));?>');" data-toggle="tooltip" title="Change Room Types"><i class="fa-solid fa-cogs"></i></button>
 										
-										<?php if($_SESSION['shop_code']=='deo_demo' || $_SESSION['shop_code']=='TIG'){ ?>
+										<?php if($_SESSION['shop_code']=='deo_demo' || $_SESSION['shop_code']=='TIG' || $_SESSION['shop_code']=='WHM'){ ?>
 										<button class="btn btn-primary btn-xs"    onclick="window.open('../master/guestCard1.php?gId=<?php echo encryptor('encrypt', $row->id_mst_guest); ?>&resId=<?php echo encryptor('encrypt', $row->id_fo_reservations);?>&folioId=0change&page=<?php echo $_REQUEST['page']; ?>', '_blank')" data-toggle="tooltip" title="Print GRC"><i class="fa-solid fa-print"></i></button>
 										
 										<?php }; ?>
