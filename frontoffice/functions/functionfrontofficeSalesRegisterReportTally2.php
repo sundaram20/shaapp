@@ -877,7 +877,8 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 	
 				
 				//$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
-				$taxMethod_cgst='charges_cgst'.($percentage_cgst);	
+				$taxMethod_cgst='charges_cgst'.($percentage_cgst);
+					
 				//$reservation_id_mst_charges_sales_local=$id_reservations;//'charges_cgst_1';						
 				$Account_Name = 'Output CGST @ '.(floatval($percentage_cgst)).'%';
 				$tax_per_day_per_room_sgst	=($reservation->tax_per_day_per_room ?? 0) / 2;
