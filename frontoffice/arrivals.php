@@ -227,7 +227,9 @@ $guestName=$Title.' '.ucwords(strtolower($Firstname)).' '.ucwords(strtolower($La
 										<?php if($_SESSION['shop_code']=='deo_demo' || $_SESSION['shop_code']=='TIG' || $_SESSION['shop_code']=='ved' || $_SESSION['shop_code']=='whm' ){ ?>
 										<button class="btn btn-primary btn-xs"    onclick="window.open('../master/guestCard1.php?gId=<?php echo encryptor('encrypt', $row->id_mst_guest); ?>&resId=<?php echo encryptor('encrypt', $row->id_fo_reservations);?>&folioId=0change&page=<?php echo $_REQUEST['page']; ?>', '_blank')" data-toggle="tooltip" title="Print GRC"><i class="fa-solid fa-print"></i></button>
 										
-										<?php }; ?>
+										<?php 
+										//Added
+										}; ?>
                                     
                                     </td>
                                 <tr id="tr_<?php echo $reservation_id;?>_<?php echo $row->id_mst_room_types;?>"  class="Exparrivals" style="display:none"><td>ertert</td></tr>
