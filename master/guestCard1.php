@@ -333,7 +333,6 @@ $SQL_Hotel = "select *  from ".TBL_HOTELS." where status='1' and `id_shop` = '".
 		
 		
 		
-		//Rajasthan
 		$HotelName	   =$row_Hotel->name;
 		$HotelState	  =selectColumn(TBL_STATE,'name','WHERE id_state="'.$row_Hotel->id_mst_state.'"');
 		$HotelCountry	  =selectColumn('mst_country_lang','name','WHERE id_country="'.$row_Hotel->id_mst_country_lang.'"');
@@ -346,6 +345,20 @@ $SQL_Hotel = "select *  from ".TBL_HOTELS." where status='1' and `id_shop` = '".
 		$Hotelsecondary_landline = $Hotelsecondary_landline.' '.$Hotelsecondary_mobile;
         $Hotelpan	=$row_Hotel->pan;
         $HotelEmail	=$row_Hotel->email;
+        $hotel_checkin = $row_Hotel->check_in_time;
+        $hotel_checkout = $row_Hotel->check_out_time;
+
+        if($hotel_checkin != '' && $hotel_checkin != '00:00:00'){
+            $hotel_checkin = date('h:i A', strtotime($hotel_checkin));
+        }else{
+            $hotel_checkin = date('h:i A', strtotime('13:00:00'));
+        }
+
+        if($hotel_checkout != '' && $hotel_checkout != '00:00:00'){
+            $hotel_checkout = date('h:i A', strtotime($hotel_checkout));
+        }else{
+            $hotel_checkout = date('h:i A', strtotime('11:00:00'));
+        }
 
 function fv($value, $minWidth = '140px') {
     if (!empty(trim((string)$value))) {
@@ -395,6 +408,8 @@ $logoImage=selectColumn(TBL_OUTLETS,'image','WHERE id_shop="'.$_SESSION['shop'].
 				$guest_first_name = $row_Guest->first_name;
 				$guest_last_name = $row_Guest->last_name;
 				$guest_name = $guest_first_name . ' ' . $guest_last_name;
+                $guest_email = $row_Guest->email;
+                $guest_phone = $row_Guest->primary_mobile;
 				$guest_reg_no = $row_Guest->guest_reg_no;
 				$guest_gst_no = ($row_Guest && isset($row_Guest->guest_gst_no)) ? $row_Guest->guest_gst_no : '';
 				
@@ -646,6 +661,7 @@ while($row = $resultDetails->fetch_assoc()){
 			
 			if (!empty($id_pay_company) && $id_pay_company > 0) {
     			$billed_company_name = selectColumn('mst_company', 'name', "WHERE id = '$id_pay_company'") ?? '';
+                $billed_company_gst = selectColumn('mst_company', 'fax', "WHERE id = '$id_pay_company'") ?? '';
 			} else {
     			$billed_company_name = '';
 			}
@@ -690,6 +706,27 @@ while($row = $resultDetails->fetch_assoc()){
                     </div>
                     <div class="grid-col">
                         <div class="field " style="margin-bottom: 0!important;">
+							<label>Email</label>
+							<div class="value">
+								<?=$guest_email;?>
+							</div>
+						</div>
+                    </div>
+                    <div class="grid-col">
+                        <div class="field " style="margin-bottom: 0!important;">
+							<label>Phone No</label>
+							<div class="value">
+								<?=$guest_phone;?>
+							</div>
+						</div>
+                    </div>
+
+                </div>
+
+                <div class="grid-row">
+
+                    <div class="grid-col">
+                        <div class="field inline" style="margin-bottom: 0!important;">
 							<label>Check In</label>
 							<div class="value">
 								<?=$checkin;?>
@@ -697,15 +734,19 @@ while($row = $resultDetails->fetch_assoc()){
 						</div>
                     </div>
                     <div class="grid-col">
-                        <div class="field" style="margin-bottom: 0!important;">
+                        <div class="field inline" style="margin-bottom: 0!important;">
 							<label>Check Out</label>
 							<div class="value">
 								<?=$checkout;?>
 							</div>
 						</div>
                     </div>
+
                 </div>
+
             </div>
+
+
 
             <div class="section">
                 <div class="section-header " style="border-bottom: none!important;">Reservation Details</div>
@@ -762,6 +803,7 @@ while($row = $resultDetails->fetch_assoc()){
                     <div class="section-header">Travel & Billing Information</div>
                    <div class="details-padding">
     <div class="field inline"><label>Company Name:</label><?= fv($billed_company_name) ?></div>
+    <div class="field inline"><label>Company GST No:</label><?= fv($billed_company_gst) ?></div>
     <!--<div class="field inline"><label>Designation:</label><div class="value">Regional Manager</div></div>-->
     <div class="field inline"><label>Purpose of Visit:</label><?= fv($purpose_of_visit) ?></div>
     <div class="field inline"><label>Arriving From:</label><?= fv($arrival_from) ?></div>
@@ -814,8 +856,8 @@ while($row = $resultDetails->fetch_assoc()){
                 <div class="rules-intro">Guest signing this document represents that he/she will abide by the house rules and is authorized by person/s staying with him/her to execute this document on their behalf and agrees:</div>
                 
                 <div class="rules-list">
-                    <p><strong>1. Check In & Checkout Time:</strong> Our Check-In time is 1.00 PM and Check-Out time is 11.00 AM.</p>
-                    <p><strong>2. Departure:</strong> "Check-Out" times are 11 AM. On failure of the same guest will be charged as per rate or if you wish to retain your room can contact with front office.</p>
+                    <p><strong>1. Check In & Checkout Time:</strong> Our Check-In time is <?=$hotel_checkin;?> and Check-Out time is <?=$hotel_checkout;?>.</p>
+                    <p><strong>2. Departure:</strong> "Check-Out" times are <?=$hotel_checkout;?>. On failure of the same guest will be charged as per rate or if you wish to retain your room can contact with front office.</p>
                     <p><strong>3. Payment:</strong> To pay the room charges mentioned above and to settle the hotel bills by mode of payment acceptable by the hotel. Personal cheques are not accepted. In case the organization/individual fails to settle the bill, the guest will be personally liable. The guest agrees to be held responsible for any and all charges incurred during the stay and agrees to settle all his account on demand. The guest authorizes the hotel management to charge his/her credit/debit card for any charges not settled upon departure.</p>
                     <p><strong>4. Liquor:</strong> Consumption of liquor in public place like lawn/swimming pool/restaurant is totally prohibited.</p>
                     <p><strong>5. Luggage Storage:</strong> Guest Luggage can be stored in the left luggage room at the guest sole risk as to loss or damage from any cause.</p>
@@ -825,10 +867,10 @@ while($row = $resultDetails->fetch_assoc()){
                     <p><strong>9. Arms & Ammunition:</strong> No Arms & Ammunition are allowed in the rooms or other parts of the hotel.</p>
                     <p><strong>10. Non Residential Guest:</strong> No outsider / Visitors are allowed in the guest rooms.</p>
                     <p><strong>11. Amendments of Rules:</strong> The Management reserves to itself the right to add to alter or amend any of the above terms & conditions and rules.</p>
-                    <p><strong>12. Liability:</strong> Resort will not be responsible or pay you compensation for any injury, illness, death, loss, damage, expense, cost or other claim of any description.</p>
-                    <p><strong>13. Valuables:</strong> Resort or Hotel Management is not responsible for your personal belongings and valuables like money, jewellery or any other valuables left by guests in the rooms.</p>
-                    <p><strong>14. Parking:</strong> The Resort is not responsible for damage or disappearance of vehicles kept in the hotel’s parking area or valuables inside the vehicle. The hotel is obliged to clearly express at the parking area that the area is not supervised and the Resort is not responsible for the property kept in there.</p>
-                    <p><strong>15. Disputes:</strong> All disputes arising from or incidental to stay itself or through any Franchisor or any other persons directly or indirectly involved shall be subject matter of dispute between guest and resort only and shall be referable to arbitration in accordance with the Indian Arbitration and conciliation Act, 1996 conducted in the city where the hotel is situated by a sole arbitrator who shall inter alia shall have qualification of ten years experience in the hospitality industry and be duly appointed by Indian Council of Arbitration. All disputes between the guest and the Resort shall be governed by Indian Law and only courts in India having territorial jurisdiction where the hotel is situated and none other shall have jurisdiction in respect of such disputes.</p>
+                    <p><strong>12. Liability:</strong> Hotel will not be responsible or pay you compensation for any injury, illness, death, loss, damage, expense, cost or other claim of any description.</p>
+                    <p><strong>13. Valuables:</strong> Hotel or Hotel Management is not responsible for your personal belongings and valuables like money, jewellery or any other valuables left by guests in the rooms.</p>
+                    <p><strong>14. Parking:</strong> The Hotel is not responsible for damage or disappearance of vehicles kept in the hotel’s parking area or valuables inside the vehicle. The hotel is obliged to clearly express at the parking area that the area is not supervised and the Hotel is not responsible for the property kept in there.</p>
+                    <p><strong>15. Disputes:</strong> All disputes arising from or incidental to stay itself or through any Franchisor or any other persons directly or indirectly involved shall be subject matter of dispute between guest and Hotel only and shall be referable to arbitration in accordance with the Indian Arbitration and conciliation Act, 1996 conducted in the city where the hotel is situated by a sole arbitrator who shall inter alia shall have qualification of ten years experience in the hospitality industry and be duly appointed by Indian Council of Arbitration. All disputes between the guest and the Hotel shall be governed by Indian Law and only courts in India having territorial jurisdiction where the hotel is situated and none other shall have jurisdiction in respect of such disputes.</p>
                 </div>
                 
                 <div class="declaration">All personal particulars provided above are true and correct. I have carefully read and understood the terms and agree that the same shall be binding upon me.</div>

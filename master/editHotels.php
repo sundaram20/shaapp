@@ -148,6 +148,10 @@
 
 							`hotel_tagline` = '".addslashes($_POST['hotel_tagline'])."',
 
+							`check_in_time` = '".addslashes($_POST['check_in_time'])."',
+
+							`check_out_time` = '".addslashes($_POST['check_out_time'])."',
+
 							`brief_description` = '".addslashes($_POST['brief_description'])."',
 
 							`primary_contact_type` = '".addslashes($_POST['primary_contact_type'])."',
@@ -503,6 +507,10 @@ $sql1 = executeSql("SELECT * FROM `".TBL_HOTELS."` ORDER BY id DESC LIMIT 1");
 
 							`hotel_tagline` = '".addslashes($_POST['hotel_tagline'])."',
 
+							`check_in_time` = '".addslashes($_POST['check_in_time'])."',
+
+							`check_out_time` = '".addslashes($_POST['check_out_time'])."',
+
 							`brief_description` = '".addslashes($_POST['brief_description'])."',
 
 							`primary_contact_type` = '".addslashes($_POST['primary_contact_type'])."',
@@ -714,7 +722,7 @@ if($ch1=='' && $ch2=='' && $ch3=='' && $ch4=='' && $ch5=='' && $ch6=='' && $ch7=
 					 	<div class="box-body" style="padding-top:0px">
 					 		<div class="card text-dark bg-light">
 				                <div class="bg-primary text-center">
-				                    <h5 style="padding: 5px;">Hotels General Details</h5>
+				                    <h5 style="padding: 5px;">Hotel General Details</h5>
 				                </div> 
 				                <hr>
 				            </div>
@@ -910,6 +918,16 @@ if($ch1=='' && $ch2=='' && $ch3=='' && $ch4=='' && $ch5=='' && $ch6=='' && $ch7=
 				 				<div class="form-group col-md-4 col-sm-4">
 				 					<label for="google_map_url">Google Map Url</label>
 				 					<input type="text" class="form-control" placeholder="Enter Google Map Url" id="google_map_url" name="google_map_url" value="<?php if($_POST['google_map_url']) echo $_POST['google_map_url'];else echo stripslashes($row->google_map_url);?>">
+				 				</div>
+
+								<div class="form-group col-md-4 col-sm-4">
+				 					<label for="check_in_time">Check In time</label>
+				 					<input type="time" class="form-control" placeholder="Enter Check In time" id="check_in_time" name="check_in_time" value="<?php if($_POST['check_in_time']) echo $_POST['check_in_time'];else echo stripslashes($row->check_in_time);?>">
+				 				</div>
+
+								<div class="form-group col-md-4 col-sm-4">
+				 					<label for="check_out_time">Check Out time</label>
+				 					<input type="time" class="form-control" placeholder="Enter Check Out time" id="check_out_time" name="check_out_time" value="<?php if($_POST['check_out_time']) echo $_POST['check_out_time'];else echo stripslashes($row->check_out_time);?>">
 				 				</div>
 				 			</div>
 				 			<div class="row">
