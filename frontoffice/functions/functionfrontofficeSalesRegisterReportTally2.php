@@ -1588,7 +1588,7 @@ $searchObject = $matchedMdocNo;
 $keys = array_keys($array, $searchObject);
 
 
-//test
+
 
 		$checkArray[$matchedMdocNo]=$matchedMdocNo;
 		//debugData($y);
