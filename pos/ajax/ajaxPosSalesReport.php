@@ -12,7 +12,7 @@ if(($_SESSION['errorMsg']!='') || ($_SESSION['userId']=='')){
 
 
 //error_reporting(E_ALL);
-include_once("../include/function.php");
+
 
 
 
@@ -29,4 +29,16 @@ $production_item	= $_REQUEST['production_item'];
 $kot_nc	= $_REQUEST['kot_nc'];
 $cronSet='';
 $pdfName='';
+
+if($_REQUEST['id_report_type']=='243'){
+    include_once("../include/functionPosConsolidatedReport.php");
+echo consolidatedItemWiseReportSetNew($_REQUEST['period'],$id_main_group,$id_sub_group,$id_items,$_REQUEST['id_report_type'],$report_show,$_REQUEST['id_order_by'],$_REQUEST['showItemReport'],$kot_nc,$appConnect,$connNew,$_SESSION['shop'],$cronSet,$pdfName,$_REQUEST['id_report_format'],$id_outlet,$production_item); 
+
+
+
+}
+else{
+    include_once("../include/function.php");
 echo consolidatedItemWiseReport($_REQUEST['period'],$id_main_group,$id_sub_group,$id_items,$_REQUEST['id_report_type'],$report_show,$_REQUEST['id_order_by'],$_REQUEST['showItemReport'],$kot_nc,$appConnect,$connNew,$_SESSION['shop'],$cronSet,$pdfName,$_REQUEST['id_report_format'],$id_outlet,$production_item); 
+}
+?>
