@@ -813,14 +813,13 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 				$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$taxMethod_sgst='Charges Sales';	
-								
+				$reservation_id_mst_charges_sales_local=$id_reservations;//'charges_Sales';						
 				//$Account_Name = 'Food Plan Sales';
 	
 	
 				$Account_Name = selectColumn(TBL_CHARGES, $chagesFieldName,'WHERE id="'.$reservation->id_mst_charges.'"  ');
 				$tax_per_day_per_room_sgst	=$reservation->tariff_price_per_day_per_room ?? 0;
 	$charges_Charges_Round_Off+=$amount;
-	$reservation_id_mst_charges_sales_local=$Account_Name;//'charges_Sales';		
 	$SalesRegisterArray['Sales Register'][$id_fo_folio_to][$matchedMdocNo][$reservation_id_mst_charges_sales_local][$taxMethod_sgst]['voucher_type']='Charges';
 	
 	$SalesRegisterArray['Sales Register'][$id_fo_folio_to][$matchedMdocNo][$reservation_id_mst_charges_sales_local][$taxMethod_sgst]['date_created']=$date_created;
@@ -849,7 +848,7 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 				//$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				//$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$taxMethod_sgst='charges_sgst'.($percentage_sgst);	
-				//$reservation_id_mst_charges_sales_local=$id_reservations;//'charges_sgst_1';						
+				$reservation_id_mst_charges_sales_local=$id_reservations;//'charges_sgst_1';						
 				$Account_Name = 'Output SGST @ '.(floatval($percentage_sgst)).'%';
 				$tax_per_day_per_room_sgst	=($reservation->tax_per_day_per_room ?? 0) / 2;
 				$charges_sgst_Round_Off+=round(($tax) / 2,2)+round(($tax) / 2,2);
