@@ -228,7 +228,7 @@ $guestName=$Title.' '.ucwords(strtolower($Firstname)).' '.ucwords(strtolower($La
 										<button class="btn btn-primary btn-xs"    onclick="window.open('../master/guestCard1.php?gId=<?php echo encryptor('encrypt', $row->id_mst_guest); ?>&resId=<?php echo encryptor('encrypt', $row->id_fo_reservations);?>&folioId=0change&page=<?php echo $_REQUEST['page']; ?>', '_blank')" data-toggle="tooltip" title="Print GRC"><i class="fa-solid fa-print"></i></button>
 										
 										<?php 
-										//Added
+										//Added afsak
 										}; ?>
                                     
                                     </td>
