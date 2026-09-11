@@ -128,8 +128,8 @@ while (strtotime($checkinDate) < strtotime($checkoutDate_upadate)) {
 			
 			  
 			  $totalRoom 							= GetAssignTotalRoom($id_mst_hotels,$rowRoom_update->id_mst_room_types);
-			  
-		$ResDetailSql	=	mysqli_query($connNew,"Select  fo_reservations.booking_no,`fo_reservations`.booking_status,`fo_reservations_details`.dated ,fo_reservations_details.no_showoff,
+			 
+		/*$ResDetailSql33	=	mysqli_query($connNew,"Select  fo_reservations.booking_no,`fo_reservations`.booking_status,`fo_reservations_details`.dated ,fo_reservations_details.no_showoff,
 			sum( CASE WHEN `fo_reservations`.booking_status = '4'   THEN ROUND(1,0) ELSE 0 END)  AS ca , 
 			sum(CASE WHEN `fo_reservations`.booking_status = '1'   THEN ROUND(1,0) ELSE 0 END ) AS Confirmed,
     		 sum(CASE WHEN `fo_reservations`.booking_status = '2'   THEN ROUND(1,0) ELSE 0 END)  AS Tentative,   
@@ -142,8 +142,107 @@ while (strtotime($checkinDate) < strtotime($checkoutDate_upadate)) {
 			 
 			 `fo_reservations`.`id_mst_hotels`='".addslashes($id_mst_hotels)."'  
 			 and `fo_reservations_details`.`id_mst_room_types`='".addslashes($rowRoom_update->id_mst_room_types)."'
-			  and fo_reservations_details.no_showoff='0'
-			  and  `fo_reservations_details`.dated = '".date('Y-m-d',strtotime($startDate))."'");
+			  and fo_reservations_details.no_showoff='0' 
+			  and  `fo_reservations_details`.dated = '".date('Y-m-d',strtotime($startDate))."'");*/
+
+			
+			  $ResDetailSql = mysqli_query($connNew,"SELECT
+    fo_reservations.booking_no,
+    fo_reservations.booking_status,
+    fo_reservations_details.dated,
+    fo_reservations_details.no_showoff,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '4'
+        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        THEN 1 ELSE 0
+    END) AS ca,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '1'
+        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        THEN 1 ELSE 0
+    END) AS Confirmed,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '2'
+        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        THEN 1 ELSE 0
+    END) AS Tentative,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '3'
+        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        THEN 1 ELSE 0
+    END) AS Waitlisted,
+
+    SUM(CASE
+        WHEN fo_reservations_details.checkout_status = '1'
+        THEN 1 ELSE 0
+    END) AS Checkout,
+
+    fo_reservations_details.id_mst_room_types
+
+FROM fo_reservations
+
+LEFT JOIN fo_reservations_details
+    ON fo_reservations.id = fo_reservations_details.id_fo_reservations
+
+WHERE
+    fo_reservations.id_mst_hotels = '".addslashes($id_mst_hotels)."'
+    AND fo_reservations_details.id_mst_room_types = '".addslashes($rowRoom_update->id_mst_room_types)."'
+    AND fo_reservations_details.no_showoff = '0'
+    AND fo_reservations_details.dated = '".date('Y-m-d',strtotime($startDate))."'");
+
+	
+/*echo "<br><br><br><br>==SELECT
+    fo_reservations.booking_no,
+    fo_reservations.booking_status,
+    fo_reservations_details.dated,
+    fo_reservations_details.no_showoff,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '4'
+        AND fo_reservations_details.checkout_status != '1'
+        THEN 1 ELSE 0
+    END) AS ca,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '1'
+        AND fo_reservations_details.checkout_status != '1'
+        THEN 1 ELSE 0
+    END) AS Confirmed,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '2'
+        AND fo_reservations_details.checkout_status != '1'
+        THEN 1 ELSE 0
+    END) AS Tentative,
+
+    SUM(CASE
+        WHEN fo_reservations.booking_status = '3'
+        AND fo_reservations_details.checkout_status != '1'
+        THEN 1 ELSE 0
+    END) AS Waitlisted,
+
+    SUM(CASE
+        WHEN fo_reservations_details.checkout_status = '1'
+        THEN 1 ELSE 0
+    END) AS Checkout,
+
+    fo_reservations_details.id_mst_room_types
+
+FROM fo_reservations
+
+LEFT JOIN fo_reservations_details
+    ON fo_reservations.id = fo_reservations_details.id_fo_reservations
+
+WHERE
+    fo_reservations.id_mst_hotels = '".addslashes($id_mst_hotels)."'
+    AND fo_reservations_details.id_mst_room_types = '".addslashes($rowRoom_update->id_mst_room_types)."'
+    AND fo_reservations_details.no_showoff = '0'
+    AND fo_reservations_details.dated = '".date('Y-m-d',strtotime($startDate))."'";*/
+	
 			  $GetTotalRoomAllotedConfirmed = mysqli_fetch_array($ResDetailSql);
 			  
 			  $orderTableAvailableRooms =$GetTotalRoomAllotedConfirmed['Confirmed']+$GetTotalRoomAllotedConfirmed['Tentative']+$GetTotalRoomAllotedConfirmed['Waitlisted'];

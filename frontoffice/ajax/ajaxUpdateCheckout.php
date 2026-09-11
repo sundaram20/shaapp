@@ -1,6 +1,6 @@
 <?php
 include_once("../../config/auto_loader.php");
-
+include_once("../../functions/inventoryUpdateFunctions.php"); 
 $id_fo_bill = $_REQUEST['id_fo_bill'];
 $status = $_REQUEST['status'];
 $id_reservation = $_REQUEST['id_reservation'];
@@ -212,7 +212,9 @@ $DateOrderByRoom	= implode(',',$DateOrderByRoom);
 					$insertOrder = mysqli_query($connNew, $insertGridDate);
 					
 										
-					
+					$dateArr = array($reservationcheckin, $reservationcheckout);
+					 updateOTA('1', $dateArr[0], $dateArr[1], $connNew);
+
 					$dataArray['status'] = '1';
 					$dataArray['message'] = 'Checkout updated sucessfully';
 					$dataArray['checkoutdate'] = date('d-m-Y',strtotime($DatedNightAudit2));

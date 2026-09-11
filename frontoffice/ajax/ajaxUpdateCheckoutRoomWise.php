@@ -1,6 +1,6 @@
 <?php
 include_once("../../config/auto_loader.php");
-
+include_once("../../functions/inventoryUpdateFunctions.php"); 
 $id_fo_bill=$_REQUEST['id_fo_bill'];
 $status=$_REQUEST['status'];
 $id_reservation=encryptor(decrypt,$_REQUEST['id_reservation']);
@@ -162,8 +162,11 @@ if(mysqli_num_rows($Vali)>0){
 
 mysqli_query($connNew,$sqlCh);
 						}
-			
-			
+	$reservationcheckin = date('d-m-Y',strtotime(selectColumn(FO_RESERVATIONS,'checkin','WHERE id="'.$id_reservation.'"')));
+	$reservationcheckout = date('d-m-Y',strtotime(selectColumn(FO_RESERVATIONS,'checkout','WHERE id="'.$id_reservation.'"')));
+
+	$dateArr = array($reservationcheckin, $reservationcheckout);
+	updateOTA('1', $dateArr[0], $dateArr[1], $connNew);	
 	
 	$dataArray['status']='1';
 	$dataArray['message']='Checkout updated sucessfully';
