@@ -18,7 +18,7 @@ $startDateCheckAvailability = date("Y-m-d",strtotime($startDateCheckAvailability
 			
 			 $sqlRes="SELECT count(fo_reservations_details.room_quantity) as qty ,fo_reservations.booking_status,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
 FROM `fo_reservations_details` left join fo_reservations on fo_reservations_details.id_fo_reservations =fo_reservations.id
-where fo_reservations.booking_status!='4' and fo_reservations_details.no_showoff='0'  and  fo_reservations_details.dated='".$startDateCheckAvailability."' 
+where fo_reservations.booking_status!='4' and fo_reservations_details.no_showoff='0' and fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout'  and  fo_reservations_details.dated='".$startDateCheckAvailability."' 
  and fo_reservations_details.id_mst_room_types='".$rowResRoomType->id_mst_room_types."'
 GROUP by fo_reservations_details.dated ,fo_reservations_details.id_mst_room_types ORDER BY `fo_reservations_details`.`dated` DESC";
 
@@ -38,7 +38,7 @@ $resRes = mysqli_query($connNew,$sqlRes);
 						//================================
 					 $sqlResConfirm="SELECT count(fo_reservations_details.room_quantity) as Confirmqty ,fo_reservations.booking_status,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
 FROM `fo_reservations_details` left join fo_reservations on fo_reservations_details.id_fo_reservations =fo_reservations.id
-where fo_reservations.booking_status='1' and fo_reservations_details.no_showoff='0'  and   fo_reservations_details.id_mst_room_types='".$rowRes->id_mst_room_types."' and fo_reservations_details.dated='".$startDateCheckAvailability."' 
+where fo_reservations.booking_status='1' and fo_reservations_details.no_showoff='0'  and fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout'  and   fo_reservations_details.id_mst_room_types='".$rowRes->id_mst_room_types."' and fo_reservations_details.dated='".$startDateCheckAvailability."' 
 GROUP by fo_reservations_details.dated  ORDER BY `fo_reservations_details`.`dated` DESC";		
 						$resnewConfirm = mysqli_query($connNew,$sqlResConfirm);	
 							$rownewConfirm = mysqli_fetch_object($resnewConfirm);
@@ -47,7 +47,7 @@ GROUP by fo_reservations_details.dated  ORDER BY `fo_reservations_details`.`date
 	
  $sqlResTenditive="SELECT count(fo_reservations_details.room_quantity) as Tenditivemqty ,fo_reservations.booking_status,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
 FROM `fo_reservations_details` left join fo_reservations on fo_reservations_details.id_fo_reservations =fo_reservations.id
-where fo_reservations.booking_status='2' and fo_reservations_details.no_showoff='0'  and   fo_reservations_details.id_mst_room_types='".$rowRes->id_mst_room_types."' and fo_reservations_details.dated='".$startDateCheckAvailability."' 
+where fo_reservations.booking_status='2' and fo_reservations_details.no_showoff='0'  and fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' and   fo_reservations_details.id_mst_room_types='".$rowRes->id_mst_room_types."' and fo_reservations_details.dated='".$startDateCheckAvailability."' 
 GROUP by fo_reservations_details.dated  ORDER BY `fo_reservations_details`.`dated` DESC";			
 						$resnewTenditive = mysqli_query($connNew,$sqlResTenditive);	
 							$rownewTenditive = mysqli_fetch_object($resnewTenditive);
