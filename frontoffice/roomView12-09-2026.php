@@ -1170,7 +1170,7 @@ $BalanceAmount = round($CurrentTotal-$receipt_amount,2);
     align-items: center;
     gap: 6px;
 
-    white-space: nowrap;   
+    white-space: nowrap;   /* 🔥 THIS fixes single line */
     line-height: 1.4;
 
     box-shadow: 0 3px 8px rgba(0,0,0,0.2);
@@ -1204,15 +1204,230 @@ $BalanceAmount = round($CurrentTotal-$receipt_amount,2);
     </div>
     
     
-    <?php 
-	// OPTIMIZATION: The "Expected Departures" count previously re-ran the ENTIRE
-	// room/guest/folio query block a second time from scratch (identical queries,
-	// identical nested loops) just to get this one number. That block populated
-	// the exact same $folioArray with the exact same checkout_text values as the
-	// first pass above, so re-querying was pure duplicate work with zero behavior
-	// difference. We now derive the same $i value directly from the $folioArray
-	// already built above - same result, same logic, none of the duplicate SQL.
-	$i = 0;
+    <?php  $kk=0;
+	$folioArray='';
+	$folioArray=array();
+	$SqlConn = " AND `room_status` IN (3)"; 
+ $sqlAllRooms = mysqli_query($connNew,"SELECT *
+
+FROM `mst_room_no_allocation`  
+ 
+
+
+WHERE management_block = 'No' and status = '1'  $SqlConn order by display_order 
+		
+		 ");
+		 
+		
+		if(mysqli_num_rows($sqlAllRooms) >0 ){
+			$y=0;
+				while($rowAllRooms= mysqli_fetch_object($sqlAllRooms)){	  
+		$CurrentTotal='0';
+		if($rowAllRooms->room_status=='1'){
+			$roomClass	='';
+			$roomStatus='Dirty';
+		}elseif($rowAllRooms->room_status=='2'){
+			$roomClass	='cstmBgReserved';
+			$roomStatus='Reserved';
+		}elseif($rowAllRooms->room_status=='3'){
+			$roomClass	='cstmBgOccupied';
+			$roomStatus='Occupied';
+		}elseif($rowAllRooms->room_status=='4'){
+			$roomClass	='cstmBgVacant';
+			$roomStatus='Vacant';
+		}elseif($rowAllRooms->room_status=='5'){
+			$roomClass	='';
+			$roomStatus='Blocked';
+		}elseif($rowAllRooms->room_status=='6'){
+			$roomClass	='';
+			$roomStatus='Under Maintenance';
+		}
+
+		$sqlRoomNumber = mysqli_query($connNew,"SELECT DISTINCT 
+		room.id,room.room_no,room.display_order,room.id_mst_room_types,room.room_status,resdetails.id_fo_reservations,
+		resdetails.id_mst_guest,resdetails.id_shared_guest,resdetails.id_fo_folio_to ,resdetails.id_fo_bill,
+		resdetails.order_by_room,
+		fo_bill.status as occupanyStatus,resdetails.child_below_5_year,resdetails.child_above_5_year,resdetails.adults_per_room
+		FROM `mst_room_no_allocation` as room 
+		INNER JOIN fo_reservations_details as resdetails ON room.id=resdetails.id_mst_room_no_allocation 
+		INNER JOIN fo_bill as fo_bill ON fo_bill.id=resdetails.id_fo_bill 
+		WHERE fo_bill.status='1'  and resdetails.`checkout_status`='0' and  resdetails.`no_showoff`='0' and  resdetails.id_mst_room_no_allocation='".$rowAllRooms->id."'");
+		if(mysqli_num_rows($sqlRoomNumber) >0 ){
+			
+				while($rowRoomNumbers= mysqli_fetch_object($sqlRoomNumber)){ //print_r($rowOrderDetail);
+				
+				$booking_no	= selectColumn(FO_RESERVATIONS,'booking_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$checkin	= selectColumn(FO_RESERVATIONS,'checkin'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$checkout	= selectColumn(FO_RESERVATIONS,'checkout'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				
+					$bill_checkout_status	= selectColumn(FO_BILL,'status'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+					
+				$id_owner_room =selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+		//================================================
+		
+		$id_mst_guest_id_owner_room	=  selectColumn('fo_reservations_details','id_mst_guest'," WHERE `id_fo_reservations` = '".$rowRoomNumbers->id_fo_reservations."' and id_mst_room_no_allocation = '".$id_owner_room."'");
+		
+			$id_mst_attributes_title	=	selectColumn("mst_guest",'id_mst_attributes_title'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$GuestTitle = selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
+					
+					$GuestName	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$lastName	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+		
+		
+		//========================================
+					
+					
+					
+					
+					$GuestNameDetailRoom	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
+					$lastNameDetailRoom	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
+					
+					$id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");				
+	$Title=selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
+	$guests = [];
+					
+		$guests[$rowRoomNumbers->id_mst_guest] = $GuestNameDetailRoom.$lastNameDetailRoom!=''?$Title.' '.ucfirst(strtolower($GuestNameDetailRoom.' '.$lastNameDetailRoom)):'';	
+					
+	if ($rowRoomNumbers->id_shared_guest != '') {
+		$id_shared_guests = explode(',', $rowRoomNumbers->id_shared_guest);
+		foreach ($id_shared_guests as $id_guest) {
+			$SharedGuestName	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$id_guest."'");
+			$sharedGuestLastName	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$id_guest."'");
+			
+			$shared_guest_id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$id_guest."'");				
+			$sharedGuestTitle = selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$shared_guest_id_mst_attributes_title."'");
+			$guests[$id_guest] = $SharedGuestName!=''?$sharedGuestTitle.' '.ucfirst(strtolower($SharedGuestName)).' '.ucfirst(strtolower($sharedGuestLastName)):'';
+		}
+	}	
+	
+	$id_folio =$rowRoomNumbers->id_fo_folio_to;
+	
+	
+	
+
+	
+	
+	//==Balance================================================
+	
+				$sqlOrderDetail = mysqli_query($connNew,"Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."' ");
+		if(mysqli_num_rows($sqlOrderDetail) >0 ){
+			
+				while($rowOrderDetail= mysqli_fetch_object($sqlOrderDetail)){
+					
+					$CurrentTotal	+=$rowOrderDetail->tariff_price_per_day_per_room+$rowOrderDetail->tax_per_day_per_room;
+					
+				}
+				
+			 ;	
+		}
+		$sqlOrderDetail = mysqli_query($connNew,"Select  * from `pos_purch` where id_fo_folio_to='".addslashes($id_folio)."' and cancelled!=1 ");
+		if(mysqli_num_rows($sqlOrderDetail) >0 ){
+			
+				while($rowOrderDetail= mysqli_fetch_object($sqlOrderDetail)){
+					
+					;
+					$CurrentTotal	+=$rowOrderDetail->grant_total_amount;
+				}
+				
+				
+		}
+$sqlOrderDetail = mysqli_query($connNew,"Select  * from `fo_reservations_addons_details` where id_fo_folio_to='".addslashes($id_folio)."' ");
+		if(mysqli_num_rows($sqlOrderDetail) >0 ){
+			
+				while($rowOrderDetail= mysqli_fetch_object($sqlOrderDetail)){
+					
+					$CurrentTotal	+=$rowOrderDetail->total;
+				}
+				
+				
+		}
+		
+
+$receipt_amount	=	round(selectColumn('fo_receipt','sum(amount)','WHERE id_fo_folio="'.$id_folio.'"'),2);
+
+
+
+$BalanceAmount = round($CurrentTotal-$receipt_amount,2);
+//==================================================	
+					
+					
+					$roomNo	  = selectColumn(TBL_ROOMNO,'room_no'," WHERE `id` = '".$rowRoomNumbers->id."'");
+					$RoomName	=	selectColumn(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowRoomNumbers->id_mst_room_types."'");
+					
+					$plan_name = selectColumn("fo_rate_plan",'name'," WHERE `id` = '".$rowRoomNumbers->id_mst_room_types."'");				
+					$id_fo_folio_to	= selectColumn(FO_BILL,'id_fo_folio_to'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+					$folio_mdoc_no	= selectColumn('fo_folio','mdoc_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_folio_to."'");
+					
+					$RoomNoAndRoomName=$RoomName.' / '.$plan_name;
+					
+					$folioArray[$rowRoomNumbers->id]['RoomType']=$RoomNoAndRoomName;
+					$folioArray[$rowRoomNumbers->id]['room_no']=$roomNo;
+					$folioArray[$rowRoomNumbers->id]['RoomName']=$RoomName;
+					$folioArray[$rowRoomNumbers->id]['status']=$roomStatus;
+					$folioArray[$rowAllRooms->id]['roomClass']=$roomClass;
+					$folioArray[$rowRoomNumbers->id]['plan_name']=$plan_name;
+					
+					$folioArray[$rowRoomNumbers->id]['total_child']=$rowRoomNumbers->child_below_5_year+$rowRoomNumbers->child_above_5_year;
+					$folioArray[$rowRoomNumbers->id]['child_below_5_year']=$rowRoomNumbers->child_below_5_year;
+					$folioArray[$rowRoomNumbers->id]['child_above_5_year']=$rowRoomNumbers->child_above_5_year;
+					$folioArray[$rowRoomNumbers->id]['adults_per_room']=$rowRoomNumbers->adults_per_room;
+					
+					
+				if($bill_checkout_status!='2'){	
+						
+					
+					$folioArray[$rowRoomNumbers->id]['id_mst_room_no_allocation']=$rowRoomNumbers->id;
+					$folioArray[$rowRoomNumbers->id]['order_by_room']=$rowRoomNumbers->order_by_room;
+					$folioArray[$rowRoomNumbers->id]['GuestName']=$GuestName!=''?$Title.' '.ucfirst(strtolower($GuestName)).' '.ucfirst(strtolower($lastName)):'';
+					$folioArray[$rowRoomNumbers->id]['Guest'] = $guests;
+					$folioArray[$rowRoomNumbers->id]['id_mst_guest']=$rowRoomNumbers->id_mst_guest;
+					$folioArray[$rowRoomNumbers->id]['folio_mdoc_no']=$folio_mdoc_no!=''?$folio_mdoc_no:'';
+					$folioArray[$rowRoomNumbers->id]['mdoc_no']=$booking_no!=''?$booking_no:'';
+					$folioArray[$rowRoomNumbers->id]['id_fo_reservations']=$rowRoomNumbers->id_fo_reservations!=''?$rowRoomNumbers->id_fo_reservations:'';
+					$folioArray[$rowRoomNumbers->id]['id_fo_view_folio']=$rowRoomNumbers->id_fo_folio_to;//$rowRoomNumbers->id_fo_reservations.'_'.$rowRoomNumbers->id_fo_bill.'_'.$rowRoomNumbers->id;
+					
+					
+					$folioArray[$rowRoomNumbers->id]['dated']= date('d-m-Y',strtotime($rowOrderDetail->dated));
+					$folioArray[$rowRoomNumbers->id]['id_fo_bill']=$rowRoomNumbers->id_fo_bill;
+					
+					$folioArray[$rowRoomNumbers->id]['Checkin']=$checkin!=''?date('d M Y',strtotime($checkin)):'';
+					$folioArray[$rowRoomNumbers->id]['Checkout']=$checkout!=''?date('d M Y',strtotime($checkout)):'';
+					$folioArray[$rowRoomNumbers->id]['checkout_text']= $checkout != '' ? date('Y-m-d',strtotime($checkout)) : '';
+					$folioArray[$rowRoomNumbers->id]['BalanceAmount']=$BalanceAmount;
+					
+					
+					if ($today == date('Y-m-d',strtotime($checkout))) {
+				
+				 $kk=$kk+1;
+			}
+				
+				}
+				
+					
+				}
+				
+				
+		}else{
+			
+					$roomNo	  = $rowAllRooms->room_no;
+					$RoomName	=	selectColumn(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowAllRooms->id_mst_room_types."'");
+									
+					
+					$RoomNoAndRoomName=$RoomName;//.'/'.$roomNo;
+					$folioArray[$rowAllRooms->id]['RoomType']=$RoomNoAndRoomName;
+					$folioArray[$rowAllRooms->id]['room_no']=$roomNo;
+					$folioArray[$rowAllRooms->id]['RoomName']=$RoomName;
+					$folioArray[$rowAllRooms->id]['status']=$roomStatus;
+					$folioArray[$rowAllRooms->id]['roomClass']=$roomClass;
+			
+			}
+				}
+		}
+	$sqlNightAudit = mysqli_query($connNew,"SELECT max(night_audit_date) as dated FROM `night_audit` order by id desc limit 1 ");
+$numRowsNightAudit =  mysqli_num_rows($sqlNightAudit);
+$rowNightAudit =  mysqli_fetch_object($sqlNightAudit);
+$today = date('Y-m-d',strtotime('+1 day',strtotime($rowNightAudit->dated)));
+	$i = 0;//echo $today;
     foreach($folioArray as $roomcount=>$roomData) {
 
 			if ($today == $roomData['checkout_text']) {
@@ -1597,3 +1812,4 @@ $BalanceAmount = round($CurrentTotal-$receipt_amount,2);
             }
         });
 </script>
+
