@@ -41,67 +41,6 @@ background :  #a7ffa7!important
 <?php
 include_once("../../config/auto_loader.php");
 include_once("../functions/function.php");
-
-/**
- * Memoized wrapper around selectColumn().
- * Same $table/$column/$where always returns the same value within a single
- * request (nothing in this file writes to the tables selectColumn() reads
- * from), so caching by exact argument signature returns identical results
- * to calling selectColumn() directly - it just avoids re-issuing the exact
- * same SELECT query when the same title/room-type/rate-plan/etc. is looked
- * up for multiple rooms in the same page render.
- */
-function selectColumnCached($table, $column, $where) {
-	static $cache = [];
-	$key = $table.'|'.$column.'|'.$where;
-	if (!array_key_exists($key, $cache)) {
-		$cache[$key] = selectColumn($table, $column, $where);
-	}
-	return $cache[$key];
-}
-
-/**
- * Memoized per-folio "current total" (tariff+tax, POS purchases, addons).
- * Identical to the inline 3-query block this replaces, just cached by
- * $id_folio so a folio shared across multiple rooms (e.g. a multi-room
- * booking) is only summed once instead of once per room.
- */
-function getFolioCurrentTotal($id_folio, $connNew) {
-	static $cache = [];
-	if (array_key_exists($id_folio, $cache)) {
-		return $cache[$id_folio];
-	}
-
-	$CurrentTotal = 0;
-
-	$query = "SELECT tariff_price_per_day_per_room, tax_per_day_per_room 
-	          FROM `".FO_RESERVATIONS_DETAILS."` 
-	          WHERE id_fo_folio_to = '".addslashes($id_folio)."'";
-	$result = mysqli_query($connNew, $query);
-	while ($row = mysqli_fetch_assoc($result)) {
-	    $CurrentTotal += $row['tariff_price_per_day_per_room'] + $row['tax_per_day_per_room'];
-	}
-
-	$query = "SELECT grant_total_amount 
-	          FROM `pos_purch` 
-	          WHERE id_fo_folio_to = '".addslashes($id_folio)."' AND cancelled != 1";
-	$result = mysqli_query($connNew, $query);
-	while ($row = mysqli_fetch_assoc($result)) {
-	    $CurrentTotal += $row['grant_total_amount'];
-	}
-
-	$query = "SELECT total 
-	          FROM `fo_reservations_addons_details` 
-	          WHERE id_fo_folio_to = '".addslashes($id_folio)."'";
-	$result = mysqli_query($connNew, $query);
-	while ($row = mysqli_fetch_assoc($result)) {
-	    $CurrentTotal += $row['total'];
-	}
-
-	$cache[$id_folio] = $CurrentTotal;
-	return $CurrentTotal;
-}
-
 $sqlNightAudit = mysqli_query($connNew,"SELECT max(night_audit_date) as dated FROM `night_audit` order by id desc limit 1 ");
 $numRowsNightAudit = mysqli_num_rows($sqlNightAudit);
 $rowNightAudit = mysqli_fetch_object($sqlNightAudit);
@@ -231,22 +170,22 @@ if($rowAllRooms->management_block=='Yes'){
 			
 				while($rowRoomNumbers= mysqli_fetch_object($sqlRoomNumber)){ //print_r($rowOrderDetail);
 				
-				$booking_no	= selectColumnCached(FO_RESERVATIONS,'booking_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
-				$checkin	= selectColumnCached(FO_RESERVATIONS,'checkin'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
-				$checkout	= selectColumnCached(FO_RESERVATIONS,'checkout'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$booking_no	= selectColumn(FO_RESERVATIONS,'booking_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$checkin	= selectColumn(FO_RESERVATIONS,'checkin'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$checkout	= selectColumn(FO_RESERVATIONS,'checkout'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
 				$checkinTime =$rowRoomNumbers->checkin_time;
-					$bill_checkout_status	= selectColumnCached(FO_BILL,'status'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+					$bill_checkout_status	= selectColumn(FO_BILL,'status'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
 					
-				$id_owner_room =selectColumnCached('fo_bill','id_owner_room'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+				$id_owner_room =selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
 		//================================================
 		
-		$id_mst_guest_id_owner_room	=  selectColumnCached('fo_reservations_details','id_mst_guest'," WHERE `id_fo_reservations` = '".$rowRoomNumbers->id_fo_reservations."' and id_mst_room_no_allocation = '".$id_owner_room."'");
+		$id_mst_guest_id_owner_room	=  selectColumn('fo_reservations_details','id_mst_guest'," WHERE `id_fo_reservations` = '".$rowRoomNumbers->id_fo_reservations."' and id_mst_room_no_allocation = '".$id_owner_room."'");
 		
-			$id_mst_attributes_title	=	selectColumnCached("mst_guest",'id_mst_attributes_title'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
-					$GuestTitle = selectColumnCached(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
+			$id_mst_attributes_title	=	selectColumn("mst_guest",'id_mst_attributes_title'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$GuestTitle = selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
 					
-					$GuestName	=	selectColumnCached("mst_guest",'first_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
-					$lastName	=	selectColumnCached("mst_guest",'last_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$GuestName	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$lastName	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
 		
 		
 		//========================================
@@ -254,11 +193,11 @@ if($rowAllRooms->management_block=='Yes'){
 					
 					
 					
-					$GuestNameDetailRoom	=	selectColumnCached("mst_guest",'first_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
-					$lastNameDetailRoom	=	selectColumnCached("mst_guest",'last_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
+					$GuestNameDetailRoom	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
+					$lastNameDetailRoom	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
 					
-					$id_mst_attributes_title	=	selectColumnCached(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");				
-	$Title=selectColumnCached(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
+					$id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");				
+	$Title=selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
 	$guests = [];
 					
 		$guests[$rowRoomNumbers->id_mst_guest] = $GuestNameDetailRoom.$lastNameDetailRoom!=''?$Title.' '.ucfirst(strtolower($GuestNameDetailRoom.' '.$lastNameDetailRoom)):'';	
@@ -266,11 +205,11 @@ if($rowAllRooms->management_block=='Yes'){
 	if ($rowRoomNumbers->id_shared_guest != '') {
 		$id_shared_guests = explode(',', $rowRoomNumbers->id_shared_guest);
 		foreach ($id_shared_guests as $id_guest) {
-			$SharedGuestName	=	selectColumnCached("mst_guest",'first_name'," WHERE `id` = '".$id_guest."'");
-			$sharedGuestLastName	=	selectColumnCached("mst_guest",'last_name'," WHERE `id` = '".$id_guest."'");
+			$SharedGuestName	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$id_guest."'");
+			$sharedGuestLastName	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$id_guest."'");
 			
-			$shared_guest_id_mst_attributes_title	=	selectColumnCached(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$id_guest."'");				
-			$sharedGuestTitle = selectColumnCached(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$shared_guest_id_mst_attributes_title."'");
+			$shared_guest_id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$id_guest."'");				
+			$sharedGuestTitle = selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$shared_guest_id_mst_attributes_title."'");
 			$guests[$id_guest] = $SharedGuestName!=''?$sharedGuestTitle.' '.ucfirst(strtolower($SharedGuestName)).' '.ucfirst(strtolower($sharedGuestLastName)):'';
 		}
 	}	
@@ -282,13 +221,40 @@ if($rowAllRooms->management_block=='Yes'){
 
 	
 	
-	// Same 3-query calculation as before, now memoized per folio (see
-	// getFolioCurrentTotal above) so a folio shared by several rooms in
-	// this loop is only summed once.
-	$CurrentTotal = getFolioCurrentTotal($id_folio, $connNew);
+	$CurrentTotal = 0;
+
+// === ROOM CHARGES (Tariff + Tax) ===
+$query = "SELECT tariff_price_per_day_per_room, tax_per_day_per_room 
+          FROM `".FO_RESERVATIONS_DETAILS."` 
+          WHERE id_fo_folio_to = '".addslashes($id_folio)."'";
+$result = mysqli_query($connNew, $query);
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $CurrentTotal += $row['tariff_price_per_day_per_room'] + $row['tax_per_day_per_room'];
+}
+
+// === POS PURCHASES ===
+$query = "SELECT grant_total_amount 
+          FROM `pos_purch` 
+          WHERE id_fo_folio_to = '".addslashes($id_folio)."' AND cancelled != 1";
+$result = mysqli_query($connNew, $query);
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $CurrentTotal += $row['grant_total_amount'];
+}
+
+// === ADDONS ===
+$query = "SELECT total 
+          FROM `fo_reservations_addons_details` 
+          WHERE id_fo_folio_to = '".addslashes($id_folio)."'";
+$result = mysqli_query($connNew, $query);
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $CurrentTotal += $row['total'];
+}
 
 // === RECEIPTS ===
-$receipt_amount = round(selectColumnCached('fo_receipt', 'SUM(amount)', 'WHERE id_fo_folio="'.addslashes($id_folio).'"'), 2);
+$receipt_amount = round(selectColumn('fo_receipt', 'SUM(amount)', 'WHERE id_fo_folio="'.addslashes($id_folio).'"'), 2);
 
 // === BALANCE ===
 $BalanceAmount = round($CurrentTotal);
@@ -312,12 +278,12 @@ while ($rowAdult = mysqli_fetch_assoc($resultAdult)) {
 					
 					
 					
-					$roomNo	  = selectColumnCached(TBL_ROOMNO,'room_no'," WHERE `id` = '".$rowRoomNumbers->id."'");
-					$RoomName	=	selectColumnCached(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowRoomNumbers->id_mst_room_types."'");
+					$roomNo	  = selectColumn(TBL_ROOMNO,'room_no'," WHERE `id` = '".$rowRoomNumbers->id."'");
+					$RoomName	=	selectColumn(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowRoomNumbers->id_mst_room_types."'");
 					
-					$plan_name = selectColumnCached("fo_rate_plan",'name'," WHERE `id` = '".$rowRoomNumbers->id_fo_rate_plan."'");
-					$id_fo_folio_to	= selectColumnCached(FO_BILL,'id_fo_folio_to'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
-					$folio_mdoc_no	= selectColumnCached('fo_folio','mdoc_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_folio_to."'");
+					$plan_name = selectColumn("fo_rate_plan",'name'," WHERE `id` = '".$rowRoomNumbers->id_fo_rate_plan."'");
+					$id_fo_folio_to	= selectColumn(FO_BILL,'id_fo_folio_to'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+					$folio_mdoc_no	= selectColumn('fo_folio','mdoc_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_folio_to."'");
 					
 					$RoomNoAndRoomName=$RoomName.' / '.$plan_name;
 					
@@ -372,7 +338,7 @@ while ($rowAdult = mysqli_fetch_assoc($resultAdult)) {
 				 
 			}else{
 					$roomNo	  = $rowAllRooms->room_no;
-					$RoomName	=	selectColumnCached(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowAllRooms->id_mst_room_types."'");
+					$RoomName	=	selectColumn(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowAllRooms->id_mst_room_types."'");
 									
 					
 					$RoomNoAndRoomName=$RoomName;//.'/'.$roomNo;
@@ -419,22 +385,22 @@ $roomClass	='cstmBgReserved';
 			$roomStatus='Reserved';
 				while($rowRoomNumbers= mysqli_fetch_object($sqlRoomNumber)){ echo '<br>';//print_r($rowRoomNumbers);
 				
-				$booking_no	= selectColumnCached(FO_RESERVATIONS,'booking_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
-				$checkin	= selectColumnCached(FO_RESERVATIONS,'checkin'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
-				$checkout	= selectColumnCached(FO_RESERVATIONS,'checkout'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$booking_no	= selectColumn(FO_RESERVATIONS,'booking_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$checkin	= selectColumn(FO_RESERVATIONS,'checkin'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
+				$checkout	= selectColumn(FO_RESERVATIONS,'checkout'," WHERE `id` = '".$rowRoomNumbers->id_fo_reservations."'");
 				$checkinTime =$rowRoomNumbers->checkin_time;
-					$bill_checkout_status	= selectColumnCached(FO_BILL,'status'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+					$bill_checkout_status	= selectColumn(FO_BILL,'status'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
 					
-				$id_owner_room =selectColumnCached('fo_bill','id_owner_room'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+				$id_owner_room =selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
 		//================================================
 		
-		$id_mst_guest_id_owner_room	=  selectColumnCached('fo_reservations_details','id_mst_guest'," WHERE `id_fo_reservations` = '".$rowRoomNumbers->id_fo_reservations."' and id_mst_room_no_allocation = '".$id_owner_room."'");
+		$id_mst_guest_id_owner_room	=  selectColumn('fo_reservations_details','id_mst_guest'," WHERE `id_fo_reservations` = '".$rowRoomNumbers->id_fo_reservations."' and id_mst_room_no_allocation = '".$id_owner_room."'");
 		
-			$id_mst_attributes_title	=	selectColumnCached("mst_guest",'id_mst_attributes_title'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
-					$GuestTitle = selectColumnCached(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
+			$id_mst_attributes_title	=	selectColumn("mst_guest",'id_mst_attributes_title'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$GuestTitle = selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
 					
-					$GuestName	=	selectColumnCached("mst_guest",'first_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
-					$lastName	=	selectColumnCached("mst_guest",'last_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$GuestName	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
+					$lastName	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$id_mst_guest_id_owner_room."'");
 		
 		
 		//========================================
@@ -442,11 +408,11 @@ $roomClass	='cstmBgReserved';
 					
 					
 					
-					$GuestNameDetailRoom	=	selectColumnCached("mst_guest",'first_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
-					$lastNameDetailRoom	=	selectColumnCached("mst_guest",'last_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
+					$GuestNameDetailRoom	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
+					$lastNameDetailRoom	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");
 					
-					$id_mst_attributes_title	=	selectColumnCached(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");				
-	$Title=selectColumnCached(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
+					$id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$rowRoomNumbers->id_mst_guest."'");				
+	$Title=selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'");
 	$guests = [];
 					
 		$guests[$rowRoomNumbers->id_mst_guest] = $GuestNameDetailRoom.$lastNameDetailRoom!=''?$Title.' '.ucfirst(strtolower($GuestNameDetailRoom.' '.$lastNameDetailRoom)):'';	
@@ -454,11 +420,11 @@ $roomClass	='cstmBgReserved';
 	if ($rowRoomNumbers->id_shared_guest != '') {
 		$id_shared_guests = explode(',', $rowRoomNumbers->id_shared_guest);
 		foreach ($id_shared_guests as $id_guest) {
-			$SharedGuestName	=	selectColumnCached("mst_guest",'first_name'," WHERE `id` = '".$id_guest."'");
-			$sharedGuestLastName	=	selectColumnCached("mst_guest",'last_name'," WHERE `id` = '".$id_guest."'");
+			$SharedGuestName	=	selectColumn("mst_guest",'first_name'," WHERE `id` = '".$id_guest."'");
+			$sharedGuestLastName	=	selectColumn("mst_guest",'last_name'," WHERE `id` = '".$id_guest."'");
 			
-			$shared_guest_id_mst_attributes_title	=	selectColumnCached(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$id_guest."'");				
-			$sharedGuestTitle = selectColumnCached(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$shared_guest_id_mst_attributes_title."'");
+			$shared_guest_id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$id_guest."'");				
+			$sharedGuestTitle = selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$shared_guest_id_mst_attributes_title."'");
 			$guests[$id_guest] = $SharedGuestName!=''?$sharedGuestTitle.' '.ucfirst(strtolower($SharedGuestName)).' '.ucfirst(strtolower($sharedGuestLastName)):'';
 		}
 	}	
@@ -467,18 +433,59 @@ $roomClass	='cstmBgReserved';
 	
 	
 	
-// NOTE: this block previously ran 4 queries here (tariff/tax, POS
-// purchases, addons, receipts) to compute $BalanceAmount. That value is
-// unconditionally overwritten with 0 below (see
-// folioArray[...]['BalanceAmount'] = 0 further down), so it never reached
-// any output. Removed as dead work - output is unchanged.
+$CurrentTotal='0';
+	
+	
+	//==Balance================================================
+	
+				$sqlOrderDetail = mysqli_query($connNew,"Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."' ");
+		if(mysqli_num_rows($sqlOrderDetail) >0 ){
+			
+				while($rowOrderDetail= mysqli_fetch_object($sqlOrderDetail)){
 					
-					$roomNo	  = selectColumnCached(TBL_ROOMNO,'room_no'," WHERE `id` = '".$rowRoomNumbers->room_id."'");
-					$RoomName	=	selectColumnCached(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowRoomNumbers->id_mst_room_types."'");
+					$CurrentTotal	+=$rowOrderDetail->tariff_price_per_day_per_room+$rowOrderDetail->tax_per_day_per_room;
 					
-					$plan_name = selectColumnCached("fo_rate_plan",'name'," WHERE `id` = '".$rowRoomNumbers->id_fo_rate_plan."'");
-					$id_fo_folio_to	= selectColumnCached(FO_BILL,'id_fo_folio_to'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
-					$folio_mdoc_no	= selectColumnCached('fo_folio','mdoc_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_folio_to."'");
+				}
+				
+			 ;	
+		}
+		$sqlOrderDetail = mysqli_query($connNew,"Select  * from `pos_purch` where id_fo_folio_to='".addslashes($id_folio)."' and cancelled!=1 ");
+		if(mysqli_num_rows($sqlOrderDetail) >0 ){
+			
+				while($rowOrderDetail= mysqli_fetch_object($sqlOrderDetail)){
+					
+					;
+					$CurrentTotal	+=$rowOrderDetail->grant_total_amount;
+				}
+				
+				
+		}
+$sqlOrderDetail = mysqli_query($connNew,"Select  * from `fo_reservations_addons_details` where id_fo_folio_to='".addslashes($id_folio)."' ");
+		if(mysqli_num_rows($sqlOrderDetail) >0 ){
+			
+				while($rowOrderDetail= mysqli_fetch_object($sqlOrderDetail)){
+					
+					$CurrentTotal	+=$rowOrderDetail->total;
+				}
+				
+				
+		}
+		
+
+$receipt_amount	=	round(selectColumn('fo_receipt','sum(amount)','WHERE id_fo_folio="'.$id_folio.'"'),2);
+
+
+
+$BalanceAmount = round($CurrentTotal-$receipt_amount,2);
+//==================================================	
+					
+					
+					$roomNo	  = selectColumn(TBL_ROOMNO,'room_no'," WHERE `id` = '".$rowRoomNumbers->room_id."'");
+					$RoomName	=	selectColumn(TBL_ROOM_TYPE,'name'," WHERE `id` = '".$rowRoomNumbers->id_mst_room_types."'");
+					
+					$plan_name = selectColumn("fo_rate_plan",'name'," WHERE `id` = '".$rowRoomNumbers->id_fo_rate_plan."'");
+					$id_fo_folio_to	= selectColumn(FO_BILL,'id_fo_folio_to'," WHERE `id` = '".$rowRoomNumbers->id_fo_bill."'");
+					$folio_mdoc_no	= selectColumn('fo_folio','mdoc_no'," WHERE `id` = '".$rowRoomNumbers->id_fo_folio_to."'");
 					
 					$RoomNoAndRoomName=$RoomName.' / '.$plan_name;
 					
@@ -720,7 +727,7 @@ $roomClass	='cstmBgReserved';
                 $id_mst_guest = $roomData['id_mst_guest'];
                 $id_resevation = $roomData['id_fo_reservations'];
                 $id_mst_guest_order_by_room = $roomData['id_fo_reservations'];
-                $id_owner_room = selectColumnCached('fo_bill','id_owner_room'," WHERE `id` = '".$roomData['id_fo_bill']."'");
+                $id_owner_room = selectColumn('fo_bill','id_owner_room'," WHERE `id` = '".$roomData['id_fo_bill']."'");
                 $id_folio = $roomData['id_fo_view_folio'];
                 
                 // Determine HK Status
