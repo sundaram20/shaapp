@@ -10,7 +10,7 @@ $numRowsNightAudit =  mysqli_num_rows($sqlNightAudit);
 $rowNightAudit =  mysqli_fetch_object($sqlNightAudit);
 $today = date('Y-m-d',strtotime('+1 day',strtotime($rowNightAudit->dated)));
 
- $sqlRes="SELECT count(fo_reservations_details.room_quantity) as qty ,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
+ /*$sqlRes="SELECT count(fo_reservations_details.room_quantity) as qty ,fo_reservations_details.dated,fo_reservations_details.id_mst_room_types,fo_reservations_details.id_mst_hotels 
 FROM `fo_reservations_details` left join fo_reservations on fo_reservations_details.id_fo_reservations =fo_reservations.id
 where fo_reservations.booking_status!='4' 
 GROUP by fo_reservations_details.dated ,fo_reservations_details.id_mst_room_types ORDER BY `fo_reservations_details`.`dated` DESC";
@@ -51,7 +51,48 @@ $resRes = mysqli_query($connNew,$sqlRes);
 						
 						
 						
-						}?>
+						}*/
+						
+						
+			$sqlUpdate = "
+    UPDATE " . FO_INVENTORY . " fi
+    INNER JOIN (
+        SELECT
+            frd.dated,
+            frd.id_mst_room_types,
+            frd.id_mst_hotels,
+            SUM(frd.room_quantity) AS qty,
+            ahr.inventory
+        FROM fo_reservations_details frd
+        INNER JOIN fo_reservations fr
+            ON frd.id_fo_reservations = fr.id
+        LEFT JOIN " . TBL_ASSIGN_HOTEL_ROOM . " ahr
+            ON ahr.id_mst_hotels = frd.id_mst_hotels
+            AND ahr.id_mst_room_types = frd.id_mst_room_types
+            AND ahr.status = '1'
+        LEFT JOIN " . TBL_ROOM_TYPE . " rt
+            ON rt.id = ahr.id_mst_room_types
+            AND rt.status = '1'
+        WHERE fr.booking_status != '4'
+        GROUP BY
+            frd.dated,
+            frd.id_mst_room_types,
+            frd.id_mst_hotels,
+            ahr.inventory
+    ) r
+        ON fi.id_mst_room_types = r.id_mst_room_types
+        AND fi.allocation_date = r.dated
+        AND fi.id_mst_hotels = r.id_mst_hotels
+    SET
+        fi.crs_available = r.inventory - r.qty,
+        fi.confirmed = r.qty
+";
+
+if (!mysqli_query($connNew, $sqlUpdate)) {
+    echo "Inventory update error: " . mysqli_error($connNew);
+}			
+						
+						?>
 	<!-- Audit Trail Modal -->
 
 	<!-- End Audit trail Modal -->
