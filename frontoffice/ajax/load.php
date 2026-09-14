@@ -508,7 +508,7 @@ DATE(allocation_date) between '".date('Y-m-d',strtotime($startDate))."' and '".d
 
 $sqlnewt = "
 SELECT 
-    SUM(confirmed) as total_confirmed,
+    SUM(crs_available) as total_confirmed,
     SUM(blocked_hotel) as total_blocked,
 	SUM(tentative) as total_tentative, 
     allocation_date
@@ -534,9 +534,9 @@ $resnewt = mysqli_query($connNew,$sqlnewt);
 $blocked   = (int)$rownetw->total_blocked;
 		$tentative = (int)$rownetw->total_tentative;
 
-$tot = $totalInventory - $confirmed - $blocked - $tentative;
+//$tot = $totalInventory - $confirmed - $blocked - $tentative;
 	  
-	 
+	 $tot =  $confirmed - $blocked - $tentative;
 	  
 	  if($tot > 0){
 		  $data[] = array(
