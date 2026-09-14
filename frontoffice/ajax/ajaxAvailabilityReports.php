@@ -26,11 +26,11 @@ function GetTotalRoomAllotedTwo1($dated,$hotelId,$roomId,$connNew)
 		}
 			
 				
-		$sql = mysqli_query($connNew,"Select sum(crs_available) as roomAlloted from `fo_inventory`  where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types` IN ($str) and status=1");
+		$sql = mysqli_query($connNew,"Select COALESCE(SUM(crs_available), 0) - COALESCE(SUM(blocked_hotel), 0) AS roomAlloted from `fo_inventory`  where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types` IN ($str) and status=1");
 				
 			 
 		 }else{
-			 		$sql = mysqli_query($connNew,"Select sum(crs_available) as roomAlloted from `fo_inventory` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and status=1 and  `id_mst_room_types`='".addslashes($roomId)."'");
+			 		$sql = mysqli_query($connNew,"Select COALESCE(SUM(crs_available), 0) - COALESCE(SUM(blocked_hotel), 0) AS roomAlloted from `fo_inventory` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and status=1 and  `id_mst_room_types`='".addslashes($roomId)."'");
 		 }
 		
 		
@@ -55,15 +55,15 @@ function GetTotalRoomAlloted2($dated,$hotelId,$roomId,$connNew)
 
 			
 			if($roomId!=''){
-			 		$sql = mysqli_query($connNew,"Select sum(crs_available) as roomAlloted from `".TBL_INVENTORY."` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types`='".addslashes($roomId)."'");
+			 		$sql = mysqli_query($connNew,"Select COALESCE(SUM(crs_available), 0) - COALESCE(SUM(blocked_hotel), 0) AS roomAlloted from `".TBL_INVENTORY."` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types`='".addslashes($roomId)."'");
 			}else{
 				
-					$sql = mysqli_query($connNew,"Select sum(crs_available) as roomAlloted from `".TBL_INVENTORY."`  where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types` IN ($str) ");
+					$sql = mysqli_query($connNew,"Select COALESCE(SUM(crs_available), 0) - COALESCE(SUM(blocked_hotel), 0) AS roomAlloted from `".TBL_INVENTORY."`  where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types` IN ($str) ");
 				}
 			 
 			 
-		 }else{//echo '11'."Select sum(crs_available) as roomAlloted from `fo_inventory` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types`='".addslashes($roomId)."'";
-			 		$sql = mysqli_query($connNew,"Select sum(crs_available) as roomAlloted from `fo_inventory` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types`='".addslashes($roomId)."'");
+		 }else{//echo '11'."Select COALESCE(SUM(crs_available), 0) - COALESCE(SUM(blocked_hotel), 0) AS roomAlloted from `fo_inventory` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types`='".addslashes($roomId)."'";
+			 		$sql = mysqli_query($connNew,"Select COALESCE(SUM(crs_available), 0) - COALESCE(SUM(blocked_hotel), 0) AS roomAlloted from `fo_inventory` where `id_mst_hotels`='".addslashes($hotelId)."' and allocation_date = '".date('Y-m-d',strtotime($dated))."' and  `id_mst_room_types`='".addslashes($roomId)."'");
 		 }
 		
 		
@@ -129,7 +129,7 @@ while (strtotime($checkinDate) < strtotime($checkoutDate_upadate)) {
 			  
 			  $totalRoom 							= GetAssignTotalRoom($id_mst_hotels,$rowRoom_update->id_mst_room_types);
 			 
-		/*$ResDetailSql33	=	mysqli_query($connNew,"Select  fo_reservations.booking_no,`fo_reservations`.booking_status,`fo_reservations_details`.dated ,fo_reservations_details.no_showoff,
+		$ResDetailSql33	=	mysqli_query($connNew,"Select  fo_reservations.booking_no,`fo_reservations`.booking_status,`fo_reservations_details`.dated ,fo_reservations_details.no_showoff,
 			sum( CASE WHEN `fo_reservations`.booking_status = '4'   THEN ROUND(1,0) ELSE 0 END)  AS ca , 
 			sum(CASE WHEN `fo_reservations`.booking_status = '1'   THEN ROUND(1,0) ELSE 0 END ) AS Confirmed,
     		 sum(CASE WHEN `fo_reservations`.booking_status = '2'   THEN ROUND(1,0) ELSE 0 END)  AS Tentative,   
@@ -143,116 +143,78 @@ while (strtotime($checkinDate) < strtotime($checkoutDate_upadate)) {
 			 `fo_reservations`.`id_mst_hotels`='".addslashes($id_mst_hotels)."'  
 			 and `fo_reservations_details`.`id_mst_room_types`='".addslashes($rowRoom_update->id_mst_room_types)."'
 			  and fo_reservations_details.no_showoff='0' 
-			  and  `fo_reservations_details`.dated = '".date('Y-m-d',strtotime($startDate))."'");*/
+			  and  `fo_reservations_details`.dated = '".date('Y-m-d',strtotime($startDate))."'");
 
-			
-			  $ResDetailSql = mysqli_query($connNew,"SELECT
+			$ResDetailSql = mysqli_query($connNew,"SELECT
     fo_reservations.booking_no,
     fo_reservations.booking_status,
     fo_reservations_details.dated,
+    fo_reservations_details.checkout_date,
+    fo_bill.checkout_date AS bill_checkout_date,
     fo_reservations_details.no_showoff,
 
     SUM(CASE
-        WHEN fo_reservations.booking_status = '4'
-        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        WHEN fo_reservations.booking_status='4'
         THEN 1 ELSE 0
     END) AS ca,
 
     SUM(CASE
-        WHEN fo_reservations.booking_status = '1'
-        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        WHEN fo_reservations.booking_status='1'
         THEN 1 ELSE 0
     END) AS Confirmed,
 
     SUM(CASE
-        WHEN fo_reservations.booking_status = '2'
-        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        WHEN fo_reservations.booking_status='2'
         THEN 1 ELSE 0
     END) AS Tentative,
 
     SUM(CASE
-        WHEN fo_reservations.booking_status = '3'
-        AND fo_reservations_details.checkout_status != '1' and fo_reservations_details.room_availability != 'checkout' 
+        WHEN fo_reservations.booking_status='3'
         THEN 1 ELSE 0
     END) AS Waitlisted,
 
     SUM(CASE
-        WHEN fo_reservations_details.checkout_status = '1'
+        WHEN fo_bill.status='2'
+        AND DATE(fo_bill.checkout_date)=DATE(fo_reservations_details.dated)
         THEN 1 ELSE 0
-    END) AS Checkout,
+    END) AS SameDayCheckout,
 
     fo_reservations_details.id_mst_room_types
 
 FROM fo_reservations
 
 LEFT JOIN fo_reservations_details
-    ON fo_reservations.id = fo_reservations_details.id_fo_reservations
+    ON fo_reservations.id=fo_reservations_details.id_fo_reservations
+
+LEFT JOIN fo_bill
+    ON fo_reservations_details.id_fo_bill=fo_bill.id
 
 WHERE
-    fo_reservations.id_mst_hotels = '".addslashes($id_mst_hotels)."'
-    AND fo_reservations_details.id_mst_room_types = '".addslashes($rowRoom_update->id_mst_room_types)."'
-    AND fo_reservations_details.no_showoff = '0'
-    AND fo_reservations_details.dated = '".date('Y-m-d',strtotime($startDate))."'");
-
+    fo_reservations.id_mst_hotels='".addslashes($id_mst_hotels)."'
+    AND fo_reservations_details.id_mst_room_types='".addslashes($rowRoom_update->id_mst_room_types)."'
+    AND fo_reservations_details.no_showoff='0'
+    AND fo_reservations_details.dated='".date('Y-m-d',strtotime($startDate))."'
+");
+			  
 	
-/*echo "<br><br><br><br>==SELECT
-    fo_reservations.booking_no,
-    fo_reservations.booking_status,
-    fo_reservations_details.dated,
-    fo_reservations_details.no_showoff,
 
-    SUM(CASE
-        WHEN fo_reservations.booking_status = '4'
-        AND fo_reservations_details.checkout_status != '1'
-        THEN 1 ELSE 0
-    END) AS ca,
-
-    SUM(CASE
-        WHEN fo_reservations.booking_status = '1'
-        AND fo_reservations_details.checkout_status != '1'
-        THEN 1 ELSE 0
-    END) AS Confirmed,
-
-    SUM(CASE
-        WHEN fo_reservations.booking_status = '2'
-        AND fo_reservations_details.checkout_status != '1'
-        THEN 1 ELSE 0
-    END) AS Tentative,
-
-    SUM(CASE
-        WHEN fo_reservations.booking_status = '3'
-        AND fo_reservations_details.checkout_status != '1'
-        THEN 1 ELSE 0
-    END) AS Waitlisted,
-
-    SUM(CASE
-        WHEN fo_reservations_details.checkout_status = '1'
-        THEN 1 ELSE 0
-    END) AS Checkout,
-
-    fo_reservations_details.id_mst_room_types
-
-FROM fo_reservations
-
-LEFT JOIN fo_reservations_details
-    ON fo_reservations.id = fo_reservations_details.id_fo_reservations
-
-WHERE
-    fo_reservations.id_mst_hotels = '".addslashes($id_mst_hotels)."'
-    AND fo_reservations_details.id_mst_room_types = '".addslashes($rowRoom_update->id_mst_room_types)."'
-    AND fo_reservations_details.no_showoff = '0'
-    AND fo_reservations_details.dated = '".date('Y-m-d',strtotime($startDate))."'";*/
 	
 			  $GetTotalRoomAllotedConfirmed = mysqli_fetch_array($ResDetailSql);
-			  
+
+			  $sameDayCheckout =
+    (int)$GetTotalRoomAllotedConfirmed['SameDayCheckout'];
+
+
+
+			 // print_r($GetTotalRoomAllotedConfirmed);
 			  $orderTableAvailableRooms =$GetTotalRoomAllotedConfirmed['Confirmed']+$GetTotalRoomAllotedConfirmed['Tentative']+$GetTotalRoomAllotedConfirmed['Waitlisted'];
 			
 			
-			$crs_available			=	$totalRoom-($orderTableAvailableRooms+$GetTotalRoomoffline_block_hotel);
-			$availableData1 = "UPDATE  `fo_inventory`  SET 
+			$crs_available			=	$totalRoom-($orderTableAvailableRooms+$GetTotalRoomoffline_block_hotel)+$sameDayCheckout;
+			 $availableData1 = "UPDATE  `fo_inventory`  SET 
 								crs_available = '".addslashes($crs_available)."',
 								".$liveCond."								
-								blocked_hotel = '".addslashes(isset($orderTableAvailableRooms)?$orderTableAvailableRooms:0)."',
+								
 								confirmed = '".addslashes(isset($GetTotalRoomAllotedConfirmed['Confirmed'])?$GetTotalRoomAllotedConfirmed['Confirmed']:0)."' ,
 								tentative = '".addslashes(isset($GetTotalRoomAllotedConfirmed['Tentative'])?$GetTotalRoomAllotedConfirmed['Tentative']:0)."',
 								waitlisted = '".addslashes(isset($GetTotalRoomAllotedConfirmed['Waitlisted'])?$GetTotalRoomAllotedConfirmed['Waitlisted']:0)."' 								
