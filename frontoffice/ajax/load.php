@@ -508,7 +508,8 @@ DATE(allocation_date) between '".date('Y-m-d',strtotime($startDate))."' and '".d
 
 $sqlnewt = "
 SELECT 
-    SUM(crs_available) as total_confirmed,
+    SUM(crs_available) as crs_available,
+	SUM(confirmed) as total_confirmed,
     SUM(blocked_hotel) as total_blocked,
 	SUM(tentative) as total_tentative, 
     allocation_date
@@ -536,8 +537,11 @@ $blocked   = (int)$rownetw->total_blocked;
 
 //$tot = $totalInventory - $confirmed - $blocked - $tentative;
 	  
-	 $tot =  $confirmed - $blocked - $tentative;
-	  
+	// $tot =  $confirmed  - $blocked - $tentative;
+	  //$tot = $totalInventory- $blocked-$confirmed-$tentative; //- $confirmed + $blocked;// + $tentative;
+
+
+	  $tot = (int)$rownetw->crs_available - $blocked;
 	  if($tot > 0){
 		  $data[] = array(
 		  'resourceId'   => 0,
