@@ -129,7 +129,7 @@ $DateOrderByRoom	= implode(',',$DateOrderByRoom);
 				$DateArray = array();
 				while(strtotime($DatedNightAudit) != strtotime($reservation_checkout)) {
 					$check_status = selectColumn(FO_RESERVATIONS_DETAILS,'checkin_status','WHERE id_fo_reservations = "'.$id_reservation.'" and checkin_status = "0" and dated = "'.date("Y-m-d",strtotime($DatedNightAudit)).'" and `order_by_room` IN ('.$DateOrderByRoom.')');
-					if ($check_status == '0') {echo 'Step122';
+					if ($check_status == '0') {
 						$DateArray[] = date("Y-m-d",strtotime($DatedNightAudit));
 					}
 					$DatedNightAudit = date('Y-m-d',strtotime('+1 day',strtotime($DatedNightAudit)));	
