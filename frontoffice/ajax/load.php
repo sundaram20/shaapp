@@ -277,59 +277,74 @@ GROUP by fo_reservations_details.dated  ORDER BY `fo_reservations_details`.`date
 						$resRoom = mysqli_query($connNew,$sqlRoom);
 						$rowRoom = mysqli_fetch_object($resRoom);
 						//if($rowRes->booking_status=='2'){
-			$ResDetailSql = mysqli_query($connNew,"SELECT
-    fo_reservations.booking_no,
-    fo_reservations.booking_status,
+
+						$ResDetailSql = mysqli_query($connNew,"SELECT
     fo_reservations_details.dated,
-    fo_reservations_details.checkout_date,
-    fo_bill.checkout_date AS bill_checkout_date,
-    fo_reservations_details.no_showoff,
+    fo_reservations_details.id_mst_room_types,
 
-    SUM(CASE
-        WHEN fo_reservations.booking_status='4'
-        THEN 1 ELSE 0
-    END) AS ca,
+    SUM(
+        CASE
+            WHEN fo_reservations.booking_status = '4'
+            AND fo_reservations_details.checkout_status != '1'
+            THEN 1
+            ELSE 0
+        END
+    ) AS ca,
 
-    SUM(CASE
-        WHEN fo_reservations.booking_status='1'
-        THEN 1 ELSE 0
-    END) AS Confirmed,
+    SUM(
+        CASE
+            WHEN fo_reservations.booking_status = '1'
+            AND fo_reservations_details.checkout_status != '1'
+            THEN 1
+            ELSE 0
+        END
+    ) AS Confirmed,
 
-    SUM(CASE
-        WHEN fo_reservations.booking_status='2'
-        THEN 1 ELSE 0
-    END) AS Tentative,
+    SUM(
+        CASE
+            WHEN fo_reservations.booking_status = '2'
+            AND fo_reservations_details.checkout_status != '1'
+            THEN 1
+            ELSE 0
+        END
+    ) AS Tentative,
 
-    SUM(CASE
-        WHEN fo_reservations.booking_status='3'
-        THEN 1 ELSE 0
-    END) AS Waitlisted,
+    SUM(
+        CASE
+            WHEN fo_reservations.booking_status = '3'
+            AND fo_reservations_details.checkout_status != '1'
+            THEN 1
+            ELSE 0
+        END
+    ) AS Waitlisted,
 
-    SUM(CASE
-        WHEN fo_bill.status='2'
-        AND DATE(fo_bill.checkout_date)=DATE(fo_reservations_details.dated)
-        THEN 1 ELSE 0
-    END) AS SameDayCheckout,
-
-    fo_reservations_details.id_mst_room_types
+    SUM(
+        CASE
+            WHEN fo_reservations_details.checkout_status = '1'
+            THEN 1
+            ELSE 0
+        END
+    ) AS SameDayCheckout
 
 FROM fo_reservations
 
 LEFT JOIN fo_reservations_details
-    ON fo_reservations.id=fo_reservations_details.id_fo_reservations
+    ON fo_reservations.id = fo_reservations_details.id_fo_reservations
 
-LEFT JOIN fo_bill
-    ON fo_reservations_details.id_fo_bill=fo_bill.id
-
-WHERE
-    fo_reservations.id_mst_hotels='".addslashes($rowRes->id_mst_hotels)."'
+WHERE 
+	fo_reservations.id_mst_hotels='".addslashes($rowRes->id_mst_hotels)."'
     AND fo_reservations_details.id_mst_room_types='".addslashes($rowRes->id_mst_room_types)."'
     AND fo_reservations_details.no_showoff='0'
     AND fo_reservations_details.dated='".date('Y-m-d',strtotime($startDateCheckAvailability))."'
-");
-	
 
-	
+GROUP BY
+    fo_reservations_details.dated,
+    fo_reservations_details.id_mst_room_types");
+
+
+
+		
+
 			  $GetTotalRoomAllotedConfirmed = mysqli_fetch_array($ResDetailSql);
 
 			  $sameDayCheckout =
@@ -532,7 +547,7 @@ $resnewt = mysqli_query($connNew,$sqlnewt);
 	 //$tot = $rownetw->total-$blocked_hotel;
 		
 		$confirmed = (int)$rownetw->total_confirmed;
-$blocked   = (int)$rownetw->total_blocked;
+		$blocked   = (int)$rownetw->total_blocked;
 		$tentative = (int)$rownetw->total_tentative;
 
 //$tot = $totalInventory - $confirmed - $blocked - $tentative;
