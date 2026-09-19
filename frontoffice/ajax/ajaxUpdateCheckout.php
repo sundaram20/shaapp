@@ -128,8 +128,8 @@ $DateOrderByRoom	= implode(',',$DateOrderByRoom);
 
 				$DateArray = array();
 				while(strtotime($DatedNightAudit) != strtotime($reservation_checkout)) {
-					$check_status = selectColumn(FO_RESERVATIONS_DETAILS,'checkin_status','WHERE id_fo_reservations = "'.$id_reservation.'" and checkin_status = "0" and dated = "'.date("Y-m-d",strtotime($DatedNightAudit)).'" and `order_by_room` IN (".$DateOrderByRoom.")');
-					if ($check_status == '0') {
+					$check_status = selectColumn(FO_RESERVATIONS_DETAILS,'checkin_status','WHERE id_fo_reservations = "'.$id_reservation.'" and checkin_status = "0" and dated = "'.date("Y-m-d",strtotime($DatedNightAudit)).'" and `order_by_room` IN ('.$DateOrderByRoom.')');
+					if ($check_status == '0') {echo 'Step122';
 						$DateArray[] = date("Y-m-d",strtotime($DatedNightAudit));
 					}
 					$DatedNightAudit = date('Y-m-d',strtotime('+1 day',strtotime($DatedNightAudit)));	
@@ -168,6 +168,7 @@ $DateOrderByRoom	= implode(',',$DateOrderByRoom);
 
 				$sql = "UPDATE ".FO_BILL." SET status = '2' , `checkout_date`='".date($DatedNightAudit2.' H:i:s')."' WHERE id_reservations='".$id_reservation."' and `id` IN (".$folio_bill_ids.")";
 				if (mysqli_query($connNew,$sql)) {
+				
 	 				$insertGrid =  "UPDATE `".FO_RESERVATIONS_DETAILS."` SET `no_showoff`= '1' where `id_fo_reservations` = '".$id_reservation."' and  DATE(dated) IN (".stripslashes($DateArray).") and `order_by_room` IN (".$DateOrderByRoom.")";
 					$insertOrder = mysqli_query($connNew,$insertGrid);
 
