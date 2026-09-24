@@ -9298,7 +9298,20 @@ function ValidateRoomSelected(roomNumber, roomId, checkboxValue) {
         var Aadhar =
           '<div class="form-group col-md-6"><label for="adhar_no">Aadhar Number <font color="#FF0000">*</font></label><div class="input-group"><div class="input-group-addon"><i class="fa fa fa-address-book"></i></div><input type="text" class="form-control" id="adhar_no" name="adhar_no" placeholder="Enter Adhar Number" data-parsley-errors-container="#adhar_noError" data-parsley-required /></div><span id="adhar_noError"><?php echo $err_adhar_noError;?></span></div>';
         $("#appenddata").html(Aadhar);
-      } else {
+      } else if (idProof == 4) {
+      var Licence =
+        '<div class="form-group col-md-6">' +
+          '<label for="licence_no">Driving Licence Number <font color="#FF0000">*</font></label>' +
+          '<div class="input-group">' +
+            '<div class="input-group-addon"><i class="fa fa fa-address-book"></i></div>' +
+            '<input type="text" class="form-control" id="licence_no" name="licence_no" ' +
+              'placeholder="Enter Driving Licence Number" ' +
+              'data-parsley-errors-container="#licence_noError" data-parsley-required />' +
+          '</div>' +
+          '<span id="licence_noError"></span>' +
+        '</div>';
+      $("#appenddata").html(Licence);
+    } else {
         $("#appenddata").html('<div></div>');
       }
     });
