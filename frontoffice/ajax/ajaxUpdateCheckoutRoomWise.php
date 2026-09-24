@@ -10,14 +10,13 @@ $dataArray=array();
  $sqlVa= "SELECT * FROM ".FO_BILL." where id='".$id_fo_bill."' and id_reservations='".$id_reservation."' and 
 			`doc_no`='0' and id_doc_type_configuration='0'";
 $Vali=	mysqli_query($connNew,$sqlVa);		
-if(mysqli_num_rows($Vali)>0){ 
-	$dataArray['status']='0';
-	$dataArray['message']=' Please Generate FO Bill.';
-	//$dataArray['value']=$id_reservation.'_'.$id_fo_bill.'_'.$_REQUEST['id_room'];
-	 echo json_encode($dataArray);
-	 die;
+//if(mysqli_num_rows($Vali)>0){ 
+	// $dataArray['status']='0';
+	// $dataArray['message']=' Please Generate FO Bill.';
+	//  echo json_encode($dataArray);
+	//  die;
 	
-}else{
+//}else{
 		$sqlCheckoutStatus = mysqli_query($connNew,"Select * From  ".FO_BILL."    WHERE id='".$id_fo_bill."' AND status='2' and id_reservations='".$id_reservation."'  ");
 		if(mysqli_num_rows($sqlCheckoutStatus) >0 ){
 			 //checkout Already Processed;
@@ -182,7 +181,7 @@ mysqli_query($connNew,$sqlCh);
 		
 		
 		}
-}
+//}
  ?>
 
 
