@@ -307,10 +307,15 @@ $receipt_result = mysqli_fetch_object($recepit_query);
                                 $SQL = "select * from mst_hotels where status='1' and `id_shop` = '".addslashes($_SESSION['shop'])."'";
                                 $query = mysqli_query($connNew, $SQL);
                                 while ($resultCat = mysqli_fetch_assoc($query)) {
-                                    if ($id_mst_hotels == $resultCat['id']) {
-                                        $selected = 'selected="selected"';
-                                    } else {
-                                        $selected = '';
+                                  
+                                if($id_mst_hotels== $resultCat['id']){
+
+                                    $selected = 'selected="selected"';
+
+                                    }else{
+
+                                    $selected = '';
+
                                     }
                                     $categoryDropDown .= '<option value="'.$resultCat['id'].'"  '.$selected.' >'.$resultCat['name'].'</option>';
                                 }
@@ -614,6 +619,9 @@ $(function() {
                                         <option value="2">2</option>
                                         <option value="1">1</option>
                                         <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
                                     </select>
                                 </td>
                                 <td id="folio_checkout">

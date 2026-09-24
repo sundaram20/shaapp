@@ -1423,20 +1423,28 @@ height : 0px!important;
                     <option value="1" selected="selected">Voter Id</option>
                     <option value="2">Adhar</option>
                     <option value="3">Passport</option>
-                    <option value="4">Form C</option>
+                    <option value="4">Driving Licence</option>
                     <?php }else if($row->proof_type == 2){?>
                     <option value="2" selected="selected">Adhar</option>
                     <option value="1">Voter Id</option>
                     <option value="3">Passport</option>
+                    <option value="4">Driving Licence</option>
                     <?php }else if($row->proof_type == 3){?>
                     <option value="1">Voter Id</option>
                     <option value="2">Adhar</option>
                     <option value="3" selected="selected">Passport</option>
+                    <option value="4">Driving Licence</option>
+                    <?php }else if($row->proof_type == 4){?>
+                    <option value="1">Voter Id</option>
+                    <option value="2">Adhar</option>
+                    <option value="3">Passport</option>
+                    <option value="4" selected="selected">Driving Licence</option>
                     <?php }else{ ?>
                     <option selected="selected" value="">Select Id Proof</option>
                     <option value="1">Voter Id</option>
                     <option value="2">Adhar</option>
                     <option value="3">Passport</option>
+                    <option value="4">Driving Licence</option>
                     <?php } ?>
 
                   </select>
@@ -1540,6 +1548,20 @@ height : 0px!important;
                       data-parsley-errors-container="#cform_expiry_dateError" data-parsley-required />
                   </div>
                   <span id="cform_expiry_dateError"><?php echo $err_cform_expiry_dateError;?></span>
+                </div>
+                <?php }else if($row->proof_type == 4){ ?>
+                <div class="form-group col-md-6">
+                  <label for="licence_no">Driving Licence Number <font color="#FF0000">*</font></label>
+                  <div class="input-group">
+                    <div class="input-group-addon">
+                      <i class="fa fa fa-address-book"></i>
+                    </div>
+                    <input type="text" class="form-control" id="licence_no" name="licence_no"
+                      placeholder="Enter Driving Licence Number"
+                      value="<?php if($_POST['licence_no']) echo $_POST['licence_no']; else echo $row->licence_no;?>"
+                      data-parsley-errors-container="#licence_noError" data-parsley-required />
+                  </div>
+                  <span id="licence_noError"><?php echo $err_licence_noError;?></span>
                 </div>
                 <?php } ?>
               </div>
