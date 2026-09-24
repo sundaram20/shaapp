@@ -18,7 +18,11 @@ if (mysqli_num_rows($Vali) > 0) {
 		$id_folio = selectColumn(FO_BILL,'id_fo_folio_to'," WHERE `id` = '".$id_fo_bill."'");
 		//echo "Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."'";
 		$DateOrderByRoom = array();
-		$sqlOrderDetailFolio = mysqli_query($connNew,"Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."' group by order_by_room order by id_fo_folio_to");
+		$sqlOrderDetailFolio = mysqli_query($connNew,"SELECT frd.* FROM fo_reservations_details frd INNER JOIN ( SELECT order_by_room, MAX(id) AS id FROM fo_reservations_details WHERE id_fo_folio_to = '".$id_folio."' AND checkin_status = '1' AND checkout_status = '0' GROUP BY order_by_room ) x ON x.id = frd.id ORDER BY frd.order_by_room");
+
+		//$sqlOrderDetailFolio = mysqli_query($connNew,"Select  `".FO_RESERVATIONS_DETAILS."`.* from `".FO_RESERVATIONS_DETAILS."` where `id_fo_folio_to` = '".$id_folio."' group by order_by_room order by id_fo_folio_to");
+		
+		
 		if (mysqli_num_rows($sqlOrderDetailFolio) > 0) {
 			while($sqlOrderDetailFolioRow = mysqli_fetch_object($sqlOrderDetailFolio)) {
 				$DateOrderByRoom[]= $sqlOrderDetailFolioRow->order_by_room;
