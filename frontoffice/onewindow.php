@@ -850,8 +850,13 @@ height : 0px!important;
         </div><?php */?>
         <div class="form-group col-sm-6">
           <label for="checkin" style="float:left;">New Check Out</label>
-          <input type="text" class="form-control " <?php echo $readonly; ?> placeholder="Enter checkout Date"
-            id="checkoutExtend_date" name="checkoutExtend_date" value="<?php echo $checkout;?>">
+           <input type="text"
+           class="form-control"
+           readonly
+           placeholder="Enter checkout Date"
+           id="checkoutExtend_date"
+           name="checkoutExtend_date"
+           value="">
         </div>
 
         <div class="form-group col-sm-6">&nbsp;
@@ -7523,13 +7528,52 @@ function updateCheckoutAfterFolio(id_mst_hotels, id_fo_bill, id_reservation, doc
 
   }
 
+function updateExtendDate(checkin, checkout, ext_id, room_no, order_by_room) {
 
-  function updateExtendDate(checkin, checkout, ext_id, room_no, order_by_room) {
+    console.log("room_no " + room_no);
+    console.log("checkout " + checkout);
+
+    $("#ext_id").val(ext_id);
+    $("#checkinExtend_date").val(checkin);
+    $('#amend_room_no').val(room_no);
+    $('#amend_order_by_room').val(order_by_room);
+
+    // Convert checkin dd-mm-yyyy
+    var checkinArray = checkin.split('-');
+
+    var checkinDate = new Date(
+        parseInt(checkinArray[2], 10),
+        parseInt(checkinArray[1], 10) - 1,
+        parseInt(checkinArray[0], 10)
+    );
+
+    // Check-in + 1 day
+    var minDate = new Date(checkinDate);
+    minDate.setDate(minDate.getDate() + 1);
+
+    // Check-in + 30 days
+    var maxDate = new Date(checkinDate);
+    maxDate.setDate(maxDate.getDate() + 30);
+
+    $('#checkoutExtend_date').datepicker('destroy');
+
+    $("#checkoutExtend_date").datepicker({
+        dateFormat: 'dd-mm-yy',
+        minDate: minDate,
+        maxDate: maxDate
+    });
+
+    // Select existing checkout date
+    $("#checkoutExtend_date").val(checkout);
+}
+  /*function updateExtendDate(checkin, checkout, ext_id, room_no, order_by_room) {
     console.log("room_no "+room_no);
     $("#ext_id").val(ext_id);
     $("#checkinExtend_date").val(checkin);
     $('#amend_room_no').val(room_no);
     $('#amend_order_by_room').val(order_by_room);
+  var room_statistics_date = $("#room_statistics_date").val();
+    
     //checkout=checkout'+10d';
     var checkinarray = checkin.split('-');
     var checkoutarray = checkout.split('-');
@@ -7549,7 +7593,7 @@ function updateCheckoutAfterFolio(id_mst_hotels, id_fo_bill, id_reservation, doc
     });
 
 
-  }
+  }*/
 
   function fillLeft(from, checkout, till, id) {
 
