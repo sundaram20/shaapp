@@ -233,6 +233,20 @@ try {
 
     $reservationData = $_POST['ReservationDataArray'] ?? [];
 
+    $resBookingStatus = (int) ($_POST['res_bookingStatus_new'] ?? 0);
+
+
+
+    /* * Booking status 4 = Cancelled * * Cancelled reservation does not need any * room availability calculation. */
+    
+     if ($resBookingStatus === 4) { 
+
+        echo json_encode([ 'status' => '1', 'message' => 'All rooms are available.' ]); 
+        
+        exit; 
+    
+        }
+
     if (!$id_hotel) {
         echo json_encode([
             'status' => '0',
