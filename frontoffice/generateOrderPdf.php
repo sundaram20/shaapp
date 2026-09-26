@@ -204,7 +204,7 @@ $content .= '<table class="table" border="0" style="margin-bottom:0;margin-top:1
 				$id_mst_guest=$rowOrder->id_mst_guest;
 
 		// $id_mst_nationality = selectColumn(TBL_COUNTRY_LANG,'id_mst_nationality'," WHERE `id_country` = '".addslashes($rowGuestDetail->id_country)."'");	 
-			$id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$rowGuestDetail->id_mst_attributes_title."'");				
+			$id_mst_attributes_title	=	selectColumn(TBL_GUEST,'id_mst_attributes_title'," WHERE `id` = '".$id_mst_guest."'");				
 	$Title=selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE id_shop='".$_SESSION['shop']."'  and status = '1' and `table_name` = 'title' AND id= '".$id_mst_attributes_title."'"); 				
 	$Firstname	=	selectColumn(TBL_GUEST,'first_name'," WHERE `id` = '".$id_mst_guest."'");
 	$Lastname	=	selectColumn(TBL_GUEST,'last_name'," WHERE `id` = '".$id_mst_guest."'");
