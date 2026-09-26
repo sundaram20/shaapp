@@ -273,8 +273,10 @@ if ($id_bill_to_company>0) {
            // $gstType = 'Unregistered/Consumer';
         }
 if ($payment_remarks == 'Direct Guest A/c'  && $rowPay->id_company == '0') {
-            $state = 'Rajasthan';
-            $city = 'Rajasthan';
+	$id_mst_state  =  selectColumn(TBL_SHOP,'id_mst_state'," WHERE `id` = '".addslashes($_SESSION['shop'])."'");
+ $state_name = ucwords(strtolower(selectColumn(TBL_STATE, 'name', "WHERE id_state='{$id_mst_state}'")));
+            $state = $state_name;//'Rajasthan';
+            $city = $state_name;//$city = 'Rajasthan';
             $gstType = 'Unregistered/Consumer';
         }
         // RoomTo logic (optional if needed per payment type)
@@ -472,8 +474,12 @@ GROUP BY
             $gstType = ($gst != '') ? 'Regular' : 'Unregistered/Consumer';
         }
 		if ($payment_remarks == 'Direct Guest A/c'  && $rowPay->id_company == '0') {
-            $state = 'Rajasthan';
-            $city = 'Rajasthan';
+           $id_mst_state  =  selectColumn(TBL_SHOP,'id_mst_state'," WHERE `id` = '".addslashes($_SESSION['shop'])."'");
+ $state_name = ucwords(strtolower(selectColumn(TBL_STATE, 'name', "WHERE id_state='{$id_mst_state}'")));
+            $state = $state_name;//'Rajasthan';
+            $city = $state_name;//$city = 'Rajasthan';
+			//  $state = 'Rajasthan';
+           // $city = 'Rajasthan';
             $gstType = 'Unregistered/Consumer';
         }
         if ($payment_remarks == 'Cash Sales' && $gst == '' && $rowPay->id_company == '0') {
