@@ -273,8 +273,10 @@ if ($id_bill_to_company>0) {
            // $gstType = 'Unregistered/Consumer';
         }
 if ($payment_remarks == 'Direct Guest A/c'  && $rowPay->id_company == '0') {
-            $state = 'Rajasthan';
-            $city = 'Rajasthan';
+	$id_mst_state  =  selectColumn(TBL_SHOP,'id_mst_state'," WHERE `id` = '".addslashes($_SESSION['shop'])."'");
+ $state_name = ucwords(strtolower(selectColumn(TBL_STATE, 'name', "WHERE id_state='{$id_mst_state}'")));
+            $state = $state_name;//'Rajasthan';
+            $city = $state_name;//$city = 'Rajasthan';
             $gstType = 'Unregistered/Consumer';
         }
         // RoomTo logic (optional if needed per payment type)
@@ -472,8 +474,12 @@ GROUP BY
             $gstType = ($gst != '') ? 'Regular' : 'Unregistered/Consumer';
         }
 		if ($payment_remarks == 'Direct Guest A/c'  && $rowPay->id_company == '0') {
-            $state = 'Rajasthan';
-            $city = 'Rajasthan';
+           $id_mst_state  =  selectColumn(TBL_SHOP,'id_mst_state'," WHERE `id` = '".addslashes($_SESSION['shop'])."'");
+ $state_name = ucwords(strtolower(selectColumn(TBL_STATE, 'name', "WHERE id_state='{$id_mst_state}'")));
+            $state = $state_name;//'Rajasthan';
+            $city = $state_name;//$city = 'Rajasthan';
+			//  $state = 'Rajasthan';
+           // $city = 'Rajasthan';
             $gstType = 'Unregistered/Consumer';
         }
         if ($payment_remarks == 'Cash Sales' && $gst == '' && $rowPay->id_company == '0') {
@@ -813,13 +819,14 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 				$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$taxMethod_sgst='Charges Sales';	
-				$reservation_id_mst_charges_sales_local=$id_reservations;//'charges_Sales';						
+								
 				//$Account_Name = 'Food Plan Sales';
 	
 	
 				$Account_Name = selectColumn(TBL_CHARGES, $chagesFieldName,'WHERE id="'.$reservation->id_mst_charges.'"  ');
 				$tax_per_day_per_room_sgst	=$reservation->tariff_price_per_day_per_room ?? 0;
 	$charges_Charges_Round_Off+=$amount;
+	$reservation_id_mst_charges_sales_local=$Account_Name;//'charges_Sales';		
 	$SalesRegisterArray['Sales Register'][$id_fo_folio_to][$matchedMdocNo][$reservation_id_mst_charges_sales_local][$taxMethod_sgst]['voucher_type']='Charges';
 	
 	$SalesRegisterArray['Sales Register'][$id_fo_folio_to][$matchedMdocNo][$reservation_id_mst_charges_sales_local][$taxMethod_sgst]['date_created']=$date_created;
@@ -848,7 +855,7 @@ while ($reservation = mysqli_fetch_object($reservation_query)) {
 				//$percentage_sgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				//$percentage_cgst	=round($percentage > 0 ? ($percentage / 2) : 0);
 				$taxMethod_sgst='charges_sgst'.($percentage_sgst);	
-				$reservation_id_mst_charges_sales_local=$id_reservations;//'charges_sgst_1';						
+				//$reservation_id_mst_charges_sales_local=$id_reservations;//'charges_sgst_1';						
 				$Account_Name = 'Output SGST @ '.(floatval($percentage_sgst)).'%';
 				$tax_per_day_per_room_sgst	=($reservation->tax_per_day_per_room ?? 0) / 2;
 				$charges_sgst_Round_Off+=round(($tax) / 2,2)+round(($tax) / 2,2);
