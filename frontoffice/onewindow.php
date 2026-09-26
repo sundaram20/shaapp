@@ -7553,7 +7553,7 @@ function updateExtendDate(checkin, checkout, ext_id, room_no, order_by_room) {
 
     // Check-in + 30 days
     var maxDate = new Date(checkinDate);
-    maxDate.setDate(maxDate.getDate() + 60);
+    maxDate.setDate(maxDate.getDate() + 260);
 
     $('#checkoutExtend_date').datepicker('destroy');
 
