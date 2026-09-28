@@ -2116,7 +2116,7 @@ if(counter11==0){
 
         cols1 += '<td><input type="text"  autocomplete="off" placeholder="Unit" class="form-control" name="main_unit' + counter1 + '" id="main_unit' + counter1 + '" readonly=""/></td>'; 
  		<!---Rate Locks----->
-		cols1 += '<td><input type="text"  autocomplete="off" placeholder="Rate" value="2223<?php echo $ratePerMainUnit; ?>" class="form-control discountvalue" name="alt_rate' + counter1 + '" id="alt_rate' + counter1 + '"/></td>'; 
+		cols1 += '<td><input type="text"  autocomplete="off" placeholder="Rate" value="<?php echo $ratePerMainUnit; ?>" class="form-control discountvalue" name="alt_rate' + counter1 + '" id="alt_rate' + counter1 + '"/></td>'; 
 
         cols1 += '<td><input onkeyup="altqtycalc_rows(this.id)" type="text"  autocomplete="off" placeholder="Alt Qty" class="form-control discountvalue" name="alt_qty' + counter1 + '" id="alt_qty' + counter1 + '"/></td>'; 
 
