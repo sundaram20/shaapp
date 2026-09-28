@@ -202,7 +202,7 @@ $report_show	= $_REQUEST['report_show'];
    <?php
           ?>
       <!--<div class="input-group-addon"> <i class="fa fa-dot-circle-o"></i> </div>-->
-      <select class="form-control select2 parsley-error"  onChange="getReportOrderBy(this.value);" name="id_report_type" data-parsley-required id="id_report_type" style="width:100%">
+      <select class="form-control select2 parsley-error"  " name="id_report_type" data-parsley-required id="id_report_type" style="width:100%">
         <option value="">---Select Report Type---</option>
         <?php
             $sqlSubMenu="SELECT * FROM ".APP_SUB_MENU." WHERE 1=1 and status='1' and type='2'  ".$subMenuCond."   order by display_order";
@@ -234,20 +234,18 @@ $report_show	= $_REQUEST['report_show'];
   </div>
   <!-- /.form-group --> 
 </div>
+
 <div class="col-md-2 col-sm-12">
   <div class="form-group">
-    <label>Order By</label>
-   
-      <!--<div class="input-group-addon"> <i class="fa fa-dot-circle-o"></i> </div>-->
-      <select class="form-control select2" name="id_order_by" data-parsley-required id="id_order_by" style="width:100%">
-        <option  value="">---Select Order By---</option>
-        <option  value="1">Name</option>
-        <option  value="2">Qty</option>
-        <option  value="3">Value</option>
-      </select>
-   <span style="margin-left:45px;color:red;font-size:11px;" id="id_order_by_error"></span>
+    <label>Group By</label>
+    <select class="form-control select2" name="id_order_by" id="id_order_by" style="width:100%">
+      <option value="">All (Item wise)</option>
+      <option value="main">Main Group</option>
+      <option value="sub">Sub Group</option>
+    </select>
   </div>
 </div>
+
      <div class="col-md-1">
         <label>More</label>
         <div class="panel-group form-group"  title="More" style="width:46px;" id="accordion" role="tablist" aria-multiselectable="true">
@@ -603,12 +601,7 @@ function getReportOrderBy(id_order_by){
 		 return false;
 		 }
 		 document.getElementById('id_report_type_error').style.display = "none";
-	if(id_order_by==''){
-		 document.getElementById('id_order_by_error').innerHTML = 'Please Select Order By';
-		 return false;
-		 }	 
-		  
-		   document.getElementById('id_order_by_error').style.display = "none";
+
 	// alert(id_report_type);
 	 $("#showPrintExplode").hide();
      $("#loading").show();
