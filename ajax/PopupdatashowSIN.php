@@ -40,8 +40,11 @@ FROM inv_items, mst_attributes, inv_indent_details, inv_indent WHERE $where ";
 					                    <th  style="width: 10%;">Department</th> 
 					                    <th style="width: 10%;">Stock In Hand</th> 
 					                    <th style="width: 10%;">Qty</th> 	
+										
+					                  
 					                    <th style="width: 10%;">Unit</th>  	
-					                    <th style="width: 10%;">Bal Qty</th>  
+					                    <th style="width: 10%;">Bal Qty</th> 
+										<th style="width: 10%;">Rate</th> 	 
 					                    <th style="width: 10%;">Select</th> 
 					                    <th style="width: 10%; display: none;">Balance Qty</th> 
 					                </tr>
@@ -85,7 +88,25 @@ FROM inv_items, mst_attributes, inv_indent_details, inv_indent WHERE $where ";
 
 								$stock_in_hand = $grn_qty + $openbal_qty + $physicalstock_qty - $sin_qty;
 								
-								
+								$sqlrate_per_main = "
+    SELECT inv_purch_details.rate_per_main_unit
+    FROM inv_purch
+    INNER JOIN inv_purch_details
+        ON inv_purch_details.id_inv_purch = inv_purch.id
+    WHERE inv_purch.id_doc_type_configuration = 34
+      AND inv_purch_details.id_inv_items = '".$row22->item_id."'
+      AND inv_purch_details.rate_per_main_unit > 0
+    ORDER BY inv_purch.id DESC
+    LIMIT 1
+";
+
+$resrate_per_main = mysqli_query($connNew, $sqlrate_per_main);
+
+$wRate = 0;
+
+if ($rowrate_per_main = mysqli_fetch_object($resrate_per_main)) {
+    $wRate = $rowrate_per_main->rate_per_main_unit;
+}
 						if($indent_po_balance_qty>0){		
 								
 								if($type == 0){
@@ -129,6 +150,9 @@ FROM inv_items, mst_attributes, inv_indent_details, inv_indent WHERE $where ";
 			                    		</td>
 			                    		<td>
 			                    			<input type="text" class="form-control" id="wbalance'.$i.'" name="wbalance'.$i.'"  value="'.$indent_po_balance_qty.' "  readonly >
+			                    		</td>
+										<td><!--Rate New-->
+			                    			<input type="text" class="form-control" id="wRate'.$i.'" name="wRate'.$i.'"  value="'.$wRate.' "  readonly >
 			                    		</td>
 			                    		<td> 
 			                    			 <input type="checkbox" name="wcheckbox'.$i.'" id="wcheckbox'.$i.'"  onclick="checkboxs(this.id);">
