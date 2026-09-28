@@ -124,6 +124,30 @@ $returnData.='<tr>';
 				
 $returnData.= '<td class="form-group col-md-2"><select onchange="popupshow(this.id);" name="id_inv_indent'.$i.'" id="id_inv_indent'.$i.'" class="form-control select2" style="width:100%;">';
 
+
+
+
+ $sqlrate_per_main = "
+    SELECT inv_purch_details.rate_per_main_unit
+    FROM inv_purch
+    INNER JOIN inv_purch_details
+        ON inv_purch_details.id_inv_purch = inv_purch.id
+    WHERE inv_purch.id_doc_type_configuration = 34
+      AND inv_purch_details.id_inv_items = '".$row22->item_id."'
+      AND inv_purch_details.rate_per_main_unit > 0
+    ORDER BY inv_purch.id DESC
+    LIMIT 1
+";
+
+$resrate_per_main = mysqli_query($connNew, $sqlrate_per_main);
+
+$ratePerMainUnit = 0;
+
+if ($rowrate_per_main = mysqli_fetch_object($resrate_per_main)) {
+    $ratePerMainUnit = $rowrate_per_main->rate_per_main_unit;
+}
+
+
 $sqlCharge = "SELECT A.doc_no,A.doc_date,B.* FROM ".TBL_INV_INDENT." A LEFT JOIN ".TBL_INV_INDENT_DETAILS." B ON A.id=B.id_inv_indent
 	WHERE A.doc_type=1 AND A.id_shop=".$_SESSION['shop']."  AND B.bal_qty>'0' GROUP BY B.id_inv_indent ";
 
@@ -146,6 +170,9 @@ $returnData.= '<td class="form-group col-xs-12 col-sm-2"><input type="text"  aut
 $returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text"  autocomplete="off" class="form-control discountvalue" onkeyup="qtycalc(this.id)" onclick="qtycalc(this.id)" name="qty'.$i.'" value="'.$qty.'" id="qty'.$i.'"  /><input type="hidden"  autocomplete="off" class="form-control" name="conversion_qty'.$i.'" value="'.$conversion_qty.'" id="conversion_qty'.$i.'"  /></td>';
 
 $returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text"  autocomplete="off" class="form-control" name="main_unit'.$i.'" value="'.$row22->main_unit.'" id="main_unit'.$i.'"  /></td>';
+
+$returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text"  autocomplete="off" class="form-control" name="alt_rate'.$i.'" value="'.$ratePerMainUnit.'" id="alt_rate'.$i.'"  /></td>';
+
 
 $returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text" onkeyup="altqtycalc(this.id)"  autocomplete="off" class="form-control discountvalue" name="alt_qty'.$i.'" value="'.$alt_qty.'" id="alt_qty'.$i.'"  /></td>';
 

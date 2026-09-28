@@ -297,8 +297,9 @@ if($_REQUEST['eId'] != ''){
 				            <thead>
 				                <tr >
 				                    <td  class="pm" style="width:30%;font-family: sans-serif;border-right:.4px solid #000;border-bottom:.4px solid #000;" ><p style="font-size:12px;"><b>Item Code / Item Main Group</b></p></td>
-				                    <td class="pm" style="width:40%;font-family: sans-serif;border-right:.4px solid #000;border-bottom:.4px solid #000;"><p style="font-size:12px;"><b>Item Description</b></p></td> 
-				                    <td class="pm" style="width:30%;font-family: sans-serif;border-bottom:.4px solid #000;" ><p style="font-size:12px;"><b>Qty</b></p></td>  
+				                    <td class="pm" style="width:30%;font-family: sans-serif;border-right:.4px solid #000;border-bottom:.4px solid #000;"><p style="font-size:12px;"><b>Item Description</b></p></td> 
+				                    <td class="pm" style="width:20%;font-family: sans-serif;border-right:.4px solid #000;border-bottom:.4px solid #000;"><p style="font-size:12px;"><b>Qty</b></p></td> 
+									  <td class="pm" style="width:20%;font-family: sans-serif;border-bottom:.4px solid #000;" ><p style="font-size:12px;"><b>Price</b></p></td>  
 				                     
 				                </tr>
 				            </thead>
@@ -334,14 +335,24 @@ if($_REQUEST['eId'] != ''){
 					                
 				                      
 				                    
-				                    <td class="pm" style="border-bottom:.4px solid #000;font-family: sans-serif;"><p style="font-size:12px;">
-				                    	<?php 
+				                   <td class="form-group col-xs-12 col-sm-2 pm"  style="border-bottom:.4px solid #000;border-right:.4px solid #000;font-family: sans-serif;"><p style="font-size:12px;">
+				                       <?php 
 					                 		echo $rowsID->qty.' '.$rowsID->main_unit; 
 					                 		$countqty = $countqty + $rowsID->qty; 
 					                 		$itemCount++;
 					                 	?>
 					                 </p>
 				                    </td>
+
+ <td class="pm" style="border-bottom:.4px solid #000;font-family: sans-serif;"><p style="font-size:12px;">
+				                    	
+										 <?php 
+					                 		echo $rowsID->rate_per_main_unit;
+					                 	?>
+					                 </p>
+				                    </td>
+
+
 				                    
 				                </tr> 
 				            	<?php } ?> 

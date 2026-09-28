@@ -80,7 +80,8 @@ if($_POST['Save']){
 
 							`id_inv_purch` = '".addslashes($lastInsertId)."',
 							`doc_type` = '".'6'."',  
-							`id_inv_items` = '".addslashes($_POST['id_inv_items'])."',  
+							`id_inv_items` = '".addslashes($_POST['id_inv_items'])."', 
+							`rate_per_main_unit` = '".addslashes($_POST['alt_rate'])."',  
 							`alt_qty` = '".addslashes($_POST['alt_qty'])."',  
 							`qty` = '".addslashes($_POST['qty'])."',  
 							`alt_unit` = '".addslashes($_POST['alt_unit'])."', 
@@ -125,6 +126,7 @@ if($_POST['Save']){
 
 									`id_inv_purch` = '".addslashes($lastInsertId)."',
 									`doc_type` = '".'6'."',   
+									`rate_per_main_unit` = '".addslashes($_POST['alt_rate'.''.$i])."',
 									`id_inv_items` = '".addslashes($_POST['id_inv_items'.''.$i])."',  
 									`alt_qty` = '".addslashes($_POST['alt_qty'.''.$i])."',  
 									`qty` = '".addslashes($_POST['qty'.''.$i])."',  
@@ -965,6 +967,7 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 				                    <th>Item Description</th> 
 				                    <th>Qty</th> 
 				                    <th>Unit</th> 
+									<th>Rate</th> 
 				                    <th>Alt.Qty</th> 
 				                    <th>AltUnit</th> 				                    
 				                    <th>Remarks</th> 
@@ -989,6 +992,7 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 							 		 $array['id_inv_po'.''.$i] = $rowsID->id_inv_po;
 							 		 $array['id_inv_items'.''.$i] = $rowsID->id_inv_items;
 							 		 $array['alt_qty'.''.$i] = $rowsID->alt_qty;
+									 $array['alt_rate'.''.$i] = $rowsID->rate_per_main_unit;
 							 		 $array['qty'.''.$i] = $rowsID->qty;
 							 		 $array['alt_unit'.''.$i] = $rowsID->alt_unit;
 							 		 $array['main_unit'.''.$i] = $rowsID->main_unit;
@@ -1095,6 +1099,9 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 
 				                    <td style="width:6%;"> 
 				                        <input type="text"  autocomplete="off"  name="main_unit<?php echo $k;?>" id="main_unit<?php echo $k;?>" placeholder="Unit"  class="form-control" readonly value="<?php if($_POST) echo $_POST['main_unit'];else echo stripslashes($array['main_unit'.''.$j]); ?>"/>
+				                    </td>
+									 <td  style="width:5%;">
+				                        <input type="text"  autocomplete="off"  name="alt_rate<?php echo $k;?>" id="alt_rate<?php echo $k;?>" placeholder="Rate"  class="form-control" value="<?php if($_POST) echo $_POST['alt_rate'];else echo stripslashes($array['alt_rate'.''.$j] ); ?>" />
 				                    </td>
 				                    <td  style="width:5%;">
 				                        <input type="text"  autocomplete="off"  name="alt_qty<?php echo $k;?>" id="alt_qty<?php echo $k;?>" placeholder="Alt Qty" onkeyup="altqtycalc(this.id)" class="form-control discountvalue" value="<?php if($_POST) echo $_POST['alt_qty'];else echo stripslashes($array['alt_qty'.''.$j] ); ?>" />
@@ -1752,6 +1759,7 @@ var len = sel.options.length;
 					var walt_unit = document.getElementById("walt_unit"+i).value; 
 					var wconversion_qty = document.getElementById("wconversion_qty"+i).value; 
 					var wbalance = document.getElementById("wbalance"+i).value; 
+					var wRate = document.getElementById("wRate"+i).value; 
 					//Table Row Date Fetch Here  
 					$("#conversion_qty").val(wconversion_qty);
 					$("#id_inv_indent").val(wpop);
@@ -1763,7 +1771,7 @@ var len = sel.options.length;
 					document.getElementById("main_unit").value = wmain_unit; 
 					document.getElementById("alt_unit").value = walt_unit; 
 					document.getElementById("conver_rate_per_unit").value = wconversion_qty; 
-				 
+					document.getElementById("alt_rate").value = wRate;
 
 					 document.getElementById('qty').click();  
 					//Form Data Empty
@@ -1795,6 +1803,7 @@ var len = sel.options.length;
 					var walt_unit = document.getElementById("walt_unit"+i).value;
 					var wconversion_qty = document.getElementById("wconversion_qty"+i).value;
 					var wbalance = document.getElementById("wbalance"+i).value;
+					var wRate = document.getElementById("wRate"+i).value; 
 					//alert(wconversion_qty); 
 					//Table Row Date Fetch Here   
 					document.getElementById("id_inv_indent_details"+counter1).value = wid;
@@ -1807,6 +1816,7 @@ var len = sel.options.length;
 					document.getElementById("main_unit"+counter1).value = wmain_unit; 
 					document.getElementById("alt_unit"+counter1).value = walt_unit;
 					document.getElementById("conver_rate_per_unit"+counter1).value = wconversion_qty;
+					document.getElementById("alt_rate"+counter1).value = wRate;
 
 					var id_mst_attributes_department = document.getElementById("id_mst_attributes_department");
 				    var id_mst_attributes_department = id_mst_attributes_department.options[id_mst_attributes_department.selectedIndex].value; 
@@ -2057,11 +2067,18 @@ if(counter11==0){
 '<td><select onchange="popupshow1(this.id)"  name="id_inv_indent' + counter1 + '" id="id_inv_indent' + counter1 + '" class="form-control select3"  style="width:100%"><option>Select Requestion No</option><?php 
 	                $sql = "SELECT inv_indent.doc_date, inv_indent.mdoc_no,  inv_indent.doc_no, 
 						                   	inv_indent_details.qty,inv_indent_details.alt_qty, inv_indent_details.id, inv_indent_details.id_inv_indent, inv_indent_details.main_unit, inv_indent_details.alt_unit, 
-						                   	inv_items.item_code, inv_items.name, 
+						                   	inv_items.item_code, inv_items.name, inv_indent_details.id_inv_items
 						                   	mst_attributes.field_value 
 						                   	FROM inv_items, mst_attributes, inv_indent_details, inv_indent WHERE mst_attributes.id=inv_indent.id_mst_attributes_department and inv_indent.id = inv_indent_details.id_inv_indent and inv_indent_details.id_inv_items = inv_items.id  and inv_indent.id_shop = '".addslashes($_SESSION['shop'])."' and inv_indent.doc_type = '2' group by inv_indent.doc_no  ";
 	                   	 $db->query($sql); 
-	                    while($row1 = $db->fetch_object()){ ?>
+	                    while($row1 = $db->fetch_object()){ 
+
+		
+	
+
+							
+							
+							?>
 	                  		<option value="<?php echo $row1->id."-".$row1->id_inv_indent; ?>"><?php echo $row1->doc_no.' | '.date('d-m-Y' , strtotime(addslashes($row1->doc_date))) ?></option> <?php } 
                   	?></select> </td>';
 */	
@@ -2075,7 +2092,15 @@ if(counter11==0){
 					
 					
 	                   	 $db->query($sql); 
-	                    while($row1 = $db->fetch_object()){ ?>
+	                    while($row1 = $db->fetch_object()){ 
+							
+
+						
+							
+							
+							
+							
+							?>
 	                  		<option value="<?php echo $row1->id."-".$row1->id_inv_indent; ?>"><?php echo $row1->doc_no.' | '.date('d-m-Y' , strtotime(addslashes($row1->doc_date))) ?></option> <?php } 
                   	?></select> </td>';
 
@@ -2083,13 +2108,15 @@ if(counter11==0){
 
         cols1 += '<td><div id="hideshow_item_code'+ counter1 +'"><input type="text"  autocomplete="off" placeholder="Item Code" class="form-control" name="item_code' + counter1 + '" id="item_code' + counter1 + '" readonly=""/>';
 		
-		cols1 += '<td><input type="text"  autocomplete="off" placeholder="Item Description" class="form-control" name="item_description' + counter1 + '" id="item_description' + counter1 + '" readonly=""/></td>';
+		cols1 += '<td>	<input type="text"  autocomplete="off" placeholder="Item Description" class="form-control" name="item_description' + counter1 + '" id="item_description' + counter1 + '" readonly=""/></td>';
 
 		cols1 += '<td><input  type="text"  autocomplete="off" placeholder="Qty" class="form-control discountvalue" onkeyup="qtycalc_rows(this.id)" onclick="qtycalc_rows(this.id)" name="qty' + counter1 + '" id="qty' + counter1 + '"/><input  type="hidden"  autocomplete="off" placeholder="Qty" class="form-control" name="conversion_qty' + counter1 + '" id="conversion_qty' + counter1 + '"/></td>';  
 		
 	
 
         cols1 += '<td><input type="text"  autocomplete="off" placeholder="Unit" class="form-control" name="main_unit' + counter1 + '" id="main_unit' + counter1 + '" readonly=""/></td>'; 
+ 		<!---Rate Locks----->
+		cols1 += '<td><input type="text"  autocomplete="off" placeholder="Rate" value="2223<?php echo $ratePerMainUnit; ?>" class="form-control discountvalue" name="alt_rate' + counter1 + '" id="alt_rate' + counter1 + '"/></td>'; 
 
         cols1 += '<td><input onkeyup="altqtycalc_rows(this.id)" type="text"  autocomplete="off" placeholder="Alt Qty" class="form-control discountvalue" name="alt_qty' + counter1 + '" id="alt_qty' + counter1 + '"/></td>'; 
 
@@ -2141,7 +2168,9 @@ if(counter11==0){
 		cols1 += '<td><input  type="text"  autocomplete="off" placeholder="Qty" class="form-control discountvalue" onkeyup="qtycalc_rows(this.id)" onclick="qtycalc_rows(this.id)" name="qty' + counter2 + '" id="qty' + counter2 + '"/></td>';  
 
         cols1 += '<td><input type="text"  autocomplete="off" placeholder="Unit" class="form-control" name="main_unit' + counter2 + '" id="main_unit' + counter2 + '" readonly=""/></td>'; 
-
+ 
+		cols1 += '<td><input onkeyup="altqtycalc_rows(this.id)" type="text"  autocomplete="off" placeholder="Rate" class="form-control discountvalue" name="alt_rate' + counter2 + '" id="alt_rate' + counter2 + '"/></td>';
+       
         cols1 += '<td><input onkeyup="altqtycalc_rows(this.id)" type="text"  autocomplete="off" placeholder="Alt Qty" class="form-control discountvalue" name="alt_qty' + counter2 + '" id="alt_qty' + counter2 + '"/></td>';
         // conversion_qty	
         cols1 += '<input  type="hidden"   placeholder="Con Qty" class="form-control" name="conversion_qty' + counter2 + '" id="conversion_qty' + counter2 + '"/>'; 
