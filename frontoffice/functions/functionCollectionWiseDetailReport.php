@@ -152,7 +152,7 @@ $SQLSalesReportPayment="SELECT
     pp.id,
     pp.doc_date AS receipt_doc_date,
     fobill.doc_date AS fo_bill_doc_date,
-    p.doc_date AS folio_doc_date,
+    p.doc_date AS folio_doc_date,pp.remark,
 
     pp.id_reservation AS final_reservation_id,
 
@@ -280,6 +280,8 @@ while($RecordsSalesReportPayment	   =	mysqli_fetch_object($querySalesReportPayme
 	$SalesRegisterArray[$RecordsSalesReportPayment->receipt_doc_date][$RecordsSalesReportPayment->id_fo_folio][$RecordsSalesReportPayment->id]['fo_receipt_amount']+=$RecordsSalesReportPayment->amount;
 	
 	$SalesRegisterArray[$RecordsSalesReportPayment->receipt_doc_date][$RecordsSalesReportPayment->id_fo_folio][$RecordsSalesReportPayment->id]['fo_receipt_doc_no']='REC'.$RecordsSalesReportPayment->id;
+	$SalesRegisterArray[$RecordsSalesReportPayment->receipt_doc_date][$RecordsSalesReportPayment->id_fo_folio][$RecordsSalesReportPayment->id]['remarks']=$RecordsSalesReportPayment->remark!=''?$RecordsSalesReportPayment->remark:'-';
+	
 	
 	//$SalesRegisterArray[$RecordsSalesReportPayment->receipt_doc_date][$RecordsSalesReportPayment->id_fo_folio][$RecordsSalesReportPayment->id]['company_name']=$CompanyName;
 	
@@ -538,6 +540,7 @@ if($report_show!=1){
 		<th style="text-align: center; width:100px; " ><b>Receipt No</b></th>';
 		$content .= '<th style="text-align: center;width:121px;"><b>Receipt Date</b></th>';
 		$content .= '<th style="text-align: center;width:121px;"><b>Mode</b></th>';
+		$content .= '<th style="text-align: center;width:121px;"><b>Remarks</b></th>';
 		$content .= '<th style="text-align: center;width:121px;"><b>Receipt Amount </b></th>';
 		$content .= '
 		<th style="text-align: center; width:100px; " ><b>FO Bills</b></th>';
@@ -599,6 +602,7 @@ if($report_show!=1){
 				$contentSubGroup .= '<td style="text-align:center;">'.strtoupper($data['fo_receipt_doc_no']).'</td>';
 				$contentSubGroup .= '<td  style="text-align:left;">'.$data['receipt_doc_date'].'</td>';
 				$contentSubGroup .= '<td  style="text-align:left;">'.$data['payment_mode'].'</td>';
+				$contentSubGroup .= '<td  style="text-align:left;">'.$data['remarks'].'</td>';
 				$contentSubGroup .= '<td  style="text-align:center;">'.$data['fo_receipt_amount'].'</td>';
 				
 				$contentSubGroup .= '<td style="text-align:center;">'.strtoupper($data['bill_bill_mdoc_no']).'</td>';
@@ -665,7 +669,7 @@ if($report_show!=1){
 	
 	$content .= '<tr  '.$listTagClass.' style="border:1px solid:font-size:11px !important;color: #000; font-weight:bold;  background-color:#cdecff!important;">';				
 				
-				$content .= '<td  style="text-align:left;"  colspan="4"> </td>';
+				$content .= '<td  style="text-align:left;"  colspan="5"> </td>';
 				//$content .= '<td style=text-align:right;">'.$frontoffice_total_amount.'</td>';			
 				//$content .= '<td style=text-align:right;">'.$pos_total_amount.'</td>';
 				$content .= '<td style=text-align:center;">'.round($fo_receipt_amount).'</td>';
@@ -697,7 +701,7 @@ if($report_show!=1){
 		}
 			$see .= '<b><span style="float: left;">DAY TOTAL :</span> <span style="float: right;">'.$TotalCollection.'</span><br/>';
 		$content .= '<tr  '.$listTagClass.' style="border:1px solid:font-size:11px !important;color: #000; ">';				
-				$content .= '<td style="text-align:center; background-color:#fff!important;" colspan="9" ></td>';
+				$content .= '<td style="text-align:center; background-color:#fff!important;" colspan="10" ></td>';
 		
 				$content .= '<td style="text-align:center; background-color:#fff!important;width: 156px;" >'.$see.'</td>';
 								
