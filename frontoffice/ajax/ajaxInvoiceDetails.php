@@ -8,6 +8,7 @@ $sqlNightAudit = mysqli_query($connNew,"SELECT max(night_audit_date) as dated FR
 $numRowsNightAudit = mysqli_num_rows($sqlNightAudit);
 $rowNightAudit = mysqli_fetch_object($sqlNightAudit);
 $today = date('Y-m-d',strtotime('+1 day',strtotime($rowNightAudit->dated)));
+$edit_doc_date = date('Y-m-d',strtotime('+1 day',strtotime($rowNightAudit->dated)));
 if($ids!='0'){
 									
 		$id_folio		=  $ids;
@@ -1333,7 +1334,7 @@ echo $categoryDropDown = '<option '.$selected.'  value="'.$resultCat->id.'">Room
                     <label for="name" style="margin-left:5px;color:#fff;">Date</label>
                     <div class="input-group" style="margin-left:5px;">
                       <div class="input-group-addon"> <i class="fa fa-diamond"></i> </div>
-                      <input type="text" class="form-control pickerdateretwodays" placeholder="sreEnter PO Date"
+                      <input type="text" class="form-control pickerdaterefivedays" placeholder="sreEnter PO Date"
                         id="po_date1" name="po_date1"
                         value="<?php echo $edit_doc_date!=''?date('d-m-Y',strtotime($edit_doc_date)):date('d-m-Y');?>">
                     </div>
