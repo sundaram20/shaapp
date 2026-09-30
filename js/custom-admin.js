@@ -646,6 +646,43 @@ $('.pickerdateretwodays').datetimepicker({
 	endDate: new Date()
 });
 
+
+var editDate = $('#po_date1').val();
+
+var startDate;
+var endDate;
+
+if (editDate) {
+    var parts = editDate.split('-');
+
+    var selectedDate = new Date(
+        parseInt(parts[2]),
+        parseInt(parts[1]) - 1,
+        parseInt(parts[0])
+    );
+
+    startDate = new Date(selectedDate);
+    startDate.setDate(startDate.getDate() - 5);
+
+    endDate = new Date(selectedDate);
+    endDate.setDate(endDate.getDate());
+} else {
+    var myDate = new Date();
+
+    startDate = new Date(myDate);
+    startDate.setDate(startDate.getDate() - 1);
+
+    endDate = new Date(myDate);
+}
+
+$('.pickerdaterefivedays').datetimepicker({
+    format: 'dd-mm-yyyy',
+    autoclose: true,
+    minView: 2,
+    startDate: startDate,
+    endDate: endDate
+});
+
     //Date range as a button
        $('#daterange-btn').daterangepicker(
       {"autoApply": true,

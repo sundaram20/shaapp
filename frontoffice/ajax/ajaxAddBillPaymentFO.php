@@ -14,7 +14,7 @@ $Message=array();
 	$numRowsNightAudit =  mysqli_num_rows($sqlNightAudit);
 	$rowNightAudit =  mysqli_fetch_object($sqlNightAudit);
 	$today = date('Y-m-d',strtotime('+1 day',strtotime($rowNightAudit->dated)));	
-		
+
 	if($_REQUEST['savetype']==0){ //Unsettled
 	
 	$doc_date  =  date('d-m-Y', strtotime(selectColumn(FO_BILL,'doc_date'," WHERE `id_mst_shops` = '".addslashes($_SESSION['shop'])."' AND `id` = '".$purch_id."'")));
@@ -225,7 +225,7 @@ $Message=array();
 						id_charges_master='".$id_charges_master."',
 						id_cardtype='".$cardType."',
 						id_onlinetransfertype='".$id_onlinetransfertype."',
-						doc_date='".date('Y-m-d',  strtotime($today))."',
+						doc_date='".date('Y-m-d',  strtotime($doc_date))."',
 						time='".date('H:i:s')."',
 						cardnumber='".$cardnumber."',
 						ccredit='".$paytype."',
