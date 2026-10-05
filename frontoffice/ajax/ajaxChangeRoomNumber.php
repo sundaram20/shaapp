@@ -74,34 +74,36 @@ $reservation_owner_room = mysqli_query($connNew, "SELECT * FROM `fo_bill` WHERE 
     <input type="text" class="form-control"  id="bookingNo" name="bookingNo" value="<?php echo $row->booking_no;?>"  readonly="readonly">
   </div>
   <div class="form-group col-sm-2">
-    <label for="checkout" style="float:left;">Booking Date</label>
-    <input type="text" class="form-control"  <?php echo $readonly; ?> placeholder="Enter checkin Date" id="bookingDate" name="bookingDate" value="<?php echo $booking_date;?>" readonly="readonly" >
+    <label for="checkout" style="float:left;">Booking Date<?php echo $booking_date;?></label>
+    <input type="text" class="form-control pickerdate"  <?php echo $readonly; ?> placeholder="Enter checkin Date" id="bookingDate" name="bookingDate" value="<?php echo $booking_date;?>" readonly="readonly" >
   </div>
   <div class="form-group col-sm-6">
-    <label for="checkin" style="float:left;" readonly="readonly">Guest Name</label>
+   
+
+    
+                    <label for="checkin" style="float:left;" readonly="readonly">Guest Name</label>
+                    <select class="form-control select2-guest itemGuest" 
+        name="id_mst_guest_form" 
+        id="id_mst_guest_form">
+    <option value="">Select Guest</option>
+</select>
+                    <p class="error id_mst_guest_form-error"></p>
+            
     <?php 
+    /*  
       
-      
-      $categoryDropDown = '<select class="form-control select2" name="id_mst_guest" id="id_mst_guest" >
+      $categoryDropDown = '<select class="form-control itemGuest select2" name="id_mst_guest" id="id_mst_guest" >
 
                   <option value="">Select Guest</option>';
 
-                  	$SQL = "select *  from ".TBL_GUEST." where status='1' and `id_shop` = '".addslashes($_SESSION['shop'])."'";
-		
-		$query=mysqli_query($connNew, $SQL);
-		
-		
-		
-	    while($resultCat=mysqli_fetch_assoc($query)){
+                $SQL = "select *  from ".TBL_GUEST." where status='1' and `id_shop` = '".addslashes($_SESSION['shop'])."'";
+                $query=mysqli_query($connNew, $SQL);	
+                while($resultCat=mysqli_fetch_assoc($query)){
 
                     if($row->id_mst_guest == $resultCat['id']){
-
                       $selected = 'selected="selected"';
-
                     }else{
-
                       $selected = '';
-
                     }
 
                     $categoryDropDown .= '<option value="'.$resultCat['id'].'"  '.$selected.' >'.$resultCat['guest_reg_no'] . ' - ' . $resultCat['first_name'].' '. $resultCat['last_name'].' - '.$resultCat['email'].'-' . $resultCat['city'].'</option>';
@@ -111,7 +113,7 @@ $reservation_owner_room = mysqli_query($connNew, "SELECT * FROM `fo_bill` WHERE 
                  
 
                   echo $categoryDropDown .= '</select>';
-
+*/
                   ?>
   </div>
   <div class="form-group col-sm-2">
@@ -350,4 +352,65 @@ $dataArr='';
 	//beforeShowDay: noWeekendsOrHolidaysOrBlockedDates
 	
 	});
+
+
+  $(document).ready(function () {
+
+    var selectedId = "<?= $row->id_mst_guest ?>";
+
+    // ✅ INIT SELECT2
+    $('#id_mst_guest_form').select2({
+        dropdownParent: $('#EditReservationModal'),
+        placeholder: 'Select Guest',
+        minimumInputLength: 0,
+        ajax: {
+            url: "ajax/ajax_guest_search.php",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    search: params.term || '',
+                    id: selectedId
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: data || []
+                };
+            },
+            cache: true
+        }
+    });
+
+    // 🔥 PRESELECT USING ONLY ID (AJAX CALL)
+   if (parseInt(selectedId) > 0) {
+
+    $.ajax({
+        url: "ajax/ajax_guest_search.php",
+        type: "GET",
+        data: { id: selectedId },
+        dataType: "json",
+        success: function (data) {
+
+            if (data.length > 0) {
+
+                var item = data.find(function(obj) {
+                    return obj.id == selectedId;
+                });
+
+                if (item) {
+                    var option = new Option(item.text, item.id, true, true);
+                    $('#id_mst_guest_form')
+                        .append(option)
+                        .trigger('change.select2');
+
+                        toggleGuestActionButtons();
+                }
+
+            }
+        }
+    });
+}
+
+});
 	</script>
