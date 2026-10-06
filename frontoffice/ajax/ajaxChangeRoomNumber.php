@@ -74,7 +74,7 @@ $reservation_owner_room = mysqli_query($connNew, "SELECT * FROM `fo_bill` WHERE 
     <input type="text" class="form-control"  id="bookingNo" name="bookingNo" value="<?php echo $row->booking_no;?>"  readonly="readonly">
   </div>
   <div class="form-group col-sm-2">
-    <label for="checkout" style="float:left;">Booking Date<?php echo $booking_date;?></label>
+    <label for="checkout" style="float:left;">Booking Date</label>
     <input type="text" class="form-control pickerdate"  <?php echo $readonly; ?> placeholder="Enter checkin Date" id="bookingDate" name="bookingDate" value="<?php echo $booking_date;?>" readonly="readonly" >
   </div>
   <div class="form-group col-sm-6">
