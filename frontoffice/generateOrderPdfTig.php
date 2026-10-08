@@ -550,17 +550,17 @@ $resRoom = executeSQl($SQl_Q);
 				}
 				$sub_total += $room_details->total_tariff_price_per_day_per_room ?? 0;
 				$total_tax += $room_details->tax_per_day_per_room ?? 0;
-				$avg = (($room_details->total_tariff_price_per_day_per_room ?? 0) / $room_quantity);
+				echo '===='.$avg = (($room_details->total_tariff_price_per_day_per_room ?? 0) / $room_quantity);
 
 					$checkin_date  = new DateTime($rowOrder->checkin);
 $checkout_date = new DateTime($rowOrder->checkout);
 
-echo $number_of_days = $checkin_date->diff($checkout_date)->days;;
-die;
+echo '===='.$number_of_days = $checkin_date->diff($checkout_date)->days;;
+
                   //  $number_of_days = $interval->days;
 
-					$Tarrif_per_night = $avg/$number_of_days;
-					
+					echo '===='.$Tarrif_per_night = $avg/$number_of_days;
+					die;
                     //echo $number_of_days;
 
 			$priceValue = 0;
