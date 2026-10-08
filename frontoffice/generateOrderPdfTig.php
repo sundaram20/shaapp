@@ -555,8 +555,8 @@ $resRoom = executeSQl($SQl_Q);
 					$checkin_date  = new DateTime($rowOrder->checkin);
 $checkout_date = new DateTime($rowOrder->checkout);
 
-$number_of_days = $checkin_date->diff($checkout_date)->days;;
-
+echo $number_of_days = $checkin_date->diff($checkout_date)->days;;
+die;
                   //  $number_of_days = $interval->days;
 
 					$Tarrif_per_night = $avg/$number_of_days;
