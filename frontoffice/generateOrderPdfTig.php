@@ -543,12 +543,13 @@ $resRoom = executeSQl($SQl_Q);
 					$child_above_5_year   = $rowOrderDetail->child_above_5_year;
 					
 				while ($room_count_details = mysqli_fetch_object($room_count_detail_query)) {
-					$room_quantity += '1';$room_count_details->room_quantity;
+					$room_quantity += '1';
+					$room_count_details->room_quantity;
 					//$adults_per_room += $room_count_details->adults_per_room;
 					//$child_below_5_year += $room_count_details->child_below_5_year;
 					//$child_above_5_year += $room_count_details->child_above_5_year;
 				}
-				$sub_total += $room_details->total_tariff_price_per_day_per_room ?? 0;
+				$sub_total += $room_details->tariff_price_per_day_per_room ?? 0;
 				$total_tax += $room_details->tax_per_day_per_room ?? 0;
 				$avg = (($room_details->total_tariff_price_per_day_per_room ?? 0) / $room_quantity);
 
@@ -563,7 +564,7 @@ $resRoom = executeSQl($SQl_Q);
 					
                     //echo $number_of_days;
 
-			$priceValue = 0;
+					$priceValue = 0;
 					if($_SESSION['shop_code']=='cch'){
 					$currency = 'GBP';
 					}else{
