@@ -560,7 +560,7 @@ $resRoom = executeSQl($SQl_Q);
 
                   //  $number_of_days = $interval->days;
 
-					$Tarrif_per_night = $avg/$number_of_days;
+					$Tarrif_per_night = $sub_total/$number_of_days;
 					
                     //echo $number_of_days;
 
