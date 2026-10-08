@@ -548,9 +548,9 @@ $resRoom = executeSQl($SQl_Q);
 					//$child_below_5_year += $room_count_details->child_below_5_year;
 					//$child_above_5_year += $room_count_details->child_above_5_year;
 				}
-				$sub_total += $room_details->tariff_price_per_day_per_room ?? 0;
+				$sub_total += $room_details->total_tariff_price_per_day_per_room ?? 0;
 				$total_tax += $room_details->tax_per_day_per_room ?? 0;
-				$avg = (($room_details->tariff_price_per_day_per_room ?? 0) / $room_quantity);
+				$avg = (($room_details->total_tariff_price_per_day_per_room ?? 0) / $room_quantity);
 
 					$checkin  = dateformat_date($rowOrder->checkin);
                     $checkout = dateformat_date($rowOrder->checkout);
