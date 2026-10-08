@@ -442,7 +442,7 @@ $receipt_amount = $row->total_amount ?? 0;
 					//echo "SELECT rt.name as room_name, rp.name as rate_name, rd.* from `fo_reservations_details` rd left join `mst_room_types` rt on rd.id_mst_room_types = rt.id left join `".'fo_rate_plan'."` rp on rd.id_fo_rate_plan = rp.id where  rd.`id_fo_reservations`='".$rowOrderDetail->id."'   and id_mst_room_types='".addslashes($rowOrderDetail->id_mst_room_types)."' order by rd.id_mst_room_types ";die;
 
 					//$resRoom = executeSQl("SELECT rt.name as room_name, rp.name as rate_name, rd.* from `fo_reservations_details` rd left join `mst_room_types` rt on rd.id_mst_room_types = rt.id left join `".'fo_rate_plan'."` rp on rd.id_fo_rate_plan = rp.id where  rd.`id_fo_reservations`='".addslashes(encryptor('decrypt',$_REQUEST['id']))."'    group by id_mst_room_types order by rd.id_mst_room_types");
-
+/*
 $resRoom = executeSQl("SELECT rt.name as room_name, rp.name as rate_name, rd.* 
     from `fo_reservations_details` rd 
     left join `mst_room_types` rt on rd.id_mst_room_types = rt.id 
@@ -450,7 +450,30 @@ $resRoom = executeSQl("SELECT rt.name as room_name, rp.name as rate_name, rd.*
     where rd.`id_fo_reservations`='".addslashes(encryptor('decrypt',$_REQUEST['id']))."'    
     group by id_mst_room_types, id_fo_rate_plan, adults_per_room, child_below_5_year, child_above_5_year
     order by rd.id_mst_room_types, rd.id_fo_rate_plan, rd.adults_per_room");
-					
+					*/
+
+				$SQl_Q	="SELECT 
+    rt.name AS room_name,
+    rp.name AS rate_name,
+    SUM(rd.tariff_price_per_day_per_room) AS total_tariff_price_per_day_per_room,
+    rd.*
+FROM `fo_reservations_details` rd
+LEFT JOIN `mst_room_types` rt 
+    ON rd.id_mst_room_types = rt.id
+LEFT JOIN `fo_rate_plan` rp 
+    ON rd.id_fo_rate_plan = rp.id
+WHERE rd.`id_fo_reservations` = '".addslashes(encryptor('decrypt', $_REQUEST['id']))."'
+GROUP BY 
+    rd.id_mst_room_types,
+    rd.id_fo_rate_plan,
+    rd.adults_per_room,
+    rd.child_below_5_year,
+    rd.child_above_5_year
+ORDER BY 
+    rd.id_mst_room_types,
+    rd.id_fo_rate_plan,
+    rd.adults_per_room;";
+$resRoom = executeSQl($SQl_Q);
 				//if(num_rows($resRoom) >0){
 						//$rowRoom = $db->fetch_object2($resRoom);
 						$sub_total = 0;
