@@ -500,7 +500,7 @@ $resRoom = executeSQl($SQl_Q);
 			}
 			  }
 				 
-				$remarks	=	 $rowOrderDetail->rate_name;
+				$remarks	=	 $rowOrderDetail->rate_name.' ('.strtolower($resultRatePlan->remarks).')';
 				 
 				 
 				}
