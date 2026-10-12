@@ -183,7 +183,14 @@ $HotelPincode = $row_Hotel->pincode;
 $HotelGST = $row_Hotel->gstin;
 $HotelAddress = $row_Hotel->address;
 $HotelCIN = selectColumn(TBL_OUTLETS,'cin_no','WHERE id="'.$id_mst_outlet.'" AND id_shop="'.$_SESSION['shop'].'" ');
-$Hotelsecondary_landline = $row_Hotel->secondary_landline;
+//$Hotelsecondary_landline = $row_Hotel->secondary_landline;
+
+$Hotelsecondary_landline	=$row_Hotel->primary_mobile;	
+		$Hotelsecondary_mobile	=$row_Hotel->secondary_mobile!==''?'PH +91 '.$row_Hotel->secondary_mobile:'';	
+		$Hotelsecondary_landline = $Hotelsecondary_landline.' '.$Hotelsecondary_mobile;
+
+
+
 ?>
 <div class="content-wrapper" style="min-height:391px;">
 	<section class="content-header">
