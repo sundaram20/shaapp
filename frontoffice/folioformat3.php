@@ -186,7 +186,7 @@ $HotelCIN = selectColumn(TBL_OUTLETS,'cin_no','WHERE id="'.$id_mst_outlet.'" AND
 //$Hotelsecondary_landline = $row_Hotel->secondary_landline;
 
 $Hotelsecondary_landline	=$row_Hotel->primary_mobile;	
-		$Hotelsecondary_mobile	=$row_Hotel->secondary_mobile!==''?'PH +91 '.$row_Hotel->secondary_mobile:'';	
+		$Hotelsecondary_mobile	=$row_Hotel->secondary_mobile!==''?', +91 '.$row_Hotel->secondary_mobile:'';	
 		$Hotelsecondary_landline = $Hotelsecondary_landline.' '.$Hotelsecondary_mobile;
 
 
