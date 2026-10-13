@@ -18,7 +18,7 @@ include_once($path."/phplib/class.database.php");
 include_once($path."/phplib/PHPExcel-1.8/Classes/PHPExcel.php");
 include_once($path."/phplib/PHPExcel-1.8/Classes/PHPExcel/IOFactory.php");
 
-include_once($path."/frontoffice/functions/functionDateWiseDailyReport.php");
+include_once($path."/frontoffice/functions/functionDateWiseDailyTentativeReport.php");
 $DB_HOST = "ls-cdbb14163c8c94432e8c07692092483200dee4a3.ck2rf8frnqrs.ap-south-1.rds.amazonaws.com:3306 (MySQL)";
  
 $DB_NAME_APP					='app';
