@@ -777,7 +777,33 @@ $objPHPExcel->getActiveSheet()->getStyle('A'.$con.':D'.$con)->getAlignment()->ap
 				
                   
          
-		
+if (!empty($tentativeBookings)) {
+
+    $con++;
+
+    $objPHPExcel->setActiveSheetIndex(0)
+        ->setCellValue('A' . $con, 'No Records');
+
+    $objPHPExcel->getActiveSheet()->mergeCells('A' . $con . ':L' . $con);
+
+    $objPHPExcel->getActiveSheet()
+        ->getStyle('A' . $con . ':L' . $con)
+        ->getFont()->setBold(true);
+
+    cellColor('A' . $con . ':L' . $con, 'cdecff');
+
+    $objPHPExcel->getActiveSheet()
+        ->getStyle('A' . $con . ':L' . $con)
+        ->applyFromArray($styleThinBlackBorderOutline);
+
+    $con++;
+
+    // Add your existing column headers here:
+    // Hotel Name, Reservation Id, Other Reference, etc.
+
+    // Add the tentative booking records here using
+    // the same row-writing code as your existing report.
+}
 	
 	
 
