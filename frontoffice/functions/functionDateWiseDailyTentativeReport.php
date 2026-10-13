@@ -777,7 +777,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A'.$con.':D'.$con)->getAlignment()->ap
 				
                   
          
-if (!empty($tentativeBookings)) {
+if (empty($datawisearrayFinal)) {
 
     $con++;
 
