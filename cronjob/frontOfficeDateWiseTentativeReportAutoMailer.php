@@ -151,7 +151,7 @@ $DateArray['mtd']['EndDate']=date('d-m-Y', strtotime('-1 days'));
 
 $id_report_type='270';
 //echo FlashReport($DateArray,$id_report_type,$report_show,$_REQUEST['showItemReport'],$kot_nc,$appConnect,$connNew,$shop,$cronSet,$pdfNameReport3,$objPHPExcel); 
-$period= date('d-m-Y', strtotime('+1 month'))." to ".date('d-m-Y', strtotime('+2 month'));
+$period= date('d-m-Y', strtotime('+1 month'))." to ".date('d-m-Y', strtotime('+1 month'));
 $id_report_type= "1";
 $id_main_group= "undefined";
 $id_data_main_group= "undefined";
