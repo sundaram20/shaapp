@@ -782,7 +782,7 @@ if (empty($datawisearrayFinal)) {
     $con++;
 
     $objPHPExcel->setActiveSheetIndex(0)
-        ->setCellValue('A' . $con, 'No Records');
+        ->setCellValue('A' . $con, 'No Tentative Bookings Found');
 
     $objPHPExcel->getActiveSheet()->mergeCells('A' . $con . ':L' . $con);
 
