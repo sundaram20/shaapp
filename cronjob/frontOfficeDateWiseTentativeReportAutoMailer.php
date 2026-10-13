@@ -205,8 +205,11 @@ foreach($GroupShopid1['Email'] as $e=>$email1){
 	
 	
 	
-$msg 	 = "Please find the attachment for the Date Wise Reservations Report<br/><br/> RoomStatusHUB Team.";
-$sub	 = $shopCodeSub.'- Date Wise Reservations Report';
+$msg = "Please find attached the Tentative Booking Report for " 
+    . date('d-m-Y', strtotime('+1 month')) 
+    . ".<br/><br/>Best regards,<br/>RoomStatusHUB Team.";
+
+$sub = $shopCodeSub . ' - Tentative Booking Report';
 $cc='';		
 $cc=array();
 /*
