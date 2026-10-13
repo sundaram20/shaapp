@@ -100,7 +100,7 @@ $resShop = mysqli_query($connNew,$SqlShop);
 $rowShop = mysqli_fetch_object($resShop);
 
 date('d-m-Y');
-$period	=date('d-m-Y', strtotime('-1 days'))." to ".date('d-m-Y', strtotime('-1 days'));
+$period	=date('d-m-Y', strtotime('+1 month')) . " to " . date('d-m-Y', strtotime('+1 month'));//date('d-m-Y', strtotime('-1 days'))." to ".date('d-m-Y', strtotime('-1 days'));
 $id_report_type="197";
 $id_main_group	="";
 $id_data_main_group	="";
@@ -132,8 +132,8 @@ $objPHPExcel = new PHPExcel();
 //echo SalesRegisterReport($period,$id_outlet,$id_shift,$objPHPExcel,$appConnectReport,$connNew,$shop,$cronSet,$pdfNameReport3);			
 
 $DateArray=array();
-$DateArray['Day']['StartDate']=date('d-m-Y', strtotime('-1 days'));
-$DateArray['Day']['EndDate']=date('d-m-Y', strtotime('-1 days'));
+$DateArray['Day']['StartDate']=date('d-m-Y', strtotime('+1 month'));
+$DateArray['Day']['EndDate']=date('d-m-Y', strtotime('+1 month'));
 
 $today = new DateTime(date('d-m-Y', strtotime('-1 days')), new DateTimeZone('UTC'));
 $day_of_week = $today->format('w');
@@ -151,7 +151,7 @@ $DateArray['mtd']['EndDate']=date('d-m-Y', strtotime('-1 days'));
 
 $id_report_type='270';
 //echo FlashReport($DateArray,$id_report_type,$report_show,$_REQUEST['showItemReport'],$kot_nc,$appConnect,$connNew,$shop,$cronSet,$pdfNameReport3,$objPHPExcel); 
-$period= date('d-m-Y', strtotime('+1 days'))." to ".date('d-m-Y', strtotime('+1 days'));
+$period= date('d-m-Y', strtotime('+1 month'))." to ".date('d-m-Y', strtotime('+1 month'));
 $id_report_type= "1";
 $id_main_group= "undefined";
 $id_data_main_group= "undefined";
