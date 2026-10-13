@@ -669,7 +669,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A'.$con.':L'.$con)->getAlignment()->ap
 					}
                          cellColor('G'.$con.':L'.$con,'bcb7b7');       
                         $con=$con+1;
-						
+					/*	
                      $objPHPExcel->setActiveSheetIndex(0)                           
                                        ->setCellValue('A'.$con, "Summary Details"); 
 									   
@@ -767,7 +767,7 @@ $objPHPExcel->getActiveSheet()->getStyle('A'.$con.':D'.$con)->getAlignment()->ap
 										->setCellValue('D'.$con, $Totalchild); 
                    $objPHPExcel->getActiveSheet()->getStyle('A'.$con.':D'.$con)->applyFromArray($styleThinBlackBorderOutline);
                    
-					}
+					}*/
 					
 					
 					
