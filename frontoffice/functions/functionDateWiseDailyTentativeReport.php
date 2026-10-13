@@ -111,7 +111,7 @@ $SalesRegisterArray=array();
 		$checkout = $splitArray['1'];
 		//$cond .= " AND `fo_reservations`.`checkin` = '".date('Y-m-d',strtotime($checkin))."' and `fo_reservations`.`checkout` = '".date('Y-m-d',strtotime($checkout))."'";
 		if(strtotime($checkin)!=strtotime($checkout)){
-			$tillcheckout = date ("Y-m-d", strtotime("-1 day", strtotime($checkout)));
+			$tillcheckout = date ("Y-m-d", strtotime($checkout));
 			$cond .= " AND `fo_reservations_details`.`dated` BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
 			$condlunch .= " `fo_reservations`.`checkin` BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
 		}else{
@@ -146,10 +146,10 @@ $sql = " SELECT `fo_reservations`.*, `fo_reservations_details`.id as id_reservat
      LEFT JOIN `fo_reservations_details` on fo_reservations.id=fo_reservations_details.id_fo_reservations
      ".$cond." order by `fo_reservations`.booking_status,`fo_reservations`.checkin, `fo_reservations`.id";
  $SQLSalesReportPayment=$sql;
-//echo '=================>'.$SQLSalesReportPayment;
+echo '=================>'.$SQLSalesReportPayment;
 
 //ee
-//die;
+die;
 
 
 
