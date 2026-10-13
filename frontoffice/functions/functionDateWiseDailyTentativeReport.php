@@ -112,11 +112,11 @@ $SalesRegisterArray=array();
 		//$cond .= " AND `fo_reservations`.`checkin` = '".date('Y-m-d',strtotime($checkin))."' and `fo_reservations`.`checkout` = '".date('Y-m-d',strtotime($checkout))."'";
 		if(strtotime($checkin)!=strtotime($checkout)){
 			$tillcheckout = date ("Y-m-d", strtotime($checkout));
-			$cond .= " AND `fo_reservations_details`.`dated` BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
-			$condlunch .= " `fo_reservations`.`checkin` BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
+			//$cond .= " AND `fo_reservations_details`.`dated` BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
+			$cond .= " `fo_reservations`.`checkin` BETWEEN '".date('Y-m-d',strtotime($checkin))."' And '".date('Y-m-d',strtotime($checkout))."'";
 		}else{
-			$cond .= " AND `fo_reservations_details`.`dated`='".date('Y-m-d',strtotime($checkin))."'";
-			$condlunch .= " `fo_reservations`.`checkin`='".date('Y-m-d',strtotime($checkin))."'";
+			//$cond .= " AND `fo_reservations_details`.`dated`='".date('Y-m-d',strtotime($checkin))."'";
+			$cond .= " `fo_reservations`.`checkin`='".date('Y-m-d',strtotime($checkin))."'";
 		}
 		$datewise_array = array();
 		$checkinDate = date('Y-m-d',strtotime($checkin));
