@@ -148,7 +148,7 @@ $sql = " SELECT `fo_reservations`.*, `fo_reservations_details`.id as id_reservat
  $SQLSalesReportPayment=$sql;
 echo '=================>'.$SQLSalesReportPayment;
 
-
+//ee
 die;
 
 
