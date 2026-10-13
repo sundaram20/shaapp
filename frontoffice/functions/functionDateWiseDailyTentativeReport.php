@@ -83,6 +83,8 @@ $SalesRegisterArray=array();
 		$booking_status_arr = $_REQUEST['res_bookingStatus_new'];
 		$cond .= " AND `fo_reservations`.`booking_status` in (".$booking_status_arr.") ";
 	}
+	$booking_status_arr = '2';
+	$cond .= " AND `fo_reservations`.`booking_status` in (".$booking_status_arr.") ";
 	if($_REQUEST['hk_status'] != ''){
 		$hk_statusCondtion = $_REQUEST['hk_status'];
 		
