@@ -397,6 +397,7 @@ $auditquery = "SELECT * From `".TBL_INV_PURCH."` WHERE id = '".addslashes(encryp
 							`id_inv_items` = '".addslashes($_POST['id_inv_items'])."',  
 							`alt_qty` = '".addslashes($_POST['alt_qty'])."',  
 							`qty` = '".addslashes($_POST['qty'])."',  
+							`rate_per_main_unit` = '".addslashes($_POST['alt_rate'])."', 
 							`alt_unit` = '".addslashes($_POST['alt_unit'])."', 
 							`main_unit` = '".addslashes($_POST['main_unit'])."', 
 							`remarks_purch_details` = '".addslashes($_POST['remarks_purch_details'])."',
@@ -438,7 +439,8 @@ $auditquery = "SELECT * From `".TBL_INV_PURCH."` WHERE id = '".addslashes(encryp
 								   
 								`id_inv_items` = '".addslashes($_POST['id_inv_items'.''.$i])."',  
 								`alt_qty` = '".addslashes($_POST['alt_qty'.''.$i])."',  
-								`qty` = '".addslashes($_POST['qty'.''.$i])."',  
+								`qty` = '".addslashes($_POST['qty'.''.$i])."',
+								`rate_per_main_unit` = '".addslashes($_POST['alt_rate'])."',   
 								`alt_unit` = '".addslashes($_POST['alt_unit'.''.$i])."', 
 								`main_unit` = '".addslashes($_POST['main_unit'.''.$i])."', 
 								`remarks_purch_details` = '".addslashes($_POST['remarks_purch_details'.''.$i])."',
