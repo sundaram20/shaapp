@@ -127,12 +127,23 @@ $returnData.= '<td class="form-group col-md-2"><select onchange="popupshow(this.
 
 
 
- $sqlrate_per_main = "
+ /*$sqlrate_per_main = "
     SELECT inv_purch_details.rate_per_main_unit
     FROM inv_purch
     INNER JOIN inv_purch_details
         ON inv_purch_details.id_inv_purch = inv_purch.id
     WHERE inv_purch.id_doc_type_configuration = 34
+      AND inv_purch_details.id_inv_items = '".$row22->item_id."'
+      AND inv_purch_details.rate_per_main_unit > 0
+    ORDER BY inv_purch.id DESC
+    LIMIT 1
+";*/
+$sqlrate_per_main = "
+    SELECT inv_purch_details.rate_per_main_unit
+    FROM inv_purch
+    INNER JOIN inv_purch_details
+        ON inv_purch_details.id_inv_purch = inv_purch.id
+    WHERE inv_purch_details.doc_type IN(4,100)
       AND inv_purch_details.id_inv_items = '".$row22->item_id."'
       AND inv_purch_details.rate_per_main_unit > 0
     ORDER BY inv_purch.id DESC
