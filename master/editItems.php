@@ -259,6 +259,7 @@ if($_REQUEST['conversion_qty']== '0'){
 							`main_unit` = '".$_REQUEST['detail_unit'][$i]."',  
 							`alt_unit` = '".addslashes($alt_unit)."', 
 							`alt_qty` = '".addslashes($alt_qty)."',  
+							`item_amount` = '".addslashes($_POST['open_amount'])."', 
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."'";
 
@@ -310,15 +311,16 @@ if($_REQUEST['conversion_qty']== '0'){
 						//Alt Unit
 						$alt_unit  =  selectColumn(TBL_ATTRIBUTES,'field_value'," WHERE `id_shop` = '".addslashes($_SESSION['shop'])."' AND `id` = '".addslashes($_POST["id_mst_attributes_unit_alt"])."' AND table_name='unit'");
 						
-
+//`item_amount` = '".addslashes($_POST['sale_rate'])."',  
 					 $addSql = " INSERT INTO `".TBL_INV_PURCH_DETAILS."` SET
 
 							`id_inv_purch` = '".addslashes($lastInsertId_purch)."', 	
 							`doc_type` = '".addslashes($doc_type)."', 
-							`item_amount` = '".addslashes($_POST['sale_rate'])."',   
+							 
 							`id_inv_items` = '".addslashes($lastInsertId_items)."', 
 							`id_inv_items_details` = '0', 
 							`qty` = '".addslashes($qty_total)."', 
+							`item_amount` = '".addslashes($_POST['open_amount'])."', 
 							`main_unit` = '".addslashes($main_unit)."',  
 							`alt_unit` = '".addslashes($alt_unit)."', 
 							`alt_qty` = '".addslashes($alt_qty)."',  
@@ -871,7 +873,7 @@ $item = $auditrow1 -> name;
 					executeSql($addSql);
 						$lastInsertId_purch= $db->insert_id();
 
-
+//`item_amount` = '".$_REQUEST['detail_rate'][$i]."',
 					$addSqled = " INSERT INTO `".TBL_INV_PURCH_DETAILS."` SET
 							`id_inv_purch` = '".addslashes($lastInsertId_purch)."',
 							`doc_type` = '".addslashes($doc_type)."',  
@@ -880,7 +882,8 @@ $item = $auditrow1 -> name;
 							`qty` = '".addslashes($qty_total)."', 
 							`main_unit` = '".$_REQUEST['detail_unit'][$i]."',  
 							`alt_qty` = '".addslashes($alt_qty)."',  
-							`item_amount` = '".$_REQUEST['detail_rate'][$i]."',  
+							  
+							`item_amount` = '".addslashes($_POST['open_amount'])."', 
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."',
 							`date_created` = '".currenDateTime()."',
@@ -893,7 +896,7 @@ $item = $auditrow1 -> name;
 							  }
 							}
 						}
-						
+						// `item_amount` = '".addslashes($_POST['sale_rate'])."',
                            // `id_mst_outlet` = '".implode(',',$_REQUEST['ids_mst_outlet'])."',
 					if($db->num_rows() > 0){
 
@@ -903,7 +906,8 @@ $item = $auditrow1 -> name;
 							`main_unit` = '".addslashes($main_unit)."',  
 							`alt_unit` = '".addslashes($alt_unit)."', 
 							`alt_qty` = '".addslashes($alt_qty)."',  
-							`item_amount` = '".addslashes($_POST['sale_rate'])."',  
+							  
+							`item_amount` = '".addslashes($_POST['open_amount'])."',
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."'";
 
@@ -964,7 +968,8 @@ $item = $auditrow1 -> name;
 							`main_unit` = '".addslashes($main_unit)."',  
 							`alt_unit` = '".addslashes($alt_unit)."', 
 							`alt_qty` = '".addslashes($alt_qty)."',  
-							`item_amount` = '".addslashes($_POST['sale_rate'])."',  
+							`item_amount` = '".addslashes($_POST['open_amount'])."',  
+							
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."'";
 
