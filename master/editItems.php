@@ -260,6 +260,7 @@ if($_REQUEST['conversion_qty']== '0'){
 							`alt_unit` = '".addslashes($alt_unit)."', 
 							`alt_qty` = '".addslashes($alt_qty)."',  
 							`item_amount` = '".addslashes($_POST['open_amount'])."', 
+							`rate_per_main_unit` = '".addslashes($_POST['open_amount']/$qty_total)."',
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."'";
 
@@ -321,6 +322,7 @@ if($_REQUEST['conversion_qty']== '0'){
 							`id_inv_items_details` = '0', 
 							`qty` = '".addslashes($qty_total)."', 
 							`item_amount` = '".addslashes($_POST['open_amount'])."', 
+							`rate_per_main_unit` = '".addslashes($_POST['open_amount']/$qty_total)."',
 							`main_unit` = '".addslashes($main_unit)."',  
 							`alt_unit` = '".addslashes($alt_unit)."', 
 							`alt_qty` = '".addslashes($alt_qty)."',  
@@ -884,6 +886,7 @@ $item = $auditrow1 -> name;
 							`alt_qty` = '".addslashes($alt_qty)."',  
 							  
 							`item_amount` = '".addslashes($_POST['open_amount'])."', 
+							`rate_per_main_unit` = '".addslashes($_POST['open_amount']/$qty_total)."',
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."',
 							`date_created` = '".currenDateTime()."',
@@ -908,6 +911,7 @@ $item = $auditrow1 -> name;
 							`alt_qty` = '".addslashes($alt_qty)."',  
 							  
 							`item_amount` = '".addslashes($_POST['open_amount'])."',
+							`rate_per_main_unit` = '".addslashes($_POST['open_amount']/$qty_total)."',
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."'";
 
@@ -969,7 +973,7 @@ $item = $auditrow1 -> name;
 							`alt_unit` = '".addslashes($alt_unit)."', 
 							`alt_qty` = '".addslashes($alt_qty)."',  
 							`item_amount` = '".addslashes($_POST['open_amount'])."',  
-							
+							`rate_per_main_unit` = '".addslashes($_POST['open_amount']/$qty_total)."',
 							`conver_rate_per_unit` = '".addslashes($_POST['conversion_qty'])."',  
 							`id_shop` = '".addslashes($_SESSION['shop'])."'";
 
