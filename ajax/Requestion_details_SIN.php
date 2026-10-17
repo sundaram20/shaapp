@@ -164,6 +164,8 @@ $sqlCharge = "SELECT A.doc_no,A.doc_date,B.* FROM ".TBL_INV_INDENT." A LEFT JOIN
 
 $resCharge = mysqli_query($connNew,$sqlCharge);
 
+$ratePerMainUnit= $ratePerMainUnit*$qty;
+
 while($rowCharge = mysqli_fetch_object($resCharge)){
 	if($row22->id_inv_indent == $rowCharge->id_inv_indent){
 		$selected="selected='selected'";
@@ -182,7 +184,8 @@ $returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text"  aut
 
 $returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text"  autocomplete="off" class="form-control" name="main_unit'.$i.'" value="'.$row22->main_unit.'" id="main_unit'.$i.'"  /></td>';
 
-$returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text"  autocomplete="off" class="form-control" name="alt_rate'.$i.'" value="'.$ratePerMainUnit.'" id="alt_rate'.$i.'"  /></td>';
+
+$returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="hidden"  autocomplete="off" class="form-control" name="alt_rate_hidden'.$i.'" value="'.$ratePerMainUnit.'" id="alt_rate_hidden'.$i.'"  /><input type="text"  autocomplete="off" class="form-control" name="alt_rate'.$i.'" value="'.$ratePerMainUnit.'" id="alt_rate'.$i.'"  /></td>';
 
 
 $returnData.= '<td class="form-group col-xs-12 col-sm-1"><input type="text" onkeyup="altqtycalc(this.id)"  autocomplete="off" class="form-control discountvalue" name="alt_qty'.$i.'" value="'.$alt_qty.'" id="alt_qty'.$i.'"  /></td>';
