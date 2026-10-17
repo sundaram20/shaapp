@@ -1104,6 +1104,7 @@ if(!empty($_REQUEST['eId']) && $_REQUEST['action']=='edit'){
 				                    </td>
 									 <td  style="width:5%;">
 				                        <input type="text"  autocomplete="off"  name="alt_rate<?php echo $k;?>" id="alt_rate<?php echo $k;?>" placeholder="Rate"  class="form-control" value="<?php if($_POST) echo $_POST['alt_rate'];else echo stripslashes($array['alt_rate'.''.$j] ); ?>" />
+										<input type="hidden"  autocomplete="off"  name="alt_rate_hidden<?php echo $k;?>" id="alt_rate_hidden<?php echo $k;?>" placeholder="Rate"  class="form-control" value="<?php if($_POST) echo $_POST['alt_rate'];else echo stripslashes($array['alt_rate'.''.$j] ); ?>" />
 				                    </td>
 				                    <td  style="width:5%;">
 				                        <input type="text"  autocomplete="off"  name="alt_qty<?php echo $k;?>" id="alt_qty<?php echo $k;?>" placeholder="Alt Qty" onkeyup="altqtycalc(this.id)" class="form-control discountvalue" value="<?php if($_POST) echo $_POST['alt_qty'];else echo stripslashes($array['alt_qty'.''.$j] ); ?>" />
@@ -1762,6 +1763,7 @@ var len = sel.options.length;
 					var wconversion_qty = document.getElementById("wconversion_qty"+i).value; 
 					var wbalance = document.getElementById("wbalance"+i).value; 
 					var wRate = document.getElementById("wRate"+i).value; 
+
 					//Table Row Date Fetch Here  
 					$("#conversion_qty").val(wconversion_qty);
 					$("#id_inv_indent").val(wpop);
@@ -1774,6 +1776,7 @@ var len = sel.options.length;
 					document.getElementById("alt_unit").value = walt_unit; 
 					document.getElementById("conver_rate_per_unit").value = wconversion_qty; 
 					document.getElementById("alt_rate").value = wRate;
+					document.getElementById("alt_rate_hidden").value = wRate;
 
 					 document.getElementById('qty').click();  
 					//Form Data Empty
@@ -1819,6 +1822,7 @@ var len = sel.options.length;
 					document.getElementById("alt_unit"+counter1).value = walt_unit;
 					document.getElementById("conver_rate_per_unit"+counter1).value = wconversion_qty;
 					document.getElementById("alt_rate"+counter1).value = wRate;
+					document.getElementById("alt_rate_hidden"+counter1).value = wRate;
 
 					var id_mst_attributes_department = document.getElementById("id_mst_attributes_department");
 				    var id_mst_attributes_department = id_mst_attributes_department.options[id_mst_attributes_department.selectedIndex].value; 
@@ -2118,9 +2122,9 @@ if(counter11==0){
 
         cols1 += '<td><input type="text"  autocomplete="off" placeholder="Unit" class="form-control" name="main_unit' + counter1 + '" id="main_unit' + counter1 + '" readonly=""/></td>'; 
  		<!---Rate Locks----->
-		cols1 += '<td><input type="text"  autocomplete="off" placeholder="Rate" value="<?php echo $ratePerMainUnit; ?>" class="form-control discountvalue" name="alt_rate' + counter1 + '" id="alt_rate' + counter1 + '"/></td>'; 
+		cols1 += '<td><input type="text" onkeyup="altqtycalc_rows(this.id)" autocomplete="off" placeholder="Rate" value="<?php echo $ratePerMainUnit; ?>" class="form-control discountvalue" name="alt_rate' + counter1 + '" id="alt_rate' + counter1 + '"/><input type="hidden"  autocomplete="off" placeholder="Rate" value="<?php echo $ratePerMainUnit; ?>" class="form-control discountvalue" name="alt_rate_hidden' + counter1 + '" id="alt_rate_hidden' + counter1 + '"/></td>'; 
 
-        cols1 += '<td><input onkeyup="altqtycalc_rows(this.id)" type="text"  autocomplete="off" placeholder="Alt Qty" class="form-control discountvalue" name="alt_qty' + counter1 + '" id="alt_qty' + counter1 + '"/></td>'; 
+        cols1 += '<td><input  type="text"  autocomplete="off" placeholder="Alt Qty" class="form-control discountvalue" name="alt_qty' + counter1 + '" id="alt_qty' + counter1 + '"/></td>'; 
 
         cols1 += '<td><input type="text"  autocomplete="off" placeholder="Alt Unit" class="form-control" name="alt_unit' + counter1 + '" id="alt_unit' + counter1 + '" readonly=""/><input type="text"  autocomplete="off" placeholder="conver_rate_per_unit" class="form-control discountvalue"  name="conver_rate_per_unit' + counter1 + '" id="conver_rate_per_unit' + counter1 + '" style="display:none;"/><input type="text"  autocomplete="off" placeholder="Item ID" class="form-control" name="id_inv_items' + counter1 + '" id="id_inv_items' + counter1 + '" style="display:none;"/></td>';         
 
@@ -2169,11 +2173,11 @@ if(counter11==0){
 
 		cols1 += '<td><input  type="text"  autocomplete="off" placeholder="Qty" class="form-control discountvalue" onkeyup="qtycalc_rows(this.id)" onclick="qtycalc_rows(this.id)" name="qty' + counter2 + '" id="qty' + counter2 + '"/></td>';  
 
-        cols1 += '<td><input type="text"  autocomplete="off" placeholder="Unit" class="form-control" name="main_unit' + counter2 + '" id="main_unit' + counter2 + '" readonly=""/></td>'; 
+        cols1 += '<td><input type="text"  onkeyup="altqtycalc_rows(this.id)"  autocomplete="off" placeholder="Unit" class="form-control" name="main_unit' + counter2 + '" id="main_unit' + counter2 + '" readonly=""/></td>'; 
  
-		cols1 += '<td><input onkeyup="altqtycalc_rows(this.id)" type="text"  autocomplete="off" placeholder="Rate" class="form-control discountvalue" name="alt_rate' + counter2 + '" id="alt_rate' + counter2 + '"/></td>';
+		cols1 += '<td><input  type="text"  autocomplete="off" placeholder="Rate" class="form-control discountvalue" name="alt_rate' + counter2 + '" id="alt_rate' + counter2 + '"/><input type="hidden"  autocomplete="off" placeholder="Rate" value="<?php echo $ratePerMainUnit; ?>" class="form-control discountvalue111" name="alt_rate_hidden' + counter2 + '" id="alt_rate_hidden' + counter2 + '"/></td>';
        
-        cols1 += '<td><input onkeyup="altqtycalc_rows(this.id)" type="text"  autocomplete="off" placeholder="Alt Qty" class="form-control discountvalue" name="alt_qty' + counter2 + '" id="alt_qty' + counter2 + '"/></td>';
+        cols1 += '<td><input type="text"  autocomplete="off" placeholder="Alt Qty" class="form-control discountvalue" name="alt_qty' + counter2 + '" id="alt_qty' + counter2 + '"/></td>';
         // conversion_qty	
         cols1 += '<input  type="hidden"   placeholder="Con Qty" class="form-control" name="conversion_qty' + counter2 + '" id="conversion_qty' + counter2 + '"/>'; 
 
@@ -2309,36 +2313,45 @@ function qtycalc(clicked_id){
 				if(i==0){
 					var main_unit = document.getElementById("main_unit").value;
 					var alt_unit = document.getElementById("alt_unit").value;
-
+					var alt_rate = document.getElementById("alt_rate_hidden").value;
 
 					if(main_unit == alt_unit){
 						var qty = document.getElementById("qty").value;
 						var kg = document.getElementById("conversion_qty").value; 
+						var alt_rate = document.getElementById("alt_rate_hidden").value;
 						
-			//alert(qty);			
-			//alert(kg);			
+			//alert('QTY'+qty);			
+			//alert(alt_rate);			
 						var grams = qty * kg;  
 						document.getElementById("alt_qty").value = grams;
+						document.getElementById("alt_rate").value = alt_rate * qty;
 					}else{
+						var alt_rate = document.getElementById("alt_rate_hidden").value;
 						var qty = document.getElementById("qty").value;
 						var kg = document.getElementById("conversion_qty").value; 
 						var grams = qty * kg;  
 						document.getElementById("alt_qty").value = grams;
+						document.getElementById("alt_rate").value = alt_rate * qty;
 					}
 				}else{
+					var alt_rate1 = document.getElementById("alt_rate_hidden"+i).value;
 					var main_unit_row = document.getElementById("main_unit"+i).value;
 					var alt_unit1_row = document.getElementById("alt_unit"+i).value;
 
-					if(main_unit_row == alt_unit1_row){ 
+					if(main_unit_row == alt_unit1_row){
+						var alt_rate = document.getElementById("alt_rate_hidden"+i).value;
 						var qty = document.getElementById("qty"+i).value; 	 
 						var kg = document.getElementById("conversion_qty"+i).value; 
 						var grams = qty * kg;  
-						document.getElementById("alt_qty"+i).value = grams; 
+						document.getElementById("alt_qty"+i).value = grams;
+						document.getElementById("alt_rate"+i).value = alt_rate * qty;
 					}else{
+						var alt_rate = document.getElementById("alt_rate_hidden"+i).value;
 						var qty = document.getElementById("qty"+i).value; 	 
 						var kg = document.getElementById("conversion_qty"+i).value; 
 						var grams = qty * kg;  
-						document.getElementById("alt_qty"+i).value = grams; 
+						document.getElementById("alt_qty"+i).value = grams;
+						document.getElementById("alt_rate"+i).value = alt_rate * qty;
 					}
 				}
 			}
@@ -2504,17 +2517,20 @@ function qtycalc(clicked_id){
      	var match = parseInt(regex.exec(clicked_id)); 
      	var main_unit_row = document.getElementById("main_unit"+match).value;
 		var alt_unit1_row = document.getElementById("alt_unit"+match).value;
-
+		var alt_rate_hidden = document.getElementById("alt_rate_hidden"+match).value;
+//alert(alt_rate_hidden);
 		if(main_unit_row == alt_unit1_row){ 
 	     	var alt_qty = document.getElementById("alt_qty"+match).value; 
 			var kg = document.getElementById("conversion_qty"+match).value; 
 			var qty = alt_qty / kg;  
 			document.getElementById("qty"+match).value = qty;  
+			document.getElementById("alt_rate"+match).value = alt_rate_hidden * qty;  
 		}else{
 			var alt_qty = document.getElementById("alt_qty"+match).value; 
 			var kg = document.getElementById("conversion_qty"+match).value; 
 			var qty = alt_qty / kg;  
 			document.getElementById("qty"+match).value = qty;  
+			document.getElementById("alt_rate"+match).value = alt_rate_hidden * qty;
 		}    			 
 	}
 </script>	

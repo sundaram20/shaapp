@@ -153,6 +153,7 @@ if ($rowrate_per_main = mysqli_fetch_object($resrate_per_main)) {
 			                    		</td>
 										<td><!--Rate New-->
 			                    			<input type="text" class="form-control" id="wRate'.$i.'" name="wRate'.$i.'"  value="'.$wRate.' "  readonly >
+											<input type="text" class="form-control" id="wRatehidden'.$i.'" name="wRatehidden'.$i.'"  value="'.$wRate.' "  readonly >
 			                    		</td>
 			                    		<td> 
 			                    			 <input type="checkbox" name="wcheckbox'.$i.'" id="wcheckbox'.$i.'"  onclick="checkboxs(this.id);">
